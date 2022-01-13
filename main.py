@@ -51,6 +51,20 @@ def showDeputat_handler(message):
         bot.send_photo(message.chat.id, deputat_photo, reply_to_message_id=message.id, caption=reply_message)
 
 
+@bot.message_handler(commands=['kill'])
+def killDeputat_handler(message):
+    user_id = message.from_user.id
+    db_object.execute(f"SELECT name FROM deputats WHERE deputats.userid = {user_id}")
+    result = db_object.fetchone()
+    if not result:
+        bot.reply_to(message, "А шо вбивати то?")
+    else:
+        db_object.execute("DELETE FROM deputats WHERE userid = %s", user_id)
+        db_connection.commit()
+        reply_message = ""
+        bot.reply_to(message, "Депутату розірвало сраку...")
+
+
 @server.route('/' + config.TOKEN, methods=['POST'])
 def get_message():
     json_string = request.get_data().decode('utf-8')
