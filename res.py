@@ -27,3 +27,5 @@ deputatNames = [
     'Юрчик',
     'Ярік'
 ]
+
+levels_photo = "https://static10.tgstat.ru/channels/_0/f8/f87840d69167450830dd5e5f482827ad.jpg"

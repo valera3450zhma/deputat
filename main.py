@@ -25,13 +25,31 @@ def start_handler(message):
 
 @bot.message_handler(commands=['get'])
 def getDeputat_handler(message):
-    id = message.from_user.id
-    db_object.execute(f"SELECT userId FROM deputats WHERE userId = {id}")
+    user_id = message.from_user.id
+    db_object.execute(f"SELECT deputats.userId FROM deputats WHERE deputats.userId = {user_id}")
     result = db_object.fetchone()
 
     if not result:
-        db_object.execute("INSERT INTO deputats(userId, money, name) VALUES ( %s, %s, %s )", (id, random.randint(0, 100), random.choice(res.deputatNames)))
+        db_object.execute("INSERT INTO deputats(userId, money, name, level) VALUES ( %s, %s, %s, %s )", (user_id, random.randint(10, 100), random.choice(res.deputatNames), 1))
         db_connection.commit()
+        bot.reply_to(message, "Гля який! Депута-а-атіще! Хочеш глянуть на підарасіка? Цикай - /show")
+    else:
+        bot.reply_to(message, "Так ти вже маєш депутата...")
+
+
+@bot.message_handler(commands=['show'])
+def showDeputat_handler(message):
+    user_id = message.from_user.id
+    db_object.execute(f"SELECT deputats.name, deputats.money, deputats.level FROM deputats WHERE deputats.userId = {user_id}")
+    result = db_object.fetchone()
+    if not result:
+        bot.reply_to(message, "Ніхуя нема...")
+    else:
+        reply_message = ""
+        deputat_photo = res.levels_photo
+        for i, item in enumerate(result):
+            reply_message += f"👨🏻 Ім'я: {item[0]}\n💰 Бабло: {item[1]}$\nРівень: {item[2]}"
+        bot.send_photo(message.chat.id, deputat_photo, reply_to_message_id=message.id, caption=reply_message)
 
 
 @server.route('/' + config.TOKEN, methods=['POST'])
