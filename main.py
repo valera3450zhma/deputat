@@ -23,7 +23,7 @@ def start_handler(message):
     bot.reply_to(message, 'ага, ок, запустився я :))')
 
 
-@bot.message_handler(commands=['getDeputat'])
+@bot.message_handler(commands=['get'])
 def getDeputat_handler(message):
     id = message.from_user.id
     db_object.execute(f"SELECT userId FROM deputats WHERE userId = {id}")
