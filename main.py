@@ -12,7 +12,7 @@ server = Flask(__name__)
 
 @bot.message_handler(commands=['start'])
 def commands_handler(message):
-    bot.reply_to(message, 'ага, ок, запустився я')
+    bot.reply_to(message, 'ага, ок, запустився я :))')
 
 
 @server.route('/' + TOKEN, methods=['POST'])
