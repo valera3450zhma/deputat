@@ -47,8 +47,7 @@ def showDeputat_handler(message):
     else:
         reply_message = ""
         deputat_photo = res.levels_photo
-        for item in result:
-            reply_message += f"👨🏻 Ім'я: {item[0]}\n💰 Бабло: {item[1]}$\nРівень: {item[2]}"
+        reply_message += f"👨🏻 Ім'я: {result[0]}\n💰 Бабло: {result[1]}$\nРівень: {result[2]}"
         bot.send_photo(message.chat.id, deputat_photo, reply_to_message_id=message.id, caption=reply_message)
 
 
