@@ -59,7 +59,7 @@ def killDeputat_handler(message):
     if not result:
         bot.reply_to(message, "А шо вбивати то?")
     else:
-        db_object.execute("DELETE FROM deputats WHERE userid = %s", user_id)
+        db_object.execute("DELETE FROM deputats WHERE userid = %s", [user_id])
         db_connection.commit()
         reply_message = ""
         bot.reply_to(message, "Депутату розірвало сраку...")
