@@ -67,9 +67,9 @@ def work_deputat_handler(message):
         bot.reply_to(message, "В тебе нема депутата, шоб він працював")
     elif not last_worked[0]:
         today_str = datetime.datetime.today().strftime("%Y-%m-%d")
-        earned = random.randint(10, 100) * res.money_earn_multiplier[data[1] - 1] + int(data[0])
+        earned = random.randint(10, 100) * res.money_earn_multiplier[data[1] - 1]
         db_object.execute("UPDATE deputats SET lastworked = %s, money = %s WHERE userid = %s",
-                          (today_str, earned, user_id))
+                          (today_str, earned + int(data[0]), user_id))
         db_connection.commit()
         bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
                        caption=f"Перший раз працюєш, да?\n{data[2]}{res.work_text[data[1]-1]}\n💰 Дохід: ${earned}",
@@ -79,9 +79,9 @@ def work_deputat_handler(message):
         today = datetime.date.today()
         if (today - worked).days >= 1:
             today_str = datetime.datetime.today().strftime("%Y-%m-%d")
-            earned = random.randint(10, 100) * res.money_earn_multiplier[data[1] - 1] + int(data[0])
+            earned = random.randint(10, 100) * res.money_earn_multiplier[data[1] - 1]
             db_object.execute("UPDATE deputats SET lastworked = %s, money = %s WHERE userid = %s",
-                              (today_str, earned, user_id))
+                              (today_str, earned + int(data[0]), user_id))
             db_connection.commit()
             bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
                            caption=f"{data[2]}{res.work_text[data[1]-1]}\n💰 Дохід: ${earned}")
