@@ -72,7 +72,7 @@ def work_deputat_handler(message):
                           (today_str, int(data[0]) + earned, user_id))
         db_connection.commit()
         bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
-                       caption=f"Перший раз працюєш, да?\n{data[2]} {res.work_text[data[1]-1]}\n💰 Дохід: ${data[0]}",
+                       caption=f"Перший раз працюєш, да?\n{data[2]}{res.work_text[data[1]-1]}\n💰 Дохід: ${data[0]}",
                        reply_to_message_id=message.id)
     else:
         worked = last_worked[0]
@@ -84,7 +84,7 @@ def work_deputat_handler(message):
                               (today_str, int(data[0]) + earned, user_id))
             db_connection.commit()
             bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
-                           caption=str(data[2]) + res.work_text + "\n💰 Дохід: $" + str(data[0]))
+                           caption=f"{data[2]}{res.work_text[data[1]-1]}\n💰 Дохід: ${data[0]}")
         else:
             bot.send_photo(message.chat.id, random.choice(res.not_working_photos),
                            caption="Твій депутат вже заїбався бо нині відхуячив своє", reply_to_message_id=message.id)
