@@ -51,7 +51,7 @@ def show_deputat_handler(message):
     else:
         reply_message = ""
         deputat_photo = res.level_photos[result[2] - 1][result[3]]
-        reply_message += f"👨🏻 Ім'я: {result[0]}\n💰 Бабло: {result[1]}$\n📚 Рівень: {result[2]} " \
+        reply_message += f"👨🏻 Ім'я: {result[0]}\n💰 Бабло: ${result[1]}\n📚 Рівень: {result[2]} " \
                          f"- {res.level_captions[result[2] - 1]} "
         bot.send_photo(message.chat.id, deputat_photo, reply_to_message_id=message.id, caption=reply_message)
 
@@ -72,7 +72,7 @@ def work_deputat_handler(message):
                           (today_str, int(data[0]) + earned, user_id))
         db_connection.commit()
         bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
-                       caption=data[2] + res.work_text + "\n💰 Дохід: " + data[0], reply_to_message_id=message.id)
+                       caption=data[2] + res.work_text + "\n💰 Дохід: $" + data[0], reply_to_message_id=message.id)
 
     else:
         worked = datetime.datetime(last_worked[0][0:4], last_worked[0][5:7], last_worked[0][8:10])
@@ -84,7 +84,7 @@ def work_deputat_handler(message):
                               (today_str, int(data[0]) + earned, user_id))
             db_connection.commit()
             bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
-                           caption=data[2] + res.work_text + "\n💰 Дохід: " + data[0])
+                           caption=data[2] + res.work_text + "\n💰 Дохід: $" + data[0])
         else:
             bot.send_photo(message.chat.id, random.choice(res.not_working_photos),
                            caption="Твій депутат вже заїбався бо нині відхуячив своє", reply_to_message_id=message.id)
