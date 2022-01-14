@@ -72,7 +72,8 @@ def work_deputat_handler(message):
                           (today_str, int(data[0]) + earned, user_id))
         db_connection.commit()
         bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
-                       caption=data[2] + res.work_text + "\n💰 Дохід: $" + data[0], reply_to_message_id=message.id)
+                       caption="Перший раз працюєш, да?\n" + data[2] + res.work_text + "\n💰 Дохід: $" + data[0],
+                       reply_to_message_id=message.id)
 
     else:
         worked = datetime.datetime(last_worked[0][0:4], last_worked[0][5:7], last_worked[0][8:10])
