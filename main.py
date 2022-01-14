@@ -72,7 +72,7 @@ def work_deputat_handler(message):
                           (today_str, int(data[0]) + earned, user_id))
         db_connection.commit()
         bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
-                       caption="Перший раз працюєш, да?\n" + str(data[2]) + res.work_text + "\n💰 Дохід: $" + str(data[0]),
+                       caption=f"Перший раз працюєш, да?\n{data[2]} {res.work_text[data[1]-1]}\n💰 Дохід: ${data[0]}",
                        reply_to_message_id=message.id)
 
     else:
