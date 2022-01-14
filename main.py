@@ -76,7 +76,7 @@ def work_deputat_handler(message):
                        reply_to_message_id=message.id)
     else:
         worked = last_worked[0]
-        today = datetime.datetime.today()
+        today = datetime.date.today()
         if (today - worked).days >= 1:
             today_str = datetime.datetime.today().strftime("%Y-%m-%d")
             earned = random.randint(10, 100) * res.money_earn_multiplier[data[1] - 1]
