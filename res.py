@@ -32,16 +32,16 @@ deputatNames = [
 
 level_photos = [
     [
-        "AgACAgIAAxkBAAEHuEVh4XiecLp9GU_7fJ7YtxdEVjvYiAAC0LYxGyf_EEvj2av7ral8XAEAAwIAA3MAAyME",
-        "AgACAgIAAxkBAAEHuEdh4XjnT2Eoz0Lu8lshWYIVxq1vHAACkrkxG5lSEUtK8QGvTQOGFwEAAwIAA20AAyME",
-        "AgACAgIAAxkBAAEHuElh4XkCdm3I0JCEX8abgA4XBzyZxgACk7kxG5lSEUtM9hYLci8cBwEAAwIAA3gAAyME",
-        "AgACAgIAAxkBAAEHuEth4XkcZ673yjiduw8MWSFqbMoGkgAClLkxG5lSEUu-1efMHwiU-wEAAwIAA3kAAyME",
-        "AgACAgIAAxkBAAEHuE1h4Xk7uqpfsf0YBZVzgOYYy7Vy1AAClbkxG5lSEUseY5YAAWQhdegBAAMCAAN4AAMjBA",
-        "AgACAgIAAxkBAAEHuE9h4XlWulUKHMbg6hTlKf3IoRbgJwAClrkxG5lSEUuFqAQugsd8EgEAAwIAA20AAyME",
-        "AgACAgIAAxkBAAEHuFFh4XlnWBF8HRA1GxgAAa8GwCyXzrEAApe5MRuZUhFLyYZMqThViCYBAAMCAAN4AAMjBA",
-        "AgACAgIAAxkBAAEHuFNh4XmEPYPgfaxouAdpXtt9mBBsnQACmLkxG5lSEUsm_ZJ4_HGaewEAAwIAA3gAAyME",
-        "AgACAgIAAxkBAAEHuFVh4XmZ3ii6mLOHgJuH66KDUckF4gACmbkxG5lSEUvqUqb4u6zuRwEAAwIAA3gAAyME",
-        "AgACAgIAAxkBAAEHuFdh4Xm1cs3FiWG9GpTqTdt2lpBQNgACmrkxG5lSEUtiS0dztTFbIgEAAwIAA3gAAyME"
+        "AQAD0LYxGyf_EEt9",
+        "AQADkrkxG5lSEUt9",
+        "AQADk7kxG5lSEUt9",
+        "AQADlLkxG5lSEUt9",
+        "AQADlbkxG5lSEUt9",
+        "AQADlrkxG5lSEUty",
+        "AQADl7kxG5lSEUt9",
+        "AQADmLkxG5lSEUt9",
+        "AQADmbkxG5lSEUt9",
+        "AQADmrkxG5lSEUt9"
     ],
     [
         "AgACAgIAAxkBAAEHuFlh4Xsd5j1rl8sOkb3a-kaudPWJIQACU7wxG0U7CUsc-e8jIEfFMwEAAwIAA3MAAyME",
