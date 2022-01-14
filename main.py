@@ -81,7 +81,8 @@ def killDeputat_handler(message):
 
 @bot.message_handler(content_types=['photo'])
 def sendPhotoId(message):
-    bot.reply_to(message, f"{message.photo[len(message.photo)-1].file_id}")
+    if message.from_user.id == 506126580:
+        bot.reply_to(message, f"{message.photo[len(message.photo)-1].file_id}")
 
 
 @server.route('/' + config.TOKEN, methods=['POST'])
