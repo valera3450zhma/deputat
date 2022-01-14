@@ -30,7 +30,7 @@ def getDeputat_handler(message):
     result = db_object.fetchone()
 
     if not result:
-        db_object.execute("INSERT INTO deputats(userid, money, name, level, photo) VALUES ( %s, %s, %s, %s, %s )", (user_id, random.randint(10, 100), random.choice(res.deputatNames), 1, random.randint(0, len(res.level1_photos)-1)))
+        db_object.execute("INSERT INTO deputats(userid, money, name, level, photo) VALUES ( %s, %s, %s, %s, %s )", (user_id, random.randint(10, 100), random.choice(res.deputatNames), 1, random.randint(0, len(res.level_photos[0])-1)))
         db_connection.commit()
         bot.reply_to(message, "Гля який! Депута-а-атіще! Хочеш глянуть на підарасіка? Цикай - /show")
     else:
@@ -61,7 +61,7 @@ def killDeputat_handler(message):
     elif result[0] == res.MAX_LEVEL:
         bot.reply_to(message, "В депутата максимальний рівень!")
     else:
-        db_object.execute("UPDATE deputats SET level = %s WHERE userid = %s", [result[0]+1], [user_id])
+        db_object.execute("UPDATE deputats SET level = %s, photo = %s WHERE userid = %s", [result[0]+1], random.randint(0, len(res.level_photos[result[0]]) - 1), [user_id])
         db_connection.commit()
         bot.reply_to(message, "Депутата підвищено до нового рівня!")
 
