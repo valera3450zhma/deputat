@@ -61,3 +61,25 @@ level_captions = [
     "Заробітчанин. Не жибрак, маю гроші",
     "Голова Сільради. Село то всьо моє"
 ]
+
+money_earn_multiplier = [
+    1, 3, 9, 27, 81, 243
+]
+
+work_text = [
+    " жостко назбирав кошик полуниці пану!",
+    " натиряв грошей з бюджету села!"
+]
+
+work_photos = [
+    "AgACAgIAAxkBAAIErmHh1U3Y3aR2iLG17jGVB8_9XvloAAJmuDEb9xwQS-Ry7B8b6eR7AQADAgADeAADIwQ",
+    "AgACAgIAAxkBAAIEsGHh1bqKQfABCFf-i70s5xsq62MWAAJpuDEb9xwQS63g-PHzSoP6AQADAgADeAADIwQ"
+]
+
+not_working_photos = [
+    "AgACAgIAAxkBAAIEsmHh2ByX9NgOCaRmkpETrJxLulgwAAJxuDEb9xwQS-5a-ouzRFdOAQADAgADeAADIwQ",
+    "AgACAgIAAxkBAAIEtGHh2No8CWpUkPZ4ZuwXOiu_SkcoAAJzuDEb9xwQS7zxAAHbX9q9SQEAAwIAA3gAAyME",
+    "AgACAgIAAxkBAAIEtmHh2PHZ8T7jjiOjPI0vVDsd4FXrAAJ0uDEb9xwQS0HOefdMR3VFAQADAgADeQADIwQ",
+    "AgACAgIAAxkBAAIEuGHh2UHSJaqZ4Ud4JC9GNMj98BoZAAJ2uDEb9xwQS70qbVku8wdlAQADAgADeQADIwQ",
+    "AgACAgIAAxkBAAIEumHh2V3Op5aE6DVXXtK4PCIztZdmAAJ3uDEb9xwQS1yFqlB7qnXpAQADAgADeAADIwQ"
+]
