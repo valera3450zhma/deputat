@@ -46,9 +46,24 @@ def showDeputat_handler(message):
         bot.reply_to(message, "Ніхуя нема...")
     else:
         reply_message = ""
-        deputat_photo = res.level1_photos[result[3]]
-        reply_message += f"👨🏻 Ім'я: {result[0]}\n💰 Бабло: {result[1]}$\n📚 Рівень: {result[2]}"
+        deputat_photo = res.level_photos[result[2]-1][result[3]]
+        reply_message += f"👨🏻 Ім'я: {result[0]}\n💰 Бабло: {result[1]}$\n📚 Рівень: {result[2]} - {res.level_captions[result[2]-1]}"
         bot.send_photo(message.chat.id, deputat_photo, reply_to_message_id=message.id, caption=reply_message)
+
+
+@bot.message_handler(commands=['lvlup'])
+def killDeputat_handler(message):
+    user_id = message.from_user.id
+    db_object.execute(f"SELECT level FROM deputats WHERE deputats.userid = {user_id}")
+    result = db_object.fetchone()
+    if not result:
+        bot.reply_to(message, "А шо апати то?")
+    elif result[0] == res.MAX_LEVEL:
+        bot.reply_to(message, "В депутата максимальний рівень!")
+    else:
+        db_object.execute("UPDATE deputats SET level = %s WHERE userid = %s", [result[0]+1], [user_id])
+        db_connection.commit()
+        bot.reply_to(message, "Депутата підвищено до нового рівня!")
 
 
 @bot.message_handler(commands=['kill'])
@@ -61,7 +76,6 @@ def killDeputat_handler(message):
     else:
         db_object.execute("DELETE FROM deputats WHERE userid = %s", [user_id])
         db_connection.commit()
-        reply_message = ""
         bot.reply_to(message, "Депутату розірвало сраку...")
 
 
