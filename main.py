@@ -81,7 +81,7 @@ def killDeputat_handler(message):
 
 @bot.message_handler(content_types=['photo'])
 def sendPhotoId(message):
-    print(f"{message.photo[2].id}")
+    print(f"{message.photo[2].file_id}")
 
 
 @server.route('/' + config.TOKEN, methods=['POST'])
