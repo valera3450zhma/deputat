@@ -76,7 +76,7 @@ def work_deputat_handler(message):
                        reply_to_message_id=message.id)
 
     else:
-        worked = datetime.datetime(last_worked[0][0:4], last_worked[0][5:7], last_worked[0][8:10])
+        worked = last_worked[0]
         today = datetime.datetime.today()
         if (today - worked).days >= 1:
             today_str = datetime.datetime.today().strftime("%Y-%m-%d")
