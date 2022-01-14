@@ -74,7 +74,6 @@ def work_deputat_handler(message):
         bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
                        caption=f"Перший раз працюєш, да?\n{data[2]} {res.work_text[data[1]-1]}\n💰 Дохід: ${data[0]}",
                        reply_to_message_id=message.id)
-
     else:
         worked = last_worked[0]
         today = datetime.datetime.today()
@@ -119,6 +118,10 @@ def kill_deputat_handler(message):
         db_connection.commit()
         bot.reply_to(message, "Депутату розірвало сраку...")
 
+
+@bot.message_handler(commands=['time'])
+def time_deputat_handler(message):
+    bot.reply_to(message, str(datetime.datetime.now()))
 
 @bot.message_handler(content_types=['photo'])
 def send_photo_id(message):
