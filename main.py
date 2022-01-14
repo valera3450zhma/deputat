@@ -64,6 +64,8 @@ def work_deputat_handler(message):
     db_object.execute(f"SELECT money, level, name FROM deputats WHERE deputats.userid = {user_id}")
     data = db_object.fetchone()
     if not last_worked:
+        bot.reply_to(message, "В тебе нема депутата, шоб він працював")
+    elif not last_worked[0]:
         today_str = datetime.datetime.today().strftime("%Y-%m-%d")
         earned = random.randint(10, 100) * res.money_earn_multiplier[data[1] - 1]
         db_object.execute("UPDATE deputats SET lastworked = %s, money = %s WHERE userid = %s",
