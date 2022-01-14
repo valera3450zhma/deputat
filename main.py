@@ -79,6 +79,11 @@ def killDeputat_handler(message):
         bot.reply_to(message, "Депутату розірвало сраку...")
 
 
+@bot.message_handler(content_types=['photo'])
+def sendPhotoId(message):
+    print(f"{message.photo[2].id}")
+
+
 @server.route('/' + config.TOKEN, methods=['POST'])
 def get_message():
     json_string = request.get_data().decode('utf-8')
