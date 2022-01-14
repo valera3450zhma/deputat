@@ -63,7 +63,7 @@ def killDeputat_handler(message):
     else:
         db_object.execute("UPDATE deputats SET level = %s, photo = %s WHERE userid = %s", (result[0]+1, random.randint(0, len(res.level_photos[result[0]]) - 1), user_id))
         db_connection.commit()
-        bot.reply_to(message, "Депутата підвищено до нового рівня!")
+        bot.reply_to(message, "Депутата підвищено до нового рівня! - /show")
 
 
 @bot.message_handler(commands=['kill'])
