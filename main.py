@@ -118,7 +118,7 @@ def kill_deputat_handler(message):
     elif result[0] == res.MAX_LEVEL:
         bot.reply_to(message, "В депутата максимальний рівень!")
     elif result[1] < res.lvlup_requirements[result[0] - 1]:
-        bot.reply_to(message, "Твій депутат надто бідний, щоб перейти на новий рівень!")
+        bot.reply_to(message, f"Твій депутат надто бідний, щоб перейти на новий рівень!\n💰 Необхідно грошей: ${res.lvlup_requirements[result[0] - 1]}")
         bot.send_sticker(message.chat.id, res.sad_sticker)
     else:
         db_object.execute("UPDATE deputats SET level = %s, photo = %s, lastworked = NULL WHERE userid = %s",
