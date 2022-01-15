@@ -142,7 +142,7 @@ def kill_deputat_handler(message):
         else:
             killed = result[1]
         db_object.execute(
-            "UPDATE deputats SET deputatid = NULL, rating = NULL, money = NULL, level = NULL, photo = NULL, name = NULL killed = %s WHERE userid = %s",
+            "UPDATE deputats SET deputatid = NULL, killed = %s WHERE userid = %s",
             ((killed + 1), user_id))
         db_connection.commit()
         bot.reply_to(message, "Депутату розірвало сраку...\nОтримати нового - /get")
