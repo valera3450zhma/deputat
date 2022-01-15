@@ -119,10 +119,11 @@ def kill_deputat_handler(message):
         bot.reply_to(message, "А шо вбивати то?")
     elif result[0] is None:
         bot.reply_to(message, "Себе грохнути хочеш, чи шо?")
-    elif result[1] is None:
-        killed = 0
     else:
-        killed = result[1]
+        if result[1] is None:
+            killed = 0
+        else:
+            killed = result[1]
         db_object.execute("UPDATE deputats SET deputatid = NULL, killed = %s WHERE userid = %s", (killed+1), [user_id])
         db_connection.commit()
         bot.reply_to(message, "Депутату розірвало сраку...\nОтримати нового - /get")
