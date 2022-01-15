@@ -27,7 +27,7 @@ def start_handler(message):
 @bot.message_handler(commands=['get'])
 def get_deputat_handler(message):
     user_id = message.from_user.id
-    db_object.execute(f"SELECT userid, deputatid FROM deputats WHERE userid = {user_id}")
+    db_object.execute(f"SELECT userid, deputatid FROM deputats WHERE userid = {user_id} ORDER BY deputatid")
     result = db_object.fetchone()
 
     if not result or result[1] is None:
