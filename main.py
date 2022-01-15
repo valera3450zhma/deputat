@@ -27,10 +27,10 @@ def start_handler(message):
 @bot.message_handler(commands=['get'])
 def get_deputat_handler(message):
     user_id = message.from_user.id
-    db_object.execute(f"SELECT userid FROM deputats WHERE userid = {user_id}")
+    db_object.execute(f"SELECT userid, deputatid FROM deputats WHERE userid = {user_id}")
     result = db_object.fetchone()
 
-    if not result:
+    if not result or result[1] is None:
         db_object.execute(
             "INSERT INTO deputats(userid, money, name, level, photo, username) VALUES ( %s, %s, %s, %s, %s, %s )", (
                 user_id, random.randint(10, 100), random.choice(res.deputatNames), 1,
@@ -44,9 +44,9 @@ def get_deputat_handler(message):
 @bot.message_handler(commands=['show'])
 def show_deputat_handler(message):
     user_id = message.from_user.id
-    db_object.execute(f"SELECT name, money, level, photo FROM deputats WHERE deputats.userid = {user_id}")
+    db_object.execute(f"SELECT name, money, level, photo, deputatid FROM deputats WHERE deputats.userid = {user_id}")
     result = db_object.fetchone()
-    if not result:
+    if not result or result[4] is None:
         bot.reply_to(message, "Ніхуя нема...")
     else:
         reply_message = ""
@@ -61,9 +61,9 @@ def work_deputat_handler(message):
     user_id = message.from_user.id
     db_object.execute(f"SELECT lastworked FROM deputats WHERE deputats.userid = {user_id}")
     last_worked = db_object.fetchone()
-    db_object.execute(f"SELECT money, level, name FROM deputats WHERE deputats.userid = {user_id}")
+    db_object.execute(f"SELECT money, level, name, deputatid FROM deputats WHERE deputats.userid = {user_id}")
     data = db_object.fetchone()
-    if not last_worked:
+    if not last_worked or data[3] is None:
         bot.reply_to(message, "В тебе нема депутата, шоб він працював")
     elif not last_worked[0]:
         today_str = datetime.datetime.today().strftime("%Y-%m-%d")
@@ -93,9 +93,9 @@ def work_deputat_handler(message):
 @bot.message_handler(commands=['lvlup'])
 def kill_deputat_handler(message):
     user_id = message.from_user.id
-    db_object.execute(f"SELECT level, money FROM deputats WHERE deputats.userid = {user_id}")
+    db_object.execute(f"SELECT level, money, deputatid FROM deputats WHERE deputats.userid = {user_id}")
     result = db_object.fetchone()
-    if not result:
+    if not result or result[2] is None:
         bot.reply_to(message, "А шо апати то?")
     elif result[0] == res.MAX_LEVEL:
         bot.reply_to(message, "В депутата максимальний рівень!")
@@ -113,14 +113,24 @@ def kill_deputat_handler(message):
 @bot.message_handler(commands=['kill'])
 def kill_deputat_handler(message):
     user_id = message.from_user.id
-    db_object.execute(f"SELECT name FROM deputats WHERE deputats.userid = {user_id}")
+    db_object.execute(f"SELECT deputatid, killed FROM deputats WHERE userid = {user_id}")
     result = db_object.fetchone()
     if not result:
         bot.reply_to(message, "А шо вбивати то?")
+    elif result[0] is None:
+        bot.reply_to(message, "Себе грохнути хочеш, чи шо?")
     else:
-        db_object.execute("DELETE FROM deputats WHERE userid = %s", [user_id])
+        db_object.execute("UPDATE deputats SET deputatid = NULL, killed = %s WHERE userid = %s", (result[1]+1), [user_id])
         db_connection.commit()
-        bot.reply_to(message, "Депутату розірвало сраку...")
+        bot.reply_to(message, "Депутату розірвало сраку...\nОтримати нового - /get")
+
+
+@bot.message_handler(commands=['killed'])
+def time_deputat_handler(message):
+    user_id = message.from_user.id
+    db_object.execute(f"SELECT killed FROM deputats WHERE userid = {user_id}")
+    result = db_object.fetchone()
+    bot.reply_to(message, f"Вбито депутатів: {result[0]}")
 
 
 @bot.message_handler(commands=['time'])
