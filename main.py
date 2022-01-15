@@ -54,6 +54,7 @@ def get_deputat_handler(message):
         db_connection.commit()
         bot.reply_to(message, "Гля який! Депута-а-а-атіще! Глянуть на підарасіка - /show")
     else:
+        bot.reply_to(message, "В тебе вже є депутат")
         bot.send_sticker(message.chat.id, res.what_sticker)
 
 
@@ -120,7 +121,7 @@ def kill_deputat_handler(message):
         bot.reply_to(message, "Твій депутат надто бідний, щоб перейти на новий рівень!")
         bot.send_sticker(message.chat.id, res.sad_sticker)
     else:
-        db_object.execute("UPDATE deputats SET level = %s, photo = %s WHERE userid = %s",
+        db_object.execute("UPDATE deputats SET level = %s, photo = %s, lastworked = NULL WHERE userid = %s",
                           (result[0] + 1, random.randint(0, len(res.level_photos[result[0]]) - 1), user_id))
         db_connection.commit()
         bot.reply_to(message, "Депутата підвищено до нового рівня! - /show")
