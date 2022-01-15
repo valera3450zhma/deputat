@@ -93,12 +93,14 @@ def work_deputat_handler(message):
 @bot.message_handler(commands=['lvlup'])
 def kill_deputat_handler(message):
     user_id = message.from_user.id
-    db_object.execute(f"SELECT level FROM deputats WHERE deputats.userid = {user_id}")
+    db_object.execute(f"SELECT level, money FROM deputats WHERE deputats.userid = {user_id}")
     result = db_object.fetchone()
     if not result:
         bot.reply_to(message, "А шо апати то?")
     elif result[0] == res.MAX_LEVEL:
         bot.reply_to(message, "В депутата максимальний рівень!")
+    elif result[1] < res.lvlup_requirements[result[0]-1]:
+        bot.send_sticker(message.chat.id, "")
     else:
         db_object.execute("UPDATE deputats SET level = %s, photo = %s WHERE userid = %s",
                           (result[0] + 1, random.randint(0, len(res.level_photos[result[0]]) - 1), user_id))
@@ -127,6 +129,12 @@ def time_deputat_handler(message):
 def send_photo_id(message):
     if message.from_user.id == 506126580:
         bot.reply_to(message, f"{message.photo[len(message.photo) - 1].file_id}")
+
+
+@bot.message_handler(content_types=['sticker'])
+def send_photo_id(message):
+    if message.from_user.id == 506126580:
+        bot.reply_to(message, message.sticker.file_id)
 
 
 @server.route('/' + config.TOKEN, methods=['POST'])

@@ -62,6 +62,11 @@ level_captions = [
     "Голова Сільради. Село то всьо моє"
 ]
 
+lvlup_requirements = [
+    500,
+    2000
+]
+
 money_earn_multiplier = [
     1, 3, 9, 27, 81, 243
 ]
