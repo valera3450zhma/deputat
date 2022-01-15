@@ -29,23 +29,30 @@ def get_deputat_handler(message):
     user_id = message.from_user.id
     db_object.execute(f"SELECT userid, deputatid FROM deputats WHERE userid = {user_id}")
     result = db_object.fetchone()
-    if not result or result[1] is None:
-        db_object.execute("SELECT deputatid FROM deputats ORDER BY deputatid DESC LIMIT 1")
-        last_deputat = db_object.fetchone()
-        if last_deputat is None or last_deputat[0] is None:
+    db_object.execute("SELECT deputatid FROM deputats WHERE deputatid IS NOT NULL ORDER BY deputatid DESC LIMIT 1")
+    last_deputat = db_object.fetchone()
+    if result is None:
+        if last_deputat is None:
             deputat_id = 1
         else:
             deputat_id = last_deputat[0] + 1
-        db_object.execute(
-            "INSERT INTO deputats(userid, money, name, level, photo, username, deputatid) VALUES "
-            "( %s, %s, %s, %s, %s, %s, %s)", (user_id, random.randint(10, 100), random.choice(res.deputatNames), 1,
-                                              random.randint(0, len(res.level_photos[0]) - 1),
-                                              message.from_user.first_name, deputat_id))
+        db_object.execute("INSERT INTO deputats(userid, money, name, level, photo, username, deputatid) VALUES "
+                          "( %s, %s, %s, %s, %s, %s, %s)",
+                          (user_id, random.randint(10, 100), random.choice(res.deputatNames), 1,
+                           random.randint(0, len(res.level_photos[0]) - 1),
+                           message.from_user.first_name, deputat_id))
         db_connection.commit()
-        bot.reply_to(message, "Гля який! Депута-а-атіще! Хочеш глянуть на підарасіка? Цикай - /show")
+        bot.reply_to(message, "Осьо! Ваш перший дєпутат! Позирити на нього - /show")
+    elif result[1] is None:
+        if last_deputat is None:
+            deputat_id = 1
+        else:
+            deputat_id = last_deputat[0] + 1
+        db_object.execute("UPDATE deputats SET deputatid = %s WHERE userid = %s", (deputat_id, result[0]))
+        db_connection.commit()
+        bot.reply_to(message, "Гля який! Депута-а-а-атіще! Глянуть на підарасіка - /show")
     else:
-        bot.reply_to(message, "Так ти вже маєш депутата...")
-
+        bot.send_sticker(message.chat.id, res.what_sticker)
 
 @bot.message_handler(commands=['show'])
 def show_deputat_handler(message):

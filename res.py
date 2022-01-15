@@ -91,3 +91,4 @@ not_working_photos = [
 
 sad_sticker = "CAACAgIAAxkBAAIF0mHi2qUiAib-CGg03DeTgHw-2B9KAAKdAAOzvVMzmb7zau0EAzIjBA"
 happy_sticker = "CAACAgIAAxkBAAIF1GHi2z8pUJU9JNPh9mYXJfaK4lC7AAK1AAP-HBsMzkiZEJFJad0jBA"
+what_sticker = "CAACAgIAAxkBAAIGfmHjCQ3ODK4nKZmnER5lv7wf-Q6hAAJuAAP3zNQYXCr47a4zAAGDIwQ"
