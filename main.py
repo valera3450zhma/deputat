@@ -27,14 +27,20 @@ def start_handler(message):
 @bot.message_handler(commands=['get'])
 def get_deputat_handler(message):
     user_id = message.from_user.id
-    db_object.execute(f"SELECT userid, deputatid FROM deputats WHERE userid = {user_id} ORDER BY deputatid")
+    db_object.execute(f"SELECT userid, deputatid FROM deputats WHERE userid = {user_id}")
     result = db_object.fetchone()
-
     if not result or result[1] is None:
+        db_object.execute("SELECT deputatid FROM deputats ORDER BY deputatid DESC LIMIT 1")
+        last_deputat = db_object.fetchone()
+        if last_deputat is None or last_deputat[0] is None:
+            deputat_id = 1
+        else:
+            deputat_id = last_deputat[0] + 1
         db_object.execute(
-            "INSERT INTO deputats(userid, money, name, level, photo, username) VALUES ( %s, %s, %s, %s, %s, %s )", (
-                user_id, random.randint(10, 100), random.choice(res.deputatNames), 1,
-                random.randint(0, len(res.level_photos[0]) - 1), message.from_user.first_name))
+            "INSERT INTO deputats(userid, money, name, level, photo, username, deputatid) VALUES "
+            "( %s, %s, %s, %s, %s, %s, %s)", (user_id, random.randint(10, 100), random.choice(res.deputatNames), 1,
+                                              random.randint(0, len(res.level_photos[0]) - 1),
+                                              message.from_user.first_name), deputat_id)
         db_connection.commit()
         bot.reply_to(message, "Гля який! Депута-а-атіще! Хочеш глянуть на підарасіка? Цикай - /show")
     else:
@@ -124,7 +130,8 @@ def kill_deputat_handler(message):
             killed = 0
         else:
             killed = result[1]
-        db_object.execute("UPDATE deputats SET deputatid = NULL, killed = %s WHERE userid = %s", ((killed+1), user_id))
+        db_object.execute("UPDATE deputats SET deputatid = NULL, killed = %s WHERE userid = %s",
+                          ((killed + 1), user_id))
         db_connection.commit()
         bot.reply_to(message, "Депутату розірвало сраку...\nОтримати нового - /get")
 
