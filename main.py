@@ -72,7 +72,7 @@ def work_deputat_handler(message):
                           (today_str, earned + int(data[0]), user_id))
         db_connection.commit()
         bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
-                       caption=f"Перший раз працюєш, да?\n{data[2]}{res.work_text[data[1]-1]}\n💰 Дохід: ${earned}",
+                       caption=f"Перший раз працюєш, да?\n{data[2]}{res.work_text[data[1] - 1]}\n💰 Дохід: ${earned}",
                        reply_to_message_id=message.id)
     else:
         worked = last_worked[0]
@@ -84,7 +84,7 @@ def work_deputat_handler(message):
                               (today_str, earned + int(data[0]), user_id))
             db_connection.commit()
             bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
-                           caption=f"{data[2]}{res.work_text[data[1]-1]}\n💰 Дохід: ${earned}")
+                           caption=f"{data[2]}{res.work_text[data[1] - 1]}\n💰 Дохід: ${earned}")
         else:
             bot.send_photo(message.chat.id, random.choice(res.not_working_photos),
                            caption="Твій депутат вже заїбався бо нині відхуячив своє", reply_to_message_id=message.id)
@@ -99,7 +99,7 @@ def kill_deputat_handler(message):
         bot.reply_to(message, "А шо апати то?")
     elif result[0] == res.MAX_LEVEL:
         bot.reply_to(message, "В депутата максимальний рівень!")
-    elif result[1] < res.lvlup_requirements[result[0]-1]:
+    elif result[1] < res.lvlup_requirements[result[0] - 1]:
         bot.reply_to(message, "Твій депутат надто бідний, щоб перейти на новий рівень!")
         bot.send_sticker(message.chat.id, res.sad_sticker)
     else:
@@ -126,6 +126,7 @@ def kill_deputat_handler(message):
 @bot.message_handler(commands=['time'])
 def time_deputat_handler(message):
     bot.reply_to(message, str(datetime.datetime.now()))
+
 
 @bot.message_handler(content_types=['photo'])
 def send_photo_id(message):
