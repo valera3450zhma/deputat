@@ -130,6 +130,8 @@ def time_deputat_handler(message):
     user_id = message.from_user.id
     db_object.execute(f"SELECT killed FROM deputats WHERE userid = {user_id}")
     result = db_object.fetchone()
+    if result[0] is None:
+        result[0] = 0
     bot.reply_to(message, f"Вбито депутатів: {result[0]}")
 
 
