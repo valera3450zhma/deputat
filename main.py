@@ -36,11 +36,11 @@ def get_deputat_handler(message):
             deputat_id = 1
         else:
             deputat_id = last_deputat[0] + 1
-        db_object.execute("INSERT INTO deputats(userid, money, name, level, photo, username, deputatid) VALUES "
-                          "( %s, %s, %s, %s, %s, %s, %s)",
+        db_object.execute("INSERT INTO deputats(userid, money, name, level, photo, username, deputatid, rating) VALUES "
+                          "( %s, %s, %s, %s, %s, %s, %s, %s)",
                           (user_id, random.randint(10, 100), random.choice(res.deputatNames), 1,
                            random.randint(0, len(res.level_photos[0]) - 1),
-                           message.from_user.first_name, deputat_id))
+                           message.from_user.first_name, deputat_id, 0))
         db_connection.commit()
         bot.reply_to(message, "Осьо! Ваш перший дєпутат! Позирити на нього - /show")
     elif result[1] is None:
@@ -48,23 +48,27 @@ def get_deputat_handler(message):
             deputat_id = 1
         else:
             deputat_id = last_deputat[0] + 1
-        db_object.execute("UPDATE deputats SET deputatid = %s WHERE userid = %s", (deputat_id, result[0]))
+        db_object.execute("UPDATE deputats SET deputatid = %s, money = %s, name = %s, level = %s,  photo = %s, "
+                          "rating = %s WHERE userid = %s", (deputat_id, random.randint(10, 100), random.choice(
+                           res.deputatNames), 1, random.randint(0, len(res.level_photos[0]) - 1), 0, result[0]))
         db_connection.commit()
         bot.reply_to(message, "Гля який! Депута-а-а-атіще! Глянуть на підарасіка - /show")
     else:
         bot.send_sticker(message.chat.id, res.what_sticker)
 
+
 @bot.message_handler(commands=['show'])
 def show_deputat_handler(message):
     user_id = message.from_user.id
-    db_object.execute(f"SELECT name, money, level, photo, deputatid FROM deputats WHERE deputats.userid = {user_id}")
+    db_object.execute(
+        f"SELECT name, money, level, photo, deputatid, rating FROM deputats WHERE deputats.userid = {user_id}")
     result = db_object.fetchone()
     if not result or result[4] is None:
         bot.reply_to(message, "Ніхуя нема...")
     else:
         reply_message = ""
         deputat_photo = res.level_photos[result[2] - 1][result[3]]
-        reply_message += f"👨🏻 Ім'я: {result[0]}\n💰 Бабло: ${result[1]}\n📚 Рівень: {result[2]} " \
+        reply_message += f"👨🏻 Ім'я: {result[0]}\n💰 Бабло: ${result[1]}\n⭐️ Рейтинг: {result[5]}\n📚 Рівень: {result[2]} " \
                          f"- {res.level_captions[result[2] - 1]} "
         bot.send_photo(message.chat.id, deputat_photo, reply_to_message_id=message.id, caption=reply_message)
 
@@ -137,8 +141,9 @@ def kill_deputat_handler(message):
             killed = 0
         else:
             killed = result[1]
-        db_object.execute("UPDATE deputats SET deputatid = NULL, killed = %s WHERE userid = %s",
-                          ((killed + 1), user_id))
+        db_object.execute(
+            "UPDATE deputats SET deputatid = NULL, rating = NULL, money = NULL, level = NULL, photo = NULL, name = NULL killed = %s WHERE userid = %s",
+            ((killed + 1), user_id))
         db_connection.commit()
         bot.reply_to(message, "Депутату розірвало сраку...\nОтримати нового - /get")
 
