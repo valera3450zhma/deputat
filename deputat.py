@@ -72,7 +72,7 @@ def work_deputat(message, db_object, db_connection, bot):
     elif not last_worked[0]:
         earned = _work_(data, user_id, db_object, db_connection)
         bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
-                       caption=f"Перший раз працюєш, да?\n{data[2]}{res.work_text[data[1] - 1]}\n💰 Дохід: ${earned}",
+                       caption=f"{data[2]}{res.work_text[data[1] - 1]}\n💰 Дохід: ${earned}",
                        reply_to_message_id=message.id)
     else:
         worked = last_worked[0]
