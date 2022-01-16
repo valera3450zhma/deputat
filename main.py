@@ -59,6 +59,15 @@ def time_deputat_handler(message):
     bot.reply_to(message, str(datetime.datetime.now()))
 
 
+@bot.message_handler(commands=['did_not_work'])
+def money_deputat_handler(message):
+    if message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1]:
+        user_id = message.from_user.id
+        db_object.execute("UPDATE deputats SET lastworked = NULL WHERE userid = %s", user_id)
+        db_connection.commit()
+        bot.reply_to(message, f"Параметр роботи оновлено. Депутат раніше не працював.")
+
+
 @bot.message_handler(content_types=['text'])
 def money_deputat_handler(message):
     if (message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1]) and message.text.isnumeric():
@@ -66,15 +75,6 @@ def money_deputat_handler(message):
         db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s", (int(message.text), user_id))
         db_connection.commit()
         bot.reply_to(message, f"Параметр гроші оновлено: ${message.text}")
-
-
-@bot.message_handler(content_types=['text'])
-def money_deputat_handler(message):
-    if (message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1]) and message.text.lower() == "не працював":
-        user_id = message.from_user.id
-        db_object.execute("UPDATE deputats SET lastworked = NULL WHERE userid = %s", user_id)
-        db_connection.commit()
-        bot.reply_to(message, f"Параметр роботи оновлено. Депутат раніше не працював.")
 
 
 @bot.message_handler(content_types=['photo'])
