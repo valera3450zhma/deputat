@@ -130,10 +130,11 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
     db_object.execute(f"SELECT kid, negr, kiosk, deputatid FROM business WHERE userid = {user_id}")
     deputat_id = db_object.fetchone()
     if deputat_id is None:
-        db_object.execute(f"INSERT INTO business(userid, deputatid, {res.biz_db_name[int(call.data)]}) VALUES(%s, %s, 1)",
-                          (user_id, result[0]))
+        db_object.execute(f"INSERT INTO business(userid, deputatid, {res.biz_db_name[int(call.data)]})"
+                          f" VALUES(%s, %s, 1)", (user_id, result[0]))
         db_connection.commit()
-        db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s", (result[1] - res.biz_prices[int(call.data)], user_id))
+        db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s",
+                          (result[1] - res.biz_prices[int(call.data)], user_id))
         db_connection.commit()
         bot.send_photo(call.message.chat.id, res.biz_photos[int(call.data)],
                        caption=f"Ви успішно купили \"{res.biz_name[int(call.data)]}\"!")
