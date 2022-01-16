@@ -138,7 +138,10 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
                        caption=f"Ви успішно купили \"{res.biz_name[int(call.data)]}\"!")
         bot.send_sticker(call.message.chat.id, res.money_pagulich_sticker)
     else:
-        biz = deputat_id[int(call.data)] + 1
+        if deputat_id[int(call.data)] is None:
+            biz = 1
+        else:
+            biz = deputat_id[int(call.data)] + 1
         db_object.execute(f"UPDATE business SET {res.biz_db_name[int(call.data)]} = %s WHERE userid = %s",
                           (biz, user_id))
         db_connection.commit()
