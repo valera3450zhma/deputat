@@ -76,7 +76,8 @@ level_photos = [
 
 level_captions = [
     "Заробітчанин. Не жибрак, маю гроші",
-    "Голова Сільради. Село то всьо моє"
+    "Голова Сільради. Село то всьо моє",
+    "Депутат міської ради. Не гордому мужику не горде місто"
 ]
 
 lvlup_requirements = [
@@ -90,12 +91,14 @@ money_earn_multiplier = [
 
 work_text = [
     " жостко назбирав повний кошик трускавок пану!",
-    " натиряв грошей з бюджету села!"
+    " натиряв грошей з бюджету села!",
+    " провів збір коштів на реконструкцію пам'ятника!"
 ]
 
 work_photos = [
     "AgACAgIAAxkBAAIErmHh1U3Y3aR2iLG17jGVB8_9XvloAAJmuDEb9xwQS-Ry7B8b6eR7AQADAgADeAADIwQ",
-    "AgACAgIAAxkBAAIEsGHh1bqKQfABCFf-i70s5xsq62MWAAJpuDEb9xwQS63g-PHzSoP6AQADAgADeAADIwQ"
+    "AgACAgIAAxkBAAIEsGHh1bqKQfABCFf-i70s5xsq62MWAAJpuDEb9xwQS63g-PHzSoP6AQADAgADeAADIwQ",
+    "AgACAgIAAxkBAAIHjGHj-HLMK5u4ozcjaZ_krnFik-MxAAIZujEb2msgS30E1LSLhD0aAQADAgADeAADIwQ"
 ]
 
 not_working_photos = [
