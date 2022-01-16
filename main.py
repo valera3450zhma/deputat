@@ -44,6 +44,11 @@ def kill_deputat_handler(message):
     deputat.lvlup_deputat(message, db_object, db_connection, bot)
 
 
+@bot.message_handler(commands=['buy_business'])
+def buy_business_deputat_handler(message):
+    deputat.buy_business_deputat(message, db_object, db_connection, bot)
+
+
 @bot.message_handler(commands=['kill'])
 def kill_deputat_handler(message):
     deputat.kill_deputat(message, db_object, db_connection, bot)

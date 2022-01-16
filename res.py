@@ -110,6 +110,26 @@ not_working_photos = [
     "AgACAgIAAxkBAAIEumHh2V3Op5aE6DVXXtK4PCIztZdmAAJ3uDEb9xwQS1yFqlB7qnXpAQADAgADeAADIwQ"
 ]
 
+biz_name = [
+    "сусідський піздюк",
+    "негр",
+    "кіоск"
+]
+
+biz_prices = [
+    100,
+    500,
+    3000
+]
+
+
+def biz_text():
+    text = "Доступні види бізнесу:"
+    for i in range(len(biz_prices)):
+        text += f"\n{i+1} - {biz_name[i]}💰{biz_prices[i]}"
+    return text
+
+
 sad_sticker = "CAACAgIAAxkBAAIF0mHi2qUiAib-CGg03DeTgHw-2B9KAAKdAAOzvVMzmb7zau0EAzIjBA"
 happy_sticker = "CAACAgIAAxkBAAIF1GHi2z8pUJU9JNPh9mYXJfaK4lC7AAK1AAP-HBsMzkiZEJFJad0jBA"
 what_sticker = "CAACAgIAAxkBAAIGfmHjCQ3ODK4nKZmnER5lv7wf-Q6hAAJuAAP3zNQYXCr47a4zAAGDIwQ"

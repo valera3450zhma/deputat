@@ -1,7 +1,7 @@
 import datetime
 import random
 import res
-
+from telebot import types
 
 def get_deputat(message, db_object, db_connection, bot):
     user_id = message.from_user.id
@@ -104,6 +104,13 @@ def lvlup_deputat(message, db_object, db_connection, bot):
         db_connection.commit()
         bot.reply_to(message, "Депутата підвищено до нового рівня! - /show")
         bot.send_sticker(message.chat.id, res.happy_sticker)
+
+
+def buy_business_deputat(message, db_object, db_connection, bot):
+    buttons = types.InlineKeyboardMarkup()
+    for i in range(len(res.biz_prices)):
+        buttons.add(types.InlineKeyboardButton(text=res.biz_name[i], callback_data=i))
+    bot.reply_to(message, res.biz_text())
 
 
 def kill_deputat(message, db_object, db_connection, bot):
