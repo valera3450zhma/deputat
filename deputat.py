@@ -111,7 +111,7 @@ def buy_business_deputat(message, bot):
     for i in range(len(res.biz_prices)):
         buttons.add(types.InlineKeyboardButton(text=res.biz_name[i], callback_data=f'{i}'))
     buttons.add(types.InlineKeyboardButton(text="І шо мені вибирати?", callback_data="help"))
-    bot.send_message(message, res.biz_text(), reply_markup=buttons)
+    bot.reply_to(message, res.biz_text(), reply_markup=buttons)
 
 
 def handle_biz_purchase_deputat():
