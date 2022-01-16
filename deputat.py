@@ -110,7 +110,7 @@ def lvlup_deputat(message, db_object, db_connection, bot):
 def buy_business_deputat(message, bot):
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.biz_prices)):
-        buttons.add(types.InlineKeyboardButton(text=res.biz_name[i], callback_data=f'{i}'))
+        buttons.add(types.InlineKeyboardButton(text=res.biz_name[i] + f"💰{res.biz_prices[i]}", callback_data=f'{i}'))
     buttons.add(types.InlineKeyboardButton(text="І шо мені вибирати?", callback_data="help"))
     bot.reply_to(message, res.biz_text(), reply_markup=buttons)
 
@@ -132,12 +132,17 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
         db_object.execute(f"INSERT INTO business(userid, deputatid, {res.biz_db_name[int(call.data)]}) VALUES(%s, %s, 1)",
                           (user_id, result[0]))
         db_connection.commit()
+        db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s", (result[1] - res.biz_prices[int(call.data)], user_id))
+        db_connection.commit()
         bot.send_message(call.message.chat.id, f"Ви успішно купили \"{res.biz_name[int(call.data)]}\"!")
         bot.send_sticker(call.message.chat.id, res.money_pagulich_sticker)
     else:
         biz = deputat_id[int(call.data)] + 1
-        db_object.execute("UPDATE business SET %s = %s WHERE userid = %s",
-                          (res.biz_db_name[int(call.data)], biz, user_id))
+        db_object.execute(f"UPDATE business SET {res.biz_db_name[int(call.data)]} = %s WHERE userid = %s",
+                          (biz, user_id))
+        db_connection.commit()
+        db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s",
+                          (result[1] - res.biz_prices[int(call.data)], user_id))
         db_connection.commit()
         bot.send_message(call.message.chat.id, f"Ви успішно купили \"{res.biz_name[int(call.data)]}\"!")
         bot.send_sticker(call.message.chat.id, res.money_pagulich_sticker)
