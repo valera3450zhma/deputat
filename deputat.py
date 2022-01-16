@@ -106,11 +106,16 @@ def lvlup_deputat(message, db_object, db_connection, bot):
         bot.send_sticker(message.chat.id, res.happy_sticker)
 
 
-def buy_business_deputat(message, db_object, db_connection, bot):
+def buy_business_deputat(message, bot):
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.biz_prices)):
         buttons.add(types.InlineKeyboardButton(text=res.biz_name[i], callback_data=i))
-    bot.reply_to(message, res.biz_text())
+    buttons.add(types.InlineKeyboardButton(text="І шо мені вибирати?", callback_data="help"))
+    bot.send_message(message, res.biz_text(), reply_markup=buttons)
+
+
+def handle_biz_purchase_deputat():
+    pass
 
 
 def kill_deputat(message, db_object, db_connection, bot):

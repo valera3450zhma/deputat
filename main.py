@@ -46,7 +46,15 @@ def kill_deputat_handler(message):
 
 @bot.message_handler(commands=['buy_business'])
 def buy_business_deputat_handler(message):
-    deputat.buy_business_deputat(message, db_object, db_connection, bot)
+    deputat.buy_business_deputat(message, bot)
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def answer(call):
+    if call.data == "help":
+        bot.reply_to(call.message, res.biz_help)
+    else:
+        pass
 
 
 @bot.message_handler(commands=['kill'])
