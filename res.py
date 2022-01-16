@@ -82,7 +82,8 @@ level_captions = [
 
 lvlup_requirements = [
     500,
-    2000
+    2000,
+    10000
 ]
 
 money_earn_multiplier = [
