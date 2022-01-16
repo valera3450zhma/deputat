@@ -24,7 +24,7 @@ def get_deputat(message, db_object, db_connection, bot):
         bot.reply_to(message, "Осьо! Ваш перший дєпутат! Позирити на нього - /show")
     elif result[1] is None:
         if last_deputat is None:
-            deputat_id = 1
+            deputat_id = -sys.maxsize - 1
         else:
             deputat_id = last_deputat[0] + 1
         db_object.execute("UPDATE deputats SET deputatid = %s, money = %s, name = %s, level = %s,  photo = %s, "
