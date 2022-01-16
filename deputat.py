@@ -100,8 +100,9 @@ def lvlup_deputat(message, db_object, db_connection, bot):
                               f"\n💰 Необхідно грошей: ${res.lvlup_requirements[result[0] - 1]}")
         bot.send_sticker(message.chat.id, res.sad_sticker)
     else:
-        db_object.execute("UPDATE deputats SET level = %s, photo = %s, lastworked = NULL WHERE userid = %s",
-                          (result[0] + 1, random.randint(0, len(res.level_photos[result[0]]) - 1), user_id))
+        db_object.execute("UPDATE deputats SET level = %s, photo = %s, lastworked = NULL, money = %s WHERE userid = %s",
+                          (result[0] + 1, random.randint(0, len(res.level_photos[result[0]]) - 1),
+                           result[1] - res.lvlup_requirements[result[0] - 1], user_id))
         db_connection.commit()
         bot.reply_to(message, "Депутата підвищено до нового рівня! - /show")
         bot.send_sticker(message.chat.id, res.happy_sticker)
