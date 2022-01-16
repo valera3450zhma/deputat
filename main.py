@@ -27,7 +27,7 @@ def start_handler(message):
 
 @bot.message_handler(commands=['get'])
 def get_deputat_handler(message):
-    deputat.Deputat.get_deputat(message, db_object, db_connection, bot)
+    deputat.get_deputat(message, db_object, db_connection, bot)
 
 
 @bot.message_handler(commands=['show'])
