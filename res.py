@@ -135,9 +135,9 @@ biz_help = "Сусідський піздюк:\nВ депутата за пар�
 
 
 def biz_text():
-    text = "Доступні види бізнесу:"
+    text = "Доступні види бізнесу:\n"
     for i in range(len(biz_prices)):
-        text += f"\n{i+1} - {biz_name[i]}💰{biz_prices[i]}"
+        text += f"\n💰{biz_prices[i]} - {biz_name[i]}"
     return text
 
 
