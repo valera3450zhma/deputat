@@ -149,7 +149,6 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
         db_connection.commit()
         bot.send_photo(call.message.chat.id, res.biz_photos[int(call.data)],
                        caption=f"Ви успішно купили \"{res.biz_name[int(call.data)]}\"!")
-        bot.send_sticker(call.message.chat.id, res.money_pagulich_sticker)
 
 
 def show_business_deputat(message, db_object, bot):
