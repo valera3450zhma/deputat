@@ -129,8 +129,8 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
     db_object.execute(f"SELECT kid, negr, kiosk, deputatid FROM business WHERE userid = {user_id}")
     deputat_id = db_object.fetchone()
     if deputat_id is None:
-        db_object.execute("INSERT INTO business(userid, deputatid, %s) VALUES(%s, %s, 1)",
-                          (res.biz_db_name[int(call.data)], user_id, result[0]))
+        db_object.execute(f"INSERT INTO business(userid, deputatid, {res.biz_db_name[int(call.data)]}) VALUES(%s, %s, 1)",
+                          (user_id, result[0]))
         db_connection.commit()
         bot.send_message(call.message.chat.id, f"Ви успішно купили \"{res.biz_name[int(call.data)]}\"!")
         bot.send_sticker(call.message.chat.id, res.money_pagulich_sticker)

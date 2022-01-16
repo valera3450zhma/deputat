@@ -117,7 +117,7 @@ biz_name = [
 ]
 
 biz_db_name = [
-    'kid',
+    "kid",
     "negr",
     "kiosk"
 ]
