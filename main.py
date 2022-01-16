@@ -61,7 +61,7 @@ def time_deputat_handler(message):
 
 @bot.message_handler(content_types=['text'])
 def money_deputat_handler(message):
-    if message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1] and message.text.isnumeric():
+    if (message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1]) and message.text.isnumeric():
         user_id = message.from_user.id
         db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s", (int(message.text), user_id))
         db_connection.commit()
@@ -70,7 +70,7 @@ def money_deputat_handler(message):
 
 @bot.message_handler(content_types=['text'])
 def money_deputat_handler(message):
-    if message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1] and message.text.lower() == "не працював":
+    if (message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1]) and message.text.lower() == "не працював":
         user_id = message.from_user.id
         db_object.execute("UPDATE deputats SET lastworked = NULL WHERE userid = %s", user_id)
         db_connection.commit()
