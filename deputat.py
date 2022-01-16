@@ -161,9 +161,8 @@ def show_business_deputat(message, db_object, bot):
     else:
         reply_text = "Бізнеси твого депутата:"
         for i in range(len(result)):
-            if i is None:
-                continue
-            reply_text += f"\n{res.biz_name[i]} - {result[i]}"
+            if i is not None:
+                reply_text += f"\n{res.biz_name[i]} - {result[i]}"
         bot.reply_to(message, reply_text)
         bot.send_sticker(message.chat.id, res.money_pagulich_sticker)
 
