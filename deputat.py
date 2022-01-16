@@ -134,7 +134,8 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
         db_connection.commit()
         db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s", (result[1] - res.biz_prices[int(call.data)], user_id))
         db_connection.commit()
-        bot.send_message(call.message.chat.id, f"Ви успішно купили \"{res.biz_name[int(call.data)]}\"!")
+        bot.send_photo(call.message.chat.id, res.biz_photos[int(call.data)],
+                       caption=f"Ви успішно купили \"{res.biz_name[int(call.data)]}\"!")
         bot.send_sticker(call.message.chat.id, res.money_pagulich_sticker)
     else:
         biz = deputat_id[int(call.data)] + 1
@@ -144,8 +145,24 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
         db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s",
                           (result[1] - res.biz_prices[int(call.data)], user_id))
         db_connection.commit()
-        bot.send_message(call.message.chat.id, f"Ви успішно купили \"{res.biz_name[int(call.data)]}\"!")
+        bot.send_photo(call.message.chat.id, res.biz_photos[int(call.data)],
+                       caption=f"Ви успішно купили \"{res.biz_name[int(call.data)]}\"!")
         bot.send_sticker(call.message.chat.id, res.money_pagulich_sticker)
+
+
+def show_business_deputat(message, db_object, bot):
+    user_id = message.from_user.id
+    db_object.execute(f"SELECT kid, negr, kiosk, FROM business WHERE userid = {user_id}")
+    result = db_object.fetchone()
+    if not result:
+        bot.reply_to(message, "У тебе нема депутата, або бізнесів!")
+    else:
+        reply_text = "Бізнеси твого депутата:"
+        for i in range(len(result)):
+            if i is None:
+                continue
+            reply_text += f"\n{res.biz_name[i]} - {result[i]}"
+        bot.reply_to(message, reply_text)
 
 
 def kill_deputat(message, db_object, db_connection, bot):
@@ -165,7 +182,7 @@ def kill_deputat(message, db_object, db_connection, bot):
             "UPDATE deputats SET deputatid = NULL, lastworked = NULL, killed = %s WHERE userid = %s",
             ((killed + 1), user_id))
         db_connection.commit()
-        db_object.execute("DELETE FROM business WHERE userid = %s", user_id)
+        db_object.execute("DELETE FROM business WHERE userid = %s", [user_id])
         db_connection.commit()
         bot.reply_to(message, "Депутату розірвало сраку...\nОтримати нового - /get")
 
