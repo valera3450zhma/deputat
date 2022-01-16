@@ -116,6 +116,12 @@ biz_name = [
     "Кіоск"
 ]
 
+biz_db_name = [
+    "kid",
+    "negr",
+    "kiosk"
+]
+
 biz_prices = [
     100,
     500,
@@ -144,3 +150,5 @@ def biz_text():
 sad_sticker = "CAACAgIAAxkBAAIF0mHi2qUiAib-CGg03DeTgHw-2B9KAAKdAAOzvVMzmb7zau0EAzIjBA"
 happy_sticker = "CAACAgIAAxkBAAIF1GHi2z8pUJU9JNPh9mYXJfaK4lC7AAK1AAP-HBsMzkiZEJFJad0jBA"
 what_sticker = "CAACAgIAAxkBAAIGfmHjCQ3ODK4nKZmnER5lv7wf-Q6hAAJuAAP3zNQYXCr47a4zAAGDIwQ"
+money_pagulich_sticker = "CAACAgIAAxkBAAIIj2HkTmFJ-1E6aO_d2bjXXqFgzof-AAIpAAMwbFkgc0I6fExuM0QjBA"
+money_valakas_sticker = "CAACAgIAAxkBAAIIk2HkTsGHDte6YbztwUAyV7lFRL4jAAKoAAMZ8nUb9i7wzt6UMxcjBA"
