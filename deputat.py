@@ -136,7 +136,6 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
         db_connection.commit()
         bot.send_photo(call.message.chat.id, res.biz_photos[int(call.data)],
                        caption=f"Ви успішно купили \"{res.biz_name[int(call.data)]}\"!")
-        bot.send_sticker(call.message.chat.id, res.money_pagulich_sticker)
     else:
         if deputat_id[int(call.data)] is None:
             biz = 1
@@ -166,6 +165,7 @@ def show_business_deputat(message, db_object, bot):
                 continue
             reply_text += f"\n{res.biz_name[i]} - {result[i]}"
         bot.reply_to(message, reply_text)
+        bot.send_sticker(message.chat.id, res.money_pagulich_sticker)
 
 
 def kill_deputat(message, db_object, db_connection, bot):
