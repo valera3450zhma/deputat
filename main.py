@@ -54,7 +54,7 @@ def answer(call):
     if call.data == "help":
         bot.reply_to(call.message, res.biz_help)
     else:
-        pass
+        deputat.handle_biz_purchase_deputat(call, db_object, db_connection, bot)
 
 
 @bot.message_handler(commands=['kill'])
