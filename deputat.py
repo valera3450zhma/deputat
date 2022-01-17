@@ -138,36 +138,35 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
     if not result or result[0] is None:
         bot.send_message(call.message.chat.id, "І кому ти зібрався купляти? Собі чи шо?")
         return
-    biz = int(call.data[2:3])
-    bot.send_message(call.message.chat.id, biz)
-    if result[1] < res.biz_prices[biz]:
+    biz_id = int(call.data[2:3])
+    if result[1] < res.biz_prices[biz_id]:
         bot.send_message(call.message.chat.id, "Твій депутат надто бідний, шоб купити о це вот")
         bot.send_sticker(call.message.chat.id, res.money_valakas_sticker)
         return
     db_object.execute(f"SELECT kid, negr, kiosk, deputatid FROM business WHERE userid = {user_id}")
     deputat_id = db_object.fetchone()
     if deputat_id is None:
-        db_object.execute(f"INSERT INTO business(userid, deputatid, {res.biz_db_name[biz]})"
+        db_object.execute(f"INSERT INTO business(userid, deputatid, {res.biz_db_name[biz_id]})"
                           f" VALUES(%s, %s, 1)", (user_id, result[0]))
         db_connection.commit()
         db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s",
-                          (result[1] - res.biz_prices[biz], user_id))
+                          (result[1] - res.biz_prices[biz_id], user_id))
         db_connection.commit()
-        bot.send_photo(call.message.chat.id, res.biz_photos[biz],
-                       caption=f"Ви успішно купили \"{res.biz_name[biz]}\"!")
+        bot.send_photo(call.message.chat.id, res.biz_photos[biz_id],
+                       caption=f"Ви успішно купили \"{res.biz_name[biz_id]}\"!")
     else:
-        if deputat_id[biz] is None:
+        if deputat_id[biz_id] is None:
             biz = 1
         else:
-            biz = deputat_id[biz] + 1
-        db_object.execute(f"UPDATE business SET {res.biz_db_name[biz]} = %s WHERE userid = %s",
+            biz = deputat_id[biz_id] + 1
+        db_object.execute(f"UPDATE business SET {res.biz_db_name[biz_id]} = %s WHERE userid = %s",
                           (biz, user_id))
         db_connection.commit()
         db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s",
-                          (result[1] - res.biz_prices[biz], user_id))
+                          (result[1] - res.biz_prices[biz_id], user_id))
         db_connection.commit()
-        bot.send_photo(call.message.chat.id, res.biz_photos[biz],
-                       caption=f"Ви успішно купили \"{res.biz_name[biz]}\"!")
+        bot.send_photo(call.message.chat.id, res.biz_photos[biz_id],
+                       caption=f"Ви успішно купили \"{res.biz_name[biz_id]}\"!")
 
 
 def show_business_deputat(message, db_object, bot):
