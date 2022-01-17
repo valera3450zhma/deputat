@@ -108,11 +108,18 @@ def lvlup_deputat(message, db_object, db_connection, bot):
         bot.send_sticker(message.chat.id, res.happy_sticker)
 
 
-def visit_business_deputat(message, bot):
+def visit_business_deputat(message, db_object, bot):
+    user_id = message.from_user.id
+    db_object.execute(f"SELECT kid, negr, kiosk FROM business WHERE userid = {user_id}")
+    result = db_object.fetchone()
+    if result is None:
+        bot.reply_to(message, "Бізнесів не знайдено!")
+        bot.send_sticker(message.chat.id, res.sad_sticker)
+        return
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.biz_prices)):
-        buttons.add(types.InlineKeyboardButton(text=res.biz_name[i] + f"💰{res.biz_prices[i]}", callback_data=f'{i}'))
-    buttons.add(types.InlineKeyboardButton(text="І шо мені вибирати?", callback_data="help"))
+        if result[i] is not None:
+            buttons.add(types.InlineKeyboardButton(text=res.biz_name[i] + f"💰{res.biz_prices[i]}", callback_data=f'{i}'))
     bot.reply_to(message, res.biz_text, reply_markup=buttons)
 
 
