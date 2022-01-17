@@ -108,7 +108,7 @@ def lvlup_deputat(message, db_object, db_connection, bot):
         bot.send_sticker(message.chat.id, res.happy_sticker)
 
 
-def visit_business_deputat(message, db_object, bot):
+def provide_business_deputat(message, db_object, bot):
     user_id = message.from_user.id
     db_object.execute(f"SELECT kid, negr, kiosk FROM business WHERE userid = {user_id}")
     result = db_object.fetchone()

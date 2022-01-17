@@ -44,9 +44,9 @@ def kill_deputat_handler(message):
     deputat.lvlup_deputat(message, db_object, db_connection, bot)
 
 
-@bot.message_handler(commands=['visit_business'])
+@bot.message_handler(commands=['provide_business'])
 def buy_business_deputat_handler(message):
-    deputat.visit_business_deputat(message, bot)
+    deputat.provide_business_deputat(message, db_object, bot)
 
 
 @bot.message_handler(commands=['buy_business'])
