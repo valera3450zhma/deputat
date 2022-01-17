@@ -108,6 +108,14 @@ def lvlup_deputat(message, db_object, db_connection, bot):
         bot.send_sticker(message.chat.id, res.happy_sticker)
 
 
+def visit_business_deputat(message, bot):
+    buttons = types.InlineKeyboardMarkup()
+    for i in range(len(res.biz_prices)):
+        buttons.add(types.InlineKeyboardButton(text=res.biz_name[i] + f"💰{res.biz_prices[i]}", callback_data=f'{i}'))
+    buttons.add(types.InlineKeyboardButton(text="І шо мені вибирати?", callback_data="help"))
+    bot.reply_to(message, res.biz_text, reply_markup=buttons)
+
+
 def buy_business_deputat(message, bot):
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.biz_prices)):
@@ -162,7 +170,7 @@ def show_business_deputat(message, db_object, bot):
     else:
         reply_text = "Бізнеси твого депутата:"
         for i in range(len(result)):
-            if i is not None:
+            if result[i] is not None:
                 reply_text += f"\n{res.biz_name[i]} - {result[i]}"
         bot.reply_to(message, reply_text)
         bot.send_sticker(message.chat.id, res.money_pagulich_sticker)
