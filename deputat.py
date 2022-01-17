@@ -139,6 +139,7 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
         bot.send_message(call.message.chat.id, "І кому ти зібрався купляти? Собі чи шо?")
         return
     biz = int(call.data[2:3])
+    bot.send_message(call.message.chat.id, biz)
     if result[1] < res.biz_prices[biz]:
         bot.send_message(call.message.chat.id, "Твій депутат надто бідний, шоб купити о це вот")
         bot.send_sticker(call.message.chat.id, res.money_valakas_sticker)
