@@ -155,7 +155,7 @@ biz_provide_photos = [
 
 
 def biz_provide_buttons(result, i):
-    return str(i) + ": " + biz_name[i] + ' ' + str(result[i] * biz_provides[i]) + '$'
+    return str(result[i]) + ": " + biz_name[i] + ' ' + str(result[i] * biz_provides[i]) + '$'
 
 
 biz_profits = [
