@@ -140,7 +140,7 @@ def handle_provide_business_deputat(call, db_object, db_connection, bot):
     if not result or deputat_id is None or biz_count is None:
         bot.send_message(call.message.chat.id, "І кого ти провідуєш? Мать свою чи шо?")
     elif visited is not None and days_diff <= 7:
-        bot.send_message(call.message.chat.id, f"Бізнес не потребує забезпечення, приходьте за {days_diff} днів")
+        bot.send_message(call.message.chat.id, f"Бізнес не потребує забезпечення, приходьте за {7-days_diff} днів")
     elif money[0] < res.biz_provides[biz_id] * biz_count:
         bot.send_message(call.message.chat.id, "В твого депутата замало грошей для підтримання цього бізнесу!")
         bot.send_sticker(call.message.chat.id, res.money_valakas_sticker)
