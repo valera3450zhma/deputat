@@ -147,7 +147,7 @@ def handle_provide_business_deputat(call, db_object, db_connection, bot):
         db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s", (money[0] - res.biz_provides[biz_id] * biz_count, user_id))
         db_connection.commit()
         today_str = datetime.datetime.today().strftime("%Y-%m-%d")
-        db_object.execute("UPDATE business SET %s = %s", (biz_visit, today_str))
+        db_object.execute(f"UPDATE business SET {biz_visit} = %s", today_str)
         db_connection.commit()
         bot.send_photo(call.message.chat.id, res.biz_provide_photo, caption="Бізнес успішно підтримано!")
 
