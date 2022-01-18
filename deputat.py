@@ -180,7 +180,7 @@ def handle_provide_business_deputat(call, db_object, db_connection, bot):
     if not result or deputat_id is None or biz_count is None:
         bot.send_message(call.message.chat.id, "І кого ти провідуєш? Мать свою чи шо?")
     elif visited is not None and days_diff < 7:
-        bot.send_message(call.message.chat.id, f"Бізнес не потребує забезпечення, приходьте за {7-days_diff} днів")
+        bot.send_message(call.message.chat.id, f"Бізнес не потребує забезпечення, приходьте за {7-days_diff} дні(-в)")
     elif money[0] < res.biz_provides[biz_id] * biz_count:
         bot.send_message(call.message.chat.id, "В твого депутата замало грошей для підтримання цього бізнесу!")
         bot.send_sticker(call.message.chat.id, res.money_valakas_sticker)
@@ -218,6 +218,7 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
         bot.send_message(call.message.chat.id, "І кому ти зібрався купляти? Собі чи шо?")
         return
     biz_id = int(call.data[2:3])
+    biz_name = res.biz_db_name[biz_id]
     if result[1] < res.biz_prices[biz_id]:
         bot.send_message(call.message.chat.id, "Твій депутат надто бідний, шоб купити о це вот")
         bot.send_sticker(call.message.chat.id, res.money_valakas_sticker)
@@ -225,16 +226,16 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
     db_object.execute(f"SELECT kid, negr, kiosk, deputatid FROM business WHERE userid = {user_id}")
     deputat_id = db_object.fetchone()
     if deputat_id is None:
-        db_object.execute(f"INSERT INTO business(userid, deputatid, {res.biz_db_name[biz_id]})"
+        db_object.execute(f"INSERT INTO business(userid, deputatid, {biz_name})"
                           f" VALUES(%s, %s, 1)", (user_id, result[0]))
         purchase_update(db_connection, db_object, bot, call, result, biz_id, user_id)
     else:
         if deputat_id[biz_id] is None:
-            biz = 1
+            biz_count = 1
         else:
-            biz = deputat_id[biz_id] + 1
-        db_object.execute(f"UPDATE business SET {res.biz_db_name[biz_id]} = %s WHERE userid = %s",
-                          (biz, user_id))
+            biz_count = deputat_id[biz_id] + 1
+        db_object.execute(f"UPDATE business SET {biz_name} = %s, {biz_name + 'visit'} = NULL WHERE userid = %s",
+                          (biz_count, user_id))
         db_connection.commit()
         purchase_update(db_connection, db_object, bot, call, result, biz_id, user_id)
 
