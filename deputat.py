@@ -134,7 +134,7 @@ def handle_provide_business_deputat(call, db_object, db_connection, bot):
     money = db_object.fetchone()
     deputat_id = result[0]
     biz_count = result[1]
-    visited = result[2]
+    visited = result[2] if result[2] is not None else visited = datetime.date.min
     today = datetime.date.today()
     days_diff = (today - visited).days
     if not result or deputat_id is None or biz_count is None:
