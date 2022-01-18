@@ -119,8 +119,32 @@ def provide_business_deputat(message, db_object, bot):
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.biz_prices)):
         if result[i] is not None:
-            buttons.add(types.InlineKeyboardButton(text=res.biz_name[i] + f"💰{res.biz_prices[i]}", callback_data=f'{i}'))
+            buttons.add(types.InlineKeyboardButton(text=res.biz_name[i], callback_data=f'pb{i}'))
     bot.reply_to(message, res.biz_text, reply_markup=buttons)
+
+
+def handle_provide_business_deputat(call, db_object, db_connection, bot):
+    user_id = call.from_user.id
+    biz_id = int(call.data[2:3])
+    biz_name = res.biz_db_name[biz_id]
+    db_object.execute(f"SELECT deputatid, money, {biz_name}, {biz_name + 'visit'} FROM deputats WHERE userid = {user_id}")
+    result = db_object.fetchone()
+    visited = result[3]
+    today = datetime.date.today()
+    if not result or result[0] is None or result[2] is None:
+        bot.send_message(call.message.chat.id, "І кого ти провідуєш? Мать свою чи шо?")
+    elif visited is not None and (today - visited).days <= 7:
+        bot.send_message(call.messgae.chat.id, "Бізнес не потребує забезпечення, приходьте за ")
+    elif result[1] < res.biz_provides[biz_id] * result[2]:
+        bot.send_message(call.message.chat.id, "В твого депутата замало грошей для підтримання цього бізнесу!")
+        bot.send_sticker(call.message.chat.id, res.money_valakas_sticker)
+    else:
+        db_object.execute(f"UPDATE deputats SET money = {result[1] - res.biz_provides[biz_id] * result[2]} WHERE userid = {user_id}")
+        db_connection.commit()
+        today_str = datetime.datetime.today().strftime("%Y-%m-%d")
+        db_object.execute(f"UPDATE business SET {biz_name + 'visit'} = {today_str}")
+        db_connection.commit()
+        bot.send_photo(call.message.chat.id, res.biz_provide_photo, caption="Бізнес успішно підтримано!")
 
 
 def buy_business_deputat(message, bot):

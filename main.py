@@ -56,10 +56,13 @@ def buy_business_deputat_handler(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def answer(call):
+    call_type = call.data[0:2]
     if call.data == "help":
         bot.reply_to(call.message, res.biz_help)
-    else:
+    elif call_type == "bb":
         deputat.handle_biz_purchase_deputat(call, db_object, db_connection, bot)
+    elif call_type == "pb":
+        deputat.handle_provide_business_deputat(call, db_object, db_connection, bot)
 
 
 @bot.message_handler(commands=['show_business'])
