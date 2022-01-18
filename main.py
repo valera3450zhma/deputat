@@ -49,6 +49,11 @@ def buy_business_deputat_handler(message):
     deputat.provide_business_deputat(message, db_object, bot)
 
 
+@bot.message_handler(commands=['business'])
+def buy_business_deputat_handler(message):
+    deputat.visit_business_deputat(message, db_object, bot)
+
+
 @bot.message_handler(commands=['buy_business'])
 def buy_business_deputat_handler(message):
     deputat.buy_business_deputat(message, bot)
