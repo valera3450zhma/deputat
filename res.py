@@ -141,11 +141,21 @@ biz_provides = [
     400
 ]
 
+biz_provide_text = [
+    "Ви закупили малому пиваса і сигарет!",
+    "Ви закупили негру хавчика!",
+    "Ви закупили товар кіоску!"
+]
+
+biz_provide_photos = [
+    "AgACAgIAAxkBAAIJ3WHmvKvJVxx6BhJGbHK0xz9aNJqaAAL8tDEbr-IxS0cXN1NNmaHKAQADAgADeAADIwQ",
+    "AgACAgIAAxkBAAIJ32HmvUFzRmYxvLt8zQ3XyxHFuWEdAAICtTEbr-IxS3A6py7E_Zq1AQADAgADeAADIwQ",
+    "AgACAgIAAxkBAAIJt2HmrPoymDaX5RPK_GzMrE_R24ywAAJytzEbkiQxS-B9cGTz2_eFAQADAgADeAADIwQ"
+]
+
 biz_profits = [
     4, 12, 36, 108, 324, 972
 ]
-
-biz_provide_photo = "AgACAgIAAxkBAAIJt2HmrPoymDaX5RPK_GzMrE_R24ywAAJytzEbkiQxS-B9cGTz2_eFAQADAgADeAADIwQ"
 
 biz_help = "👦🏼Сусідський піздюк:\nВ депутата за парканом живе мікрочел 8 років, який хоче купляти собі пиво і " \
            "дзигари, але він байстрюк і ніхто не вірить, шо він купує це діло \"для баті\". Купивши піздюка, " \
