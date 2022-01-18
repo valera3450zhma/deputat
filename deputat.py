@@ -127,19 +127,23 @@ def handle_provide_business_deputat(call, db_object, db_connection, bot):
     user_id = call.from_user.id
     biz_id = int(call.data[2:3])
     biz_name = res.biz_db_name[biz_id]
-    db_object.execute(f"SELECT deputatid, money, {biz_name}, {biz_name + 'visit'} FROM deputats WHERE userid = {user_id}")
+    db_object.execute(f"SELECT deputatid, {biz_name}, {biz_name + 'visit'} FROM business WHERE userid = {user_id}")
     result = db_object.fetchone()
-    visited = result[3]
+    db_object.execute(f"SELECT money FROM deputats WHERE userid = {user_id}")
+    money = db_object.fetchone()
+    deputat_id = result[0]
+    biz_count = result[1]
+    visited = result[2]
     today = datetime.date.today()
-    if not result or result[0] is None or result[2] is None:
+    if not result or deputat_id is None or biz_count is None:
         bot.send_message(call.message.chat.id, "І кого ти провідуєш? Мать свою чи шо?")
     elif visited is not None and (today - visited).days <= 7:
         bot.send_message(call.messgae.chat.id, "Бізнес не потребує забезпечення, приходьте за ")
-    elif result[1] < res.biz_provides[biz_id] * result[2]:
+    elif money[0] < res.biz_provides[biz_id] * biz_count:
         bot.send_message(call.message.chat.id, "В твого депутата замало грошей для підтримання цього бізнесу!")
         bot.send_sticker(call.message.chat.id, res.money_valakas_sticker)
     else:
-        db_object.execute(f"UPDATE deputats SET money = {result[1] - res.biz_provides[biz_id] * result[2]} WHERE userid = {user_id}")
+        db_object.execute(f"UPDATE deputats SET money = {money[0] - res.biz_provides[biz_id] * biz_count} WHERE userid = {user_id}")
         db_connection.commit()
         today_str = datetime.datetime.today().strftime("%Y-%m-%d")
         db_object.execute(f"UPDATE business SET {biz_name + 'visit'} = {today_str}")
