@@ -112,6 +112,18 @@ def money_deputat_handler(message):
         bot.reply_to(message, f"Параметр відвідування оновлено. Депутат раніше не відвідував жоден бізнес.")
 
 
+@bot.message_handler(commands=['nbusiness'])
+def money_deputat_handler(message):
+    if message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1]:
+        user_id = message.from_user.id
+        for name in res.biz_db_name:
+            name += 'work'
+            db_object.execute(f"UPDATE business SET {name} = NULL WHERE userid = %s", [user_id])
+            db_connection.commit()
+        bot.reply_to(message, f"Параметр збору оновлено. Депутат раніше не збирав гроші з жодного бізнесу.")
+
+
+
 @bot.message_handler(content_types=['text'])
 def money_deputat_handler(message):
     if (message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1]) and message.text.isnumeric():

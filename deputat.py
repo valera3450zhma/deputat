@@ -149,7 +149,7 @@ def handle_visit_business_deputat(call, db_object, db_connection, bot):
     elif (today - visited).days >= 7:
         bot.send_message(call.message.chat.id, res.biz_not_visited_text[biz_id])
     else:
-        earned = res.biz_profits[biz_id] * random.randint(1, 10)
+        earned = res.biz_profits[biz_id] * random.randint(1, 10) * biz_count
         db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s",
                           (money[0] + earned, user_id))
         db_connection.commit()
