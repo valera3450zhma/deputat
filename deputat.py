@@ -127,7 +127,8 @@ def handle_provide_business_deputat(call, db_object, db_connection, bot):
     user_id = call.from_user.id
     biz_id = int(call.data[2:3])
     biz_name = res.biz_db_name[biz_id]
-    db_object.execute(f"SELECT deputatid, {biz_name}, {biz_name + 'visit'} FROM business WHERE userid = {user_id}")
+    biz_visit = biz_name + 'visit'
+    db_object.execute(f"SELECT deputatid, {biz_name}, {biz_visit} FROM business WHERE userid = {user_id}")
     result = db_object.fetchone()
     db_object.execute(f"SELECT money FROM deputats WHERE userid = {user_id}")
     money = db_object.fetchone()
@@ -143,10 +144,10 @@ def handle_provide_business_deputat(call, db_object, db_connection, bot):
         bot.send_message(call.message.chat.id, "В твого депутата замало грошей для підтримання цього бізнесу!")
         bot.send_sticker(call.message.chat.id, res.money_valakas_sticker)
     else:
-        db_object.execute(f"UPDATE deputats SET money = {money[0] - res.biz_provides[biz_id] * biz_count} WHERE userid = {user_id}")
+        db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s", (money[0] - res.biz_provides[biz_id] * biz_count, user_id))
         db_connection.commit()
         today_str = datetime.datetime.today().strftime("%Y-%m-%d")
-        db_object.execute(f"UPDATE business SET {biz_name + 'visit'} = {str(today_str)}")
+        db_object.execute("UPDATE business SET %s = %s", (biz_visit, today_str))
         db_connection.commit()
         bot.send_photo(call.message.chat.id, res.biz_provide_photo, caption="Бізнес успішно підтримано!")
 
