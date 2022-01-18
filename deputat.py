@@ -119,7 +119,7 @@ def provide_business_deputat(message, db_object, bot):
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.biz_prices)):
         if result[i] is not None:
-            buttons.add(types.InlineKeyboardButton(text=str(i) + res.biz_name[i] + ' ' + str(result[i] * res.biz_provides[i]) + '$', callback_data=f'pb{i}'))
+            buttons.add(types.InlineKeyboardButton(text=res.biz_provide_buttons(result, i), callback_data=f'pb{i}'))
     bot.reply_to(message, res.biz_text, reply_markup=buttons)
 
 
