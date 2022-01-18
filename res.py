@@ -154,8 +154,11 @@ biz_provide_photos = [
 ]
 
 
-def biz_provide_buttons(result, i):
-    return str(result[i]) + ": " + biz_name[i] + ' ' + str(result[i] * biz_provides[i]) + '$'
+def biz_provide_buttons(result, i, price):
+    if price:
+        return str(result[i]) + ": " + biz_name[i] + ' ' + str(result[i] * biz_provides[i]) + '$'
+    else:
+        return str(result[i]) + ": " + biz_name[i]
 
 
 biz_worked_text = [
