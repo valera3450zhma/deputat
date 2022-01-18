@@ -119,7 +119,8 @@ def _create_buttons_(modifier, message, db_object, bot, price):
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.biz_prices)):
         if result[i] is not None:
-            buttons.add(types.InlineKeyboardButton(text=res.biz_provide_buttons(result, i, price), callback_data=f'{modifier}{i}'))
+            buttons.add(types.InlineKeyboardButton
+                        (text=res.biz_provide_buttons(result, i, price), callback_data=f'{modifier}{i}'))
     bot.reply_to(message, res.biz_text, reply_markup=buttons)
 
 
@@ -185,7 +186,8 @@ def handle_provide_business_deputat(call, db_object, db_connection, bot):
         bot.send_message(call.message.chat.id, "В твого депутата замало грошей для підтримання цього бізнесу!")
         bot.send_sticker(call.message.chat.id, res.money_valakas_sticker)
     else:
-        db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s", (money[0] - res.biz_provides[biz_id] * biz_count, user_id))
+        db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s",
+                          (money[0] - res.biz_provides[biz_id] * biz_count, user_id))
         db_connection.commit()
         today_str = datetime.datetime.today().strftime("%Y/%m/%d")
         db_object.execute(f"UPDATE business SET {biz_visit} = %s WHERE userid=%s", (today_str, user_id))
