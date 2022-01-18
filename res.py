@@ -153,6 +153,11 @@ biz_provide_photos = [
     "AgACAgIAAxkBAAIJt2HmrPoymDaX5RPK_GzMrE_R24ywAAJytzEbkiQxS-B9cGTz2_eFAQADAgADeAADIwQ"
 ]
 
+
+def biz_provide_buttons(result, i):
+    text = str(i) + ": " + biz_name[i] + ' ' + str(result[i] * biz_provides[i])
+
+
 biz_profits = [
     4, 12, 36, 108, 324, 972
 ]
