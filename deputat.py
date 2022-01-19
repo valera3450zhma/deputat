@@ -264,6 +264,14 @@ def show_business_deputat(message, db_object, bot):
         bot.send_sticker(message.chat.id, res.money_pagulich_sticker)
 
 
+def up_rating_deputat(message, bot):
+    buttons = types.InlineKeyboardMarkup()
+    for i in range(len(res.rating_name)):
+        buttons.add(types.InlineKeyboardButton
+                    (text=res.rating_name[i], callback_data=f'rt{i}'))
+    bot.reply_to(message, "Доступні види підняття рейтингу:", reply_markup=buttons)
+
+
 def kill_deputat(message, db_object, db_connection, bot):
     user_id = message.from_user.id
     db_object.execute(f"SELECT deputatid, killed FROM deputats WHERE userid = {user_id}")

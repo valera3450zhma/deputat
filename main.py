@@ -77,6 +77,11 @@ def buy_business_deputat_handler(message):
     deputat.show_business_deputat(message, db_object, bot)
 
 
+@bot.message_handler(commands=['rating'])
+def buy_business_deputat_handler(message):
+    deputat.up_rating_deputat(message, bot)
+
+
 @bot.message_handler(commands=['kill'])
 def kill_deputat_handler(message):
     deputat.kill_deputat(message, db_object, db_connection, bot)

@@ -213,6 +213,19 @@ biz_help = "👦🏼Сусідський піздюк:\nВ депутата за
 
 biz_text = "Доступні види бізнесу:\n"
 
+rating_up = [
+    1, 2, 8
+]
+
+rating_price = [
+    50, 80, 250
+]
+
+rating_name = [
+    "Ящик горілки куму",
+    "Дві свині для баби Каті",
+    "Велопарковка біля ратуші"
+]
 
 sad_sticker = "CAACAgIAAxkBAAIF0mHi2qUiAib-CGg03DeTgHw-2B9KAAKdAAOzvVMzmb7zau0EAzIjBA"
 happy_sticker = "CAACAgIAAxkBAAIF1GHi2z8pUJU9JNPh9mYXJfaK4lC7AAK1AAP-HBsMzkiZEJFJad0jBA"
