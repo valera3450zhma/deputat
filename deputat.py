@@ -285,6 +285,8 @@ def handle_rating_deputat(call, db_object, db_connection, bot):
     else:
         db_object.execute(f"UPDATE deputats SET rating = {result[1] + res.rating_up[rating]} WHERE userid = {user_id}")
         db_connection.commit()
+        db_object.execute(f"UPDATE deputats SET money = {result[0] - res.rating_price[rating]} WHERE userid = {user_id}")
+        db_connection.commit()
         bot.send_message(call.message.chat.id, f"Рейтинг серед громади піднято на {res.rating_up[rating]}⭐️")
 
 
