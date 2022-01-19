@@ -268,7 +268,7 @@ def up_rating_deputat(message, bot):
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.rating_name)):
         buttons.add(types.InlineKeyboardButton
-                    (text=res.rating_name[i] + ' $' + res.rating_price[i], callback_data=f'rt{i}'))
+                    (text=res.rating_name[i] + ' $' + str(res.rating_price[i]), callback_data=f'rt{i}'))
     bot.reply_to(message, "Доступні види підняття рейтингу:", reply_markup=buttons)
 
 
