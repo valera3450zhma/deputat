@@ -268,8 +268,24 @@ def up_rating_deputat(message, bot):
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.rating_name)):
         buttons.add(types.InlineKeyboardButton
-                    (text=res.rating_name[i], callback_data=f'rt{i}'))
+                    (text=res.rating_name[i] + ' $' + res.rating_price[i], callback_data=f'rt{i}'))
     bot.reply_to(message, "Доступні види підняття рейтингу:", reply_markup=buttons)
+
+
+def handle_rating_deputat(call, db_object, db_connection, bot):
+    user_id = call.from_user.id
+    rating = int(call.data[2:3])
+    db_object.execute(f"SELECT money, rating, deputatid FROM deputats WHERE userid = {user_id}")
+    result = db_object.fetchone()
+    if result is None or result[2]:
+        bot.send_message(call.message.chat.id, "У тебе немає депутата")
+    elif result[0] < res.rating_price[rating]:
+        bot.send_message(call.message.chat.id, "Твоєму депутату не вистачає грошей для цього!")
+        bot.send_sticker(call.message.chat.id, res.sad_sticker)
+    else:
+        db_object.execute(f"UPDATE deputats SET rating = {result[1] + res.rating_price[rating]} WHERE userid = {user_id}")
+        db_connection.commit()
+        bot.send_message(call.message.chat.id, f"Рейтинг серед громади піднято на {res.rating_price[rating]}")
 
 
 def kill_deputat(message, db_object, db_connection, bot):

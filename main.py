@@ -70,6 +70,8 @@ def answer(call):
         deputat.handle_provide_business_deputat(call, db_object, db_connection, bot)
     elif call_type == "vb":
         deputat.handle_visit_business_deputat(call, db_object, db_connection, bot)
+    elif call_type == "rt":
+        deputat.handle_rating_deputat(call, db_object, db_connection, bot)
 
 
 @bot.message_handler(commands=['show_business'])
