@@ -210,6 +210,13 @@ def purchase_update(db_connection, db_object, bot, call, result, biz_id, user_id
     db_connection.commit()
     bot.send_photo(call.message.chat.id, res.biz_photos[biz_id],
                    caption=f"Ви успішно купили \"{res.biz_name[biz_id]}\"!")
+    if random.randint(0, 9) == 0:
+        db_object.execute(f"SELECT rating FROM deputats WHERE userid = {user_id}")
+        result = db_object.fetchone()
+        db_object.execute("UPDATE deputats SET rating = %s WHERE userid = %s",
+                          (result[0] - res.biz_rating_drop[biz_id], user_id))
+        db_connection.commit()
+        bot.send_photo(call.message.chat.id, res.biz_rating_photo[biz_id], caption=res.biz_rating_text[biz_id])
 
 
 def handle_biz_purchase_deputat(call, db_object, db_connection, bot):

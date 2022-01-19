@@ -179,6 +179,22 @@ biz_not_visited_text = [
     "Кіоск вже розпродав весь товар!"
 ]
 
+biz_rating_drop = [
+    1, 3, 12
+]
+
+biz_rating_text = [
+    f"Бомж побачив піздюка на пункті прийому металу і розпиздів про вас всьому селу! Ваш рейтинг у громади впав на {biz_rating_drop[0]} пункт.",
+    f"Сусідка побачила як ви відмиваєте негра у ванній! Рейтинг серед громади впав на {biz_rating_drop[1]} пункти",
+    f"Отець Михайло побачив як ви завозите товар в кіоск, тим самим створюючи конкуренцію кіоску його брата! На ранковій молитві він вирішив розказати всім, що ви трахали козу! Рейтинг серед громади впав на {biz_rating_drop[2]} пунктів"
+]
+
+biz_rating_photo = [
+    "AgACAgIAAxkBAAILXmHn-7kdnfJX5gmUOCqD_rhE0Br0AAIUtTEbr-JBS0JWDIsILqcuAQADAgADbQADIwQ",
+    "AgACAgIAAxkBAAILYGHn_BdkZ9afLED45r5R-mnBl7DuAAIVtTEbr-JBS8jVfwg5AudaAQADAgADeQADIwQ",
+    "AgACAgIAAxkBAAILYmHn_GqA56UFPOlgHinktLZ7LHgrAAIXtTEbr-JBS_PiJab0OTCWAQADAgADeAADIwQ"
+]
+
 biz_profits = [
     4, 12, 36, 108, 324, 972
 ]
