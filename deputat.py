@@ -277,7 +277,7 @@ def handle_rating_deputat(call, db_object, db_connection, bot):
     rating = int(call.data[2:3])
     db_object.execute(f"SELECT money, rating, deputatid FROM deputats WHERE userid = {user_id}")
     result = db_object.fetchone()
-    if result is None or result[2]:
+    if result is None or result[2] is None:
         bot.send_message(call.message.chat.id, "У тебе немає депутата")
     elif result[0] < res.rating_price[rating]:
         bot.send_message(call.message.chat.id, "Твоєму депутату не вистачає грошей для цього!")
