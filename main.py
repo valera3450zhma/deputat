@@ -99,6 +99,11 @@ def time_deputat_handler(message):
     bot.reply_to(message, str(datetime.datetime.now()))
 
 
+@bot.message_handler(commands=['hellp'])
+def time_deputat_handler(message):
+    bot.reply_to(message, res.help_text)
+
+
 @bot.message_handler(commands=['nwork'])
 def money_deputat_handler(message):
     if message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1]:
