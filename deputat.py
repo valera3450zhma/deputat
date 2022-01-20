@@ -125,6 +125,9 @@ def _create_buttons_(modifier, message, db_object, bot, price):
 
 
 def visit_business_deputat(message, db_object, bot):
+    if message.chat.type != "private":
+        bot.reply_to(message, "Команду слід писати в ПП боту!")
+        return
     _create_buttons_('vb', message, db_object, bot, False)
 
 
@@ -161,6 +164,9 @@ def handle_visit_business_deputat(call, db_object, db_connection, bot):
 
 
 def provide_business_deputat(message, db_object, bot):
+    if message.chat.type != "private":
+        bot.reply_to(message, "Команду слід писати в ПП боту!")
+        return
     _create_buttons_('pb', message, db_object, bot, True)
 
 
@@ -196,6 +202,9 @@ def handle_provide_business_deputat(call, db_object, db_connection, bot):
 
 
 def buy_business_deputat(message, bot):
+    if message.chat.type != "private":
+        bot.reply_to(message, "Команду слід писати в ПП боту!")
+        return
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.biz_prices)):
         buttons.add(types.InlineKeyboardButton(text=res.biz_name[i] + f"💰{res.biz_prices[i]}", callback_data=f'bb{i}'))
@@ -265,6 +274,9 @@ def show_business_deputat(message, db_object, bot):
 
 
 def up_rating_deputat(message, bot):
+    if message.chat.type != "private":
+        bot.reply_to(message, "Команду слід писати в ПП боту!")
+        return
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.rating_name)):
         buttons.add(types.InlineKeyboardButton
