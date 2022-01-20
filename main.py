@@ -130,7 +130,6 @@ def money_deputat_handler(message):
         bot.reply_to(message, f"Параметр збору оновлено. Депутат раніше не збирав гроші з жодного бізнесу.")
 
 
-
 @bot.message_handler(content_types=['text'])
 def money_deputat_handler(message):
     if (message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1]) and message.text.isnumeric():
