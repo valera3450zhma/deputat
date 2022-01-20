@@ -164,7 +164,7 @@ def handle_visit_business_deputat(call, db_object, db_connection, bot):
 
 
 def provide_business_deputat(message, db_object, bot):
-    if message.chat.type != "private":
+    if message.chat.type == "private":
         bot.reply_to(message, "Команду слід писати в ПП боту!")
         return
     _create_buttons_('pb', message, db_object, bot, True)
