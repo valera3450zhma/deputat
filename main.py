@@ -96,7 +96,7 @@ def time_deputat_handler(message):
 
 @bot.message_handler(commands=['time'])
 def time_deputat_handler(message):
-    bot.reply_to(message, str(datetime.datetime.now()))
+    bot.reply_to(message, str(datetime.datetime.now() + datetime.timedelta(hours=res.hour_adjust)))
 
 
 @bot.message_handler(commands=['hellp'])

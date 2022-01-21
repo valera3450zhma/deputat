@@ -54,7 +54,7 @@ def show_deputat(message, db_object, bot):
 
 
 def _work_(data, user_id, db_object, db_connection):
-    today_str = datetime.datetime.today().strftime("%Y-%m-%d")
+    today_str = (datetime.datetime.today() + datetime.timedelta(hours=res.hour_adjust)).strftime("%Y/%m/%d")
     earned = random.randint(10, 100) * res.money_earn_multiplier[data[1] - 1]
     db_object.execute("UPDATE deputats SET lastworked = %s, money = %s WHERE userid = %s",
                       (today_str, earned + int(data[0]), user_id))
@@ -77,7 +77,7 @@ def work_deputat(message, db_object, db_connection, bot):
                        reply_to_message_id=message.id)
     else:
         worked = last_worked[0]
-        today = datetime.date.today()
+        today = datetime.date.today() + datetime.timedelta(hours=res.hour_adjust)
         if (today - worked).days >= 1:
             earned = _work_(data, user_id, db_object, db_connection)
             bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
@@ -145,7 +145,7 @@ def handle_visit_business_deputat(call, db_object, db_connection, bot):
     biz_count = result[1]
     visited = result[2] if result[2] is not None else datetime.date.min
     worked = result[3] if result[3] is not None else datetime.date.min
-    today = datetime.date.today()
+    today = datetime.date.today() + datetime.timedelta(hours=res.hour_adjust)
     if not result or deputat_id is None or biz_count is None:
         bot.send_message(call.message.chat.id, "І кого ти провідуєш? Мать свою чи шо?")
     elif (today - worked).days < 1:
@@ -157,7 +157,7 @@ def handle_visit_business_deputat(call, db_object, db_connection, bot):
         db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s",
                           (money[0] + earned, user_id))
         db_connection.commit()
-        today_str = datetime.datetime.today().strftime("%Y/%m/%d")
+        today_str = (datetime.datetime.today() + datetime.timedelta(hours=res.hour_adjust)).strftime("%Y/%m/%d")
         db_object.execute(f"UPDATE business SET {biz_work} = %s WHERE userid=%s", (today_str, user_id))
         db_connection.commit()
         bot.send_photo(call.message.chat.id, res.biz_photos[biz_id], caption=res.biz_work_text[biz_id] + str(earned))
@@ -182,7 +182,7 @@ def handle_provide_business_deputat(call, db_object, db_connection, bot):
     deputat_id = result[0]
     biz_count = result[1]
     visited = result[2] if result[2] is not None else datetime.date.min
-    today = datetime.date.today()
+    today = datetime.date.today() + datetime.timedelta(hours=res.hour_adjust)
     days_diff = (today - visited).days
     if not result or deputat_id is None or biz_count is None:
         bot.send_message(call.message.chat.id, "І кого ти провідуєш? Мать свою чи шо?")
@@ -195,7 +195,7 @@ def handle_provide_business_deputat(call, db_object, db_connection, bot):
         db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s",
                           (money[0] - res.biz_provides[biz_id] * biz_count, user_id))
         db_connection.commit()
-        today_str = datetime.datetime.today().strftime("%Y/%m/%d")
+        today_str = (datetime.datetime.today() + datetime.timedelta(hours=res.hour_adjust)).strftime("%Y/%m/%d")
         db_object.execute(f"UPDATE business SET {biz_visit} = %s WHERE userid=%s", (today_str, user_id))
         db_connection.commit()
         bot.send_photo(call.message.chat.id, res.biz_provide_photos[biz_id], caption=res.biz_provide_text[biz_id])

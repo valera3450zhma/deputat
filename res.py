@@ -1,5 +1,7 @@
 MAX_LEVEL = 3
 
+hour_adjust = 2
+
 SU = [
     506126580,
     507028811
