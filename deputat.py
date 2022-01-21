@@ -89,7 +89,7 @@ def work_deputat(message, db_object, db_connection, bot):
 
 def lvlup_deputat(message, db_object, db_connection, bot):
     user_id = message.from_user.id
-    db_object.execute(f"SELECT level, money, deputatid FROM deputats WHERE deputats.userid = {user_id}")
+    db_object.execute(f"SELECT level, money, deputatid, rating FROM deputats WHERE deputats.userid = {user_id}")
     result = db_object.fetchone()
     if not result or result[2] is None:
         bot.reply_to(message, "А шо апати то?")
@@ -98,6 +98,10 @@ def lvlup_deputat(message, db_object, db_connection, bot):
     elif result[1] < res.lvlup_requirements[result[0] - 1]:
         bot.reply_to(message, f"Твій депутат надто бідний, щоб перейти на новий рівень!"
                               f"\n💰 Необхідно грошей: ${res.lvlup_requirements[result[0] - 1]}")
+        bot.send_sticker(message.chat.id, res.sad_sticker)
+    elif result[3] < res.lvlup_rating[result[0] - 1]:
+        bot.reply_to(message, f"У твого депутата надто низький рейтинг, щоб перейти на новий рівень!"
+                              f"\n⭐ Необхідно рейтингу: {res.lvlup_rating[result[0] - 1]}")
         bot.send_sticker(message.chat.id, res.sad_sticker)
     else:
         db_object.execute("UPDATE deputats SET level = %s, photo = %s, lastworked = NULL, money = %s WHERE userid = %s",
