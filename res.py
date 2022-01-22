@@ -1,4 +1,4 @@
-MAX_LEVEL = 3
+MAX_LEVEL = 4
 
 hour_adjust = 2
 
@@ -64,6 +64,18 @@ level_photos = [
         "AgACAgIAAxkBAAIDk2HhgF5PRAkVxgnedMhAGuC2yt5aAAKauTEbmVIRSxN7rNAUMoUDAQADAgADeAADIwQ"
     ],
     [
+        "AgACAgIAAxkBAAIPe2Hr-QY3AYEuMzAKqxweh9ga13w1AAKiuDEbTFVhSxNSx2xbzUqJAQADAgADbQADIwQ",
+        "AgACAgIAAxkBAAIPfWHr-Q0QQTI8U8IrfWEGVTGaSi_UAAKjuDEbTFVhS663dCwElSAYAQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAIPf2Hr-RQo-T1EYfxA2bH3X7y0YhlFAAKkuDEbTFVhS1WhVkm5RzMHAQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAIPgWHr-TH1DVi_X12gJYidsRlAZRIFAAKluDEbTFVhS4Os9shmbgFeAQADAgADeQADIwQ",
+        "AgACAgIAAxkBAAIPg2Hr-UYd8LMawVvwCaBP5bFBvmKzAAKmuDEbTFVhS8bIVn9NYvwMAQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAIPhWHr-VFMggGiUAnfxIOzWDJLp6ZmAAKnuDEbTFVhSzbpaoSFrp5NAQADAgADeQADIwQ",
+        "AgACAgIAAxkBAAIPh2Hr-VlBxywdptGlGp4Oy8e9C1MZAAKouDEbTFVhS2ZBpGyb8ygMAQADAgADeQADIwQ",
+        "AgACAgIAAxkBAAIPiWHr-a4gY-hhvWMRodhIyqYQOONpAAKpuDEbTFVhSxzAoJ-498DDAQADAgADeQADIwQ",
+        "AgACAgIAAxkBAAIPi2Hr-cSwxGyZn_--xmgDOrb-QBUWAAKquDEbTFVhS6o3mpl_oLPgAQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAIPjWHr-dODKwbKPi9Bw7lwuoSdE_MbAAKruDEbTFVhS6O3Tv-f9CuQAQADAgADbQADIwQ"
+    ],
+    [
         "AgACAgIAAxkBAAIDnmHhgMjHO6ORGcPbOK9NBCP8aOsBAAJTvDEbRTsJS3Ic8acDtj4vAQADAgADeQADIwQ",
         "AgACAgIAAxkBAAIDn2HhgMjrRfTsxFgjly0O0EfHav20AAJUvDEbRTsJS892LhLAQ6iiAQADAgADeQADIwQ",
         "AgACAgIAAxkBAAIDoGHhgMi9su9PfcropFTfAbE-ms03AAJWvDEbRTsJS6SeFyIjJppkAQADAgADeQADIwQ",
@@ -80,8 +92,9 @@ level_photos = [
 level_captions = [
     "Заробітчанин. Не жибрак, маю гроші",
     "Голова Сільради. Село то всьо моє",
-    "Депутат міської ради. Я раніше жив бідно, пас корови, продавав гриби. Одягався бідно. Мене ображали. Не вірили в "
-    "мої таланти вчителі. Я не здався і доказав всім! "
+    "Депутат міської ради. Я хачю вєласіпєд...",
+    "Мер міста. Я раніше жив бідно, пас корови, продавав гриби. Одягався бідно. Мене ображали. Не вірили в "
+    "мої таланти вчителі. Я не здався і доказав всім!"
 ]
 
 lvlup_requirements = [
@@ -106,12 +119,14 @@ work_text = [
     " жостко назбирав повний кошик трускавок пану!",
     " натиряв грошей з бюджету села!",
     " провів збір коштів на реконструкцію пам'ятника!"
+    " відкрив нову школу в найзалупнішому районі міста!"
 ]
 
 work_photos = [
     "AgACAgIAAxkBAAIErmHh1U3Y3aR2iLG17jGVB8_9XvloAAJmuDEb9xwQS-Ry7B8b6eR7AQADAgADeAADIwQ",
     "AgACAgIAAxkBAAIEsGHh1bqKQfABCFf-i70s5xsq62MWAAJpuDEb9xwQS63g-PHzSoP6AQADAgADeAADIwQ",
-    "AgACAgIAAxkBAAIHjGHj-HLMK5u4ozcjaZ_krnFik-MxAAIZujEb2msgS30E1LSLhD0aAQADAgADeAADIwQ"
+    "AgACAgIAAxkBAAIHjGHj-HLMK5u4ozcjaZ_krnFik-MxAAIZujEb2msgS30E1LSLhD0aAQADAgADeAADIwQ",
+    "AgACAgIAAxkBAAIPj2Hr-scC_2n2DkT4LKJGU5S1JmxLAAK4uDEbTFVhSxxdjS8sRAkAAQEAAwIAA3kAAyME"
 ]
 
 not_working_photos = [
