@@ -256,7 +256,7 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
             biz_count = 1
         else:
             biz_count = deputat_id[biz_id] + 1
-        db_object.execute(f"UPDATE business SET {biz_name} = %s, {biz_name + 'visit'} = NULL WHERE userid = %s",
+        db_object.execute(f"UPDATE business SET {biz_name} = %s, {biz_name + 'visit'} = NULL, {biz_name + 'work'} = NULL WHERE userid = %s",
                           (biz_count, user_id))
         db_connection.commit()
         purchase_update(db_connection, db_object, bot, call, result, biz_id, user_id)

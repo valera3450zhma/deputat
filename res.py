@@ -93,7 +93,9 @@ lvlup_requirements = [
 lvlup_rating = [
     3,
     10,
-    20
+    20,
+    50,
+    120
 ]
 
 money_earn_multiplier = [
