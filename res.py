@@ -1,4 +1,4 @@
-MAX_LEVEL = 4
+MAX_LEVEL = 5
 
 hour_adjust = 2
 
@@ -86,6 +86,18 @@ level_photos = [
         "AgACAgIAAxkBAAIDpWHhgMgbo2gJx7GS6BxBzOUD15XXAAJZvDEbRTsJSxDh2kfKhfxkAQADAgADeQADIwQ",
         "AgACAgIAAxkBAAIDpmHhgMgiXlRQe3Z4d3C8TAthtz2FAAJbvDEbRTsJS3g1TjCtZ0SMAQADAgADeQADIwQ",
         "AgACAgIAAxkBAAIDp2HhgMjFHTsSUMlge4xUvk-TR7IiAAJcvDEbRTsJS-ROU_wXNquFAQADAgADeQADIwQ"
+    ],
+    [
+        "AgACAgIAAxkBAAIQ32Huu-XJbcJp7y2qlQ_K12ws-Um7AALstzEbuAF5S3Z1BxN0mqbbAQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAIQ4WHuu-1RBZHKtztMNoCyHB5WDx-sAALttzEbuAF5Sw_xFlm9PkEtAQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAIQ42Huu_dJRAlwHOa5hR1w2KU6k4fsAALwtzEbuAF5S0ROe_jxoS_1AQADAgADeQADIwQ",
+        "AgACAgIAAxkBAAIQ5WHuvAWgKzN57B1wepr-5TByTvbTAALxtzEbuAF5S7OyTcUAAYoXNgEAAwIAA3kAAyME",
+        "AgACAgIAAxkBAAIQ52HuvCOr_sQVz1_BVDo1E7nwd7XnAALytzEbuAF5S-y1aHt6xOQ5AQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAIQ6WHuvDJDVp4xnK15F2ohK4MR5PskAALztzEbuAF5S6mFGfwihkWkAQADAgADeQADIwQ",
+        "AgACAgIAAxkBAAIQ62HuvD31PDlG4DWBSmZIcswwqX4kAAL0tzEbuAF5S3j4xZ1ShMDVAQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAIQ7WHuvEyjqhGVODPHozgKDxLp-kccAAL2tzEbuAF5S2Noh30oZMsfAQADAgADbQADIwQ",
+        "AgACAgIAAxkBAAIQ72HuvHUhmH_g6stfVzjzBMUKzXY5AAL3tzEbuAF5S9ng2LmGhblHAQADAgADbQADIwQ",
+        "AgACAgIAAxkBAAIQ8WHuvJOwBJ58sgwwoH3D9dk2l5d3AAL4tzEbuAF5S4QsmCLfxdY3AQADAgADeAADIwQ"
     ]
 ]
 
@@ -94,13 +106,15 @@ level_captions = [
     "Голова Сільради. Село то всьо моє",
     "Депутат міської ради. Я хачю вєласіпєд...",
     "Мер міста. Я раніше жив бідно, пас корови, продавав гриби. Одягався бідно. Мене ображали. Не вірили в "
-    "мої таланти вчителі. Я не здався і доказав всім!"
+    "мої таланти вчителі. Я не здався і доказав всім!",
+    "Губернатор області. В Тернополі торчав катав у ширку дімідрол, я ненавидів поп я слухав тіко рок-н-рол"
 ]
 
 lvlup_requirements = [
     500,
     2000,
-    10000
+    8000,
+    15000
 ]
 
 lvlup_rating = [
@@ -119,14 +133,16 @@ work_text = [
     " жостко назбирав повний кошик трускавок пану!",
     " натиряв грошей з бюджету села!",
     " провів збір коштів на реконструкцію пам'ятника!",
-    " відкрив нову школу в найзалупнішому районі міста!"
+    " відкрив нову школу в найзалупнішому районі міста!",
+    " проклав дорогу до свого рідного села!"
 ]
 
 work_photos = [
     "AgACAgIAAxkBAAIErmHh1U3Y3aR2iLG17jGVB8_9XvloAAJmuDEb9xwQS-Ry7B8b6eR7AQADAgADeAADIwQ",
     "AgACAgIAAxkBAAIEsGHh1bqKQfABCFf-i70s5xsq62MWAAJpuDEb9xwQS63g-PHzSoP6AQADAgADeAADIwQ",
     "AgACAgIAAxkBAAIHjGHj-HLMK5u4ozcjaZ_krnFik-MxAAIZujEb2msgS30E1LSLhD0aAQADAgADeAADIwQ",
-    "AgACAgIAAxkBAAIPj2Hr-scC_2n2DkT4LKJGU5S1JmxLAAK4uDEbTFVhSxxdjS8sRAkAAQEAAwIAA3kAAyME"
+    "AgACAgIAAxkBAAIPj2Hr-scC_2n2DkT4LKJGU5S1JmxLAAK4uDEbTFVhSxxdjS8sRAkAAQEAAwIAA3kAAyME",
+    "AgACAgIAAxkBAAIQ82Huvw8sNS5Ht3Nr-EgrWT06oT4bAAO4MRu4AXlLnREmIFnwFG4BAAMCAAN5AAMjBA"
 ]
 
 not_working_photos = [
@@ -210,7 +226,8 @@ biz_rating_drop = [
 ]
 
 biz_rating_text = [
-    f"Бомж побачив піздюка на пункті прийому металу і розпиздів про вас всьому селу! Ваш рейтинг у громади впав на {biz_rating_drop[0]} пункт.",
+    f"Бомж побачив піздюка на пункті прийому металу і розпиздів про вас всьому селу!"
+    f" Ваш рейтинг у громади впав на {biz_rating_drop[0]} пункт.",
     f"Сусідка побачила як ви відмиваєте негра у ванній! Рейтинг серед громади впав на {biz_rating_drop[1]} пункти",
     f"Отець Михайло побачив як ви відбудовуєте кіоск, тим самим створюючи конкуренцію кіоску його брата! На ранковій "
     f"молитві він вирішив розказати всім, що ви трахали козу! Рейтинг серед громади впав на {biz_rating_drop[2]} "
@@ -261,4 +278,12 @@ what_sticker = "CAACAgIAAxkBAAIGfmHjCQ3ODK4nKZmnER5lv7wf-Q6hAAJuAAP3zNQYXCr47a4z
 money_pagulich_sticker = "CAACAgIAAxkBAAIIj2HkTmFJ-1E6aO_d2bjXXqFgzof-AAIpAAMwbFkgc0I6fExuM0QjBA"
 money_valakas_sticker = "CAACAgIAAxkBAAIIk2HkTsGHDte6YbztwUAyV7lFRL4jAAKoAAMZ8nUb9i7wzt6UMxcjBA"
 
-help_text = "Команди бота для використання в усіх чатах:\n/get - отримати свого дерутата\n/show - оглянути основні характеристики депутата\n/work - відправити депутата на заробітки (доступно 1 раз в день, точний час бота за командою /time)\n/show_business - оглянути бізнес(и) депутата\n/lvlup - підвищити рівень депутата (підвищує дохід від /work)\n/kill - вбити депутата\n/killed - кількість власних, вбитих депутатів\n/time - отримати час бота\n\nКоманди бота для використання у розмові з ботом:\n/business - зібрати дохід з бізнесу (1 раз на день)\n/provide_business - забезпечити бізнес ресурсами (1 раз на тиждень, збивається для всіх бізнесів даної категорії при купівлі нового бізнесу цієї ж категорії)\n/buy_business - купити бізнес (шанс бути поміченим 20%)\n/rating - підняти рейтинг депутату"
+help_text = "Команди бота для використання в усіх чатах:\n/get - отримати свого дерутата\n/show - оглянути основні " \
+            "характеристики депутата\n/work - відправити депутата на заробітки (доступно 1 раз в день, точний час " \
+            "бота за командою /time)\n/show_business - оглянути бізнес(и) депутата\n/lvlup - підвищити рівень " \
+            "депутата (підвищує дохід від /work)\n/kill - вбити депутата\n/killed - кількість власних, " \
+            "вбитих депутатів\n/time - отримати час бота\n\nКоманди бота для використання у розмові з " \
+            "ботом:\n/business - зібрати дохід з бізнесу (1 раз на день)\n/provide_business - забезпечити бізнес " \
+            "ресурсами (1 раз на тиждень, збивається для всіх бізнесів даної категорії при купівлі нового бізнесу " \
+            "цієї ж категорії)\n/buy_business - купити бізнес (шанс бути поміченим 20%)\n/rating - підняти рейтинг " \
+            "депутату "
