@@ -78,7 +78,7 @@ def answer(call):
     elif call_type == "rt":
         deputat.handle_rating_deputat(call, db_object, db_connection, bot)
     elif call_type == "el":
-        deputat.handle_elect_deputat(call, db_object, bot)
+        deputat.handle_elect_deputat(call, db_object, db_connection, bot)
 
 
 @bot.message_handler(commands=['show_business'])
