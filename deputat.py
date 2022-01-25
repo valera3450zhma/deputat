@@ -30,7 +30,7 @@ def get_deputat(message, db_object, db_connection, bot):
             deputat_id = last_deputat[0] + 1
         db_object.execute("UPDATE deputats SET deputatid = %s, money = %s, name = %s, level = %s,  photo = %s, "
                           "rating = %s WHERE userid = %s", (deputat_id, random.randint(10, 100), random.choice(
-                           res.deputatNames), 1, random.randint(0, len(res.level_photos[0]) - 1), 0, result[0]))
+            res.deputatNames), 1, random.randint(0, len(res.level_photos[0]) - 1), 0, result[0]))
         db_connection.commit()
         bot.reply_to(message, "Гля який! Депута-а-а-атіще! Глянуть на підарасіка - /show")
     else:
@@ -93,7 +93,7 @@ def lvlup_deputat(message, db_object, db_connection, bot):
     result = db_object.fetchone()
     if not result or result[2] is None:
         bot.reply_to(message, "А шо апати то?")
-    elif result[0] == res.MAX_LEVEL:
+    elif result[0] == 4:
         bot.reply_to(message, "В депутата максимальний рівень!")
     elif result[1] < res.lvlup_requirements[result[0] - 1]:
         bot.reply_to(message, f"Твій депутат надто бідний, щоб перейти на новий рівень!"
@@ -110,6 +110,26 @@ def lvlup_deputat(message, db_object, db_connection, bot):
         db_connection.commit()
         bot.reply_to(message, "Депутата підвищено до нового рівня! - /show")
         bot.send_sticker(message.chat.id, res.happy_sticker)
+
+
+def elections_deputat(message, bot):
+    buttons = types.InlineKeyboardMarkup()
+    buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='el'))
+    bot.send_message(message, "Ініційовано початок виборів! Кандидати:", reply_markup=buttons)
+
+
+def handle_elect_deputat(call, db_object, bot):
+    user_id = call.from_user.id
+    db_object.execute(f"SELECT level, name FROM deputats WHERE userid = {user_id}")
+    result = db_object.fetchone()
+    if result is None or result[0] is None:
+        bot.send_message(call.message.chat.id, "У вас нема депутата!")
+    elif result[0] < 4:
+        bot.send_message(call.message.chat.id, "У вас замалий рівень для подання кандидатури!")
+    elif result[0] == res.MAX_LEVEL:
+        bot.send_message(call.message.chat.id, "У вашого депутата максимальний рівень!")
+    else:
+        bot.edit_message_text(call.message.text + '\n' + result[1], call.message.chat.id, call.message.message_id)
 
 
 def _create_buttons_(modifier, message, db_object, bot, price):
@@ -191,7 +211,7 @@ def handle_provide_business_deputat(call, db_object, db_connection, bot):
     if not result or deputat_id is None or biz_count is None:
         bot.send_message(call.message.chat.id, "І кого ти провідуєш? Мать свою чи шо?")
     elif visited is not None and days_diff < 7:
-        bot.send_message(call.message.chat.id, f"Бізнес не потребує забезпечення, приходьте за {7-days_diff} дні(-в)")
+        bot.send_message(call.message.chat.id, f"Бізнес не потребує забезпечення, приходьте за {7 - days_diff} дні(-в)")
     elif money[0] < res.biz_provides[biz_id] * biz_count:
         bot.send_message(call.message.chat.id, "В твого депутата замало грошей для підтримання цього бізнесу!")
         bot.send_sticker(call.message.chat.id, res.money_valakas_sticker)
@@ -256,8 +276,9 @@ def handle_biz_purchase_deputat(call, db_object, db_connection, bot):
             biz_count = 1
         else:
             biz_count = deputat_id[biz_id] + 1
-        db_object.execute(f"UPDATE business SET {biz_name} = %s, {biz_name + 'visit'} = NULL, {biz_name + 'work'} = NULL WHERE userid = %s",
-                          (biz_count, user_id))
+        db_object.execute(
+            f"UPDATE business SET {biz_name} = %s, {biz_name + 'visit'} = NULL, {biz_name + 'work'} = NULL WHERE userid = %s",
+            (biz_count, user_id))
         db_connection.commit()
         purchase_update(db_connection, db_object, bot, call, result, biz_id, user_id)
 

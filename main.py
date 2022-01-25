@@ -44,6 +44,11 @@ def kill_deputat_handler(message):
     deputat.lvlup_deputat(message, db_object, db_connection, bot)
 
 
+@bot.message_handler(commands=['elections'])
+def kill_deputat_handler(message):
+    deputat.elections_deputat(message, bot)
+
+
 @bot.message_handler(commands=['provide_business'])
 def buy_business_deputat_handler(message):
     deputat.provide_business_deputat(message, db_object, bot)
@@ -72,6 +77,9 @@ def answer(call):
         deputat.handle_visit_business_deputat(call, db_object, db_connection, bot)
     elif call_type == "rt":
         deputat.handle_rating_deputat(call, db_object, db_connection, bot)
+    elif call_type == "el":
+        deputat.handle_elect_deputat(call, db_connection, bot)
+        bot.edit_message_text()
 
 
 @bot.message_handler(commands=['show_business'])
