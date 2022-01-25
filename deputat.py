@@ -93,7 +93,7 @@ def lvlup_deputat(message, db_object, db_connection, bot):
     result = db_object.fetchone()
     if not result or result[2] is None:
         bot.reply_to(message, "А шо апати то?")
-    elif result[0] == 4:
+    elif result[0] == res.MAX_LEVEL:
         bot.reply_to(message, "В депутата максимальний рівень!")
     elif result[1] < res.lvlup_requirements[result[0] - 1]:
         bot.reply_to(message, f"Твій депутат надто бідний, щоб перейти на новий рівень!"
