@@ -129,7 +129,9 @@ def handle_elect_deputat(call, db_object, bot):
     elif result[0] == res.MAX_LEVEL:
         bot.send_message(call.message.chat.id, "У вашого депутата максимальний рівень!")
     else:
-        bot.edit_message_text(call.message.text + '\n' + result[1], call.message.chat.id, call.message.message_id)
+        buttons = types.InlineKeyboardMarkup()
+        buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='el'))
+        bot.edit_message_text(call.message.text + '\n' + result[1], call.message.chat.id, call.message.message_id, reply_markup=buttons)
 
 
 def _create_buttons_(modifier, message, db_object, bot, price):
