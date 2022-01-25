@@ -112,34 +112,34 @@ def lvlup_deputat(message, db_object, db_connection, bot):
         bot.send_sticker(message.chat.id, res.happy_sticker)
 
 
-def elections_deputat(message, bot):
-    buttons = types.InlineKeyboardMarkup()
-    buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='el'))
-    bot.reply_to(message, "Ініційовано початок виборів! Кандидати:", reply_markup=buttons)
-
-
-def handle_elect_deputat(call, db_object, db_connection, bot):
-    user_id = call.from_user.id
-    db_object.execute(f"SELECT level, name FROM deputats WHERE userid = {user_id}")
-    result = db_object.fetchone()
-    name = result[1]
-    if result is None or result[0] is None:
-        bot.send_message(call.message.chat.id, "У вас нема депутата!")
-    elif result[0] < 4:
-        bot.send_message(call.message.chat.id, "У вас замалий рівень для подання кандидатури!")
-    elif result[0] == res.MAX_LEVEL:
-        bot.send_message(call.message.chat.id, "У вашого депутата максимальний рівень!")
-    else:
-        db_object.execute(f"SELECT userid FROM elections WHERE userid = {user_id}")
-        result = db_object.fetchone()
-        if result is not None:
-            bot.send_message(call.message.chat.id, "Ваша кандидатура вже на виборах!")
-        else:
-            db_object.execute(f"INSERT INTO elections(userid) VALUES({user_id})")
-            db_connection.commit()
-            buttons = types.InlineKeyboardMarkup()
-            buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='el'))
-            bot.edit_message_text(call.message.text + '\n' + name, call.message.chat.id, call.message.message_id, reply_markup=buttons)
+# def elections_deputat(message, bot):
+#     buttons = types.InlineKeyboardMarkup()
+#     buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='el'))
+#     bot.reply_to(message, "Ініційовано початок виборів! Кандидати:", reply_markup=buttons)
+#
+#
+# def handle_elect_deputat(call, db_object, db_connection, bot):
+#     user_id = call.from_user.id
+#     db_object.execute(f"SELECT level, name FROM deputats WHERE userid = {user_id}")
+#     result = db_object.fetchone()
+#     name = result[1]
+#     if result is None or result[0] is None:
+#         bot.send_message(call.message.chat.id, "У вас нема депутата!")
+#     elif result[0] < 4:
+#         bot.send_message(call.message.chat.id, "У вас замалий рівень для подання кандидатури!")
+#     elif result[0] == res.MAX_LEVEL:
+#         bot.send_message(call.message.chat.id, "У вашого депутата максимальний рівень!")
+#     else:
+#         db_object.execute(f"SELECT userid FROM elections WHERE userid = {user_id}")
+#         result = db_object.fetchone()
+#         if result is not None:
+#             bot.send_message(call.message.chat.id, "Ваша кандидатура вже на виборах!")
+#         else:
+#             db_object.execute(f"INSERT INTO elections(userid) VALUES({user_id})")
+#             db_connection.commit()
+#             buttons = types.InlineKeyboardMarkup()
+#             buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='el'))
+#             bot.edit_message_text(call.message.text + '\n' + name, call.message.chat.id, call.message.message_id, reply_markup=buttons)
 
 
 def _create_buttons_(modifier, message, db_object, bot, price):
