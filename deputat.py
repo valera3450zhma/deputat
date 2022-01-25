@@ -115,7 +115,7 @@ def lvlup_deputat(message, db_object, db_connection, bot):
 def elections_deputat(message, bot):
     buttons = types.InlineKeyboardMarkup()
     buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='el'))
-    bot.send_message(message, "Ініційовано початок виборів! Кандидати:", reply_markup=buttons)
+    bot.reply_to(message, "Ініційовано початок виборів! Кандидати:", reply_markup=buttons)
 
 
 def handle_elect_deputat(call, db_object, bot):
