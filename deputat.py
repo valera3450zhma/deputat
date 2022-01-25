@@ -338,6 +338,20 @@ def handle_rating_deputat(call, db_object, db_connection, bot):
         bot.send_message(call.message.chat.id, f"Рейтинг серед громади піднято на {res.rating_up[rating]}⭐️")
 
 
+def top_deputat(message, db_object, bot):
+    db_object.execute("SELECT username, money, rating FROM deputats ORDER BY money DESC LIMIT 30")
+    result = db_object.fetchall()
+    if not result:
+        bot.reply_to(message, "Здається, ніхто навіть не має дупетата...")
+    else:
+        text = ''
+        i = 1
+        for row in result:
+            text += f"{i} - {row[0]} - 💰{row[1]}$ - ⭐{row[2]}"
+            i += 1
+        bot.reply_to(message, text)
+
+
 def kill_deputat(message, db_object, db_connection, bot):
     user_id = message.from_user.id
     db_object.execute(f"SELECT deputatid, killed FROM deputats WHERE userid = {user_id}")
