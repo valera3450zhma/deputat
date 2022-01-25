@@ -347,7 +347,7 @@ def top_deputat(message, db_object, bot):
         text = ''
         i = 1
         for row in result:
-            text += f"{i} - {row[0]} - 💰{row[1]}$ - ⭐{row[2]}\n"
+            text += f"{i} - {row[0]}\n💰{row[1]}$ - ⭐{row[2]}\n"
             i += 1
         bot.reply_to(message, text)
 
