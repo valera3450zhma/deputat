@@ -49,6 +49,11 @@ def elect_deputat_handler(message):
     deputat.elections_deputat(message, db_object, bot)
 
 
+@bot.message_handler(commands=['show_candidates'])
+def elect_deputat_handler(message):
+    deputat.start_election(message, db_object, db_connection, bot)
+
+
 @bot.message_handler(commands=['vote'])
 def elect_deputat_handler(message):
     deputat.election_results(message, db_object, db_connection, bot)
