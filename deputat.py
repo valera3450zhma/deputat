@@ -120,7 +120,7 @@ def elections_deputat(message, db_object, bot):
     buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
     chat_id = message.chat.id
     db_object.execute(f"SELECT username, name FROM deputats "
-                      f"JOIN elections e on deputats.userid = e.userid WHERE chatid = {chat_id}")
+                      f"JOIN elections e on deputats.userid = e.userid WHERE chatid = %s", (chat_id))
     result = db_object.fetchall()
     names = ""
     for resul in result:
