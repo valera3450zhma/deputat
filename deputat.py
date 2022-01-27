@@ -197,7 +197,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             names = ""
             for resul in result:
                 names += f"\n{resul[1]} ({resul[0]})"
-            bot.edit_message_text(f"{call.message.text}{names}", call.message.chat.id, call.message.message_id, reply_markup=buttons)
+            bot.edit_message_text(f"Ініційовано початок виборів! Кандидати:{names}", call.message.chat.id, call.message.message_id, reply_markup=buttons)
 
 
 def _create_buttons_(modifier, message, db_object, bot, price):
