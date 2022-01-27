@@ -138,8 +138,8 @@ def start_election(message, db_object, db_connection, bot, chat_id):
         optionss = []
         for ress in result:
             optionss.append(ress[1] + ' (' + ress[0] + ')')
-        bot.send_poll(message.chat.id, "Вибирай давай", optionss, is_anonymous=False)
-
+        poll = bot.send_poll(message.chat.id, "Вибирай давай", optionss, is_anonymous=False)
+        db_object.execute(f"UPDATE elections SET pollid = CAST({poll.message_id} AS varchar) WHERE chatid = CAST({chat_id} AS varchar)")
 
 def _show_candidates_(call, db_object, db_connection, bot, chat_id):
     buttons = types.InlineKeyboardMarkup()
