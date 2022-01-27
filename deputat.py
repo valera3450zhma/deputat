@@ -140,7 +140,7 @@ def start_election(message, db_object, bot, chat_id):
         bot.send_message(message.chat.id, "ВО ТОВО ВАШІ КАНДИДАТИ Є")
         for ress in result:
             text = str(i) + ' - ' + ress[1] + ' (' + ress[0] + ')'
-            bot.send_photo(message.chat.id, res.level_photos[result[3]-1][result[2]], caption=text)
+            bot.send_photo(message.chat.id, res.level_photos[ress[3]-1][ress[2]], caption=text)
             i += 1
 
 
@@ -208,7 +208,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
         if result is not None:
             bot.send_message(call.message.chat.id, "Ваша кандидатура вже на виборах!")
         else:
-            db_object.execute(f"INSERT INTO elections(userid, chatid) VALUES({user_id}, {chat_id})")
+            db_object.execute(f"INSERT INTO elections(userid, chatid, votes) VALUES({user_id}, {chat_id}, 0)")
             db_connection.commit()
             _show_candidates_(call, db_object, db_connection, bot, chat_id)
 
