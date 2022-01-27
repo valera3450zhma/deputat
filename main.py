@@ -52,6 +52,7 @@ def elect_deputat_handler(message):
 @bot.message_handler(commands=['removeme'])
 def elect_deputat_handler(message):
     db_object.execute(f"DELETE FROM elections WHERE userid = {message.from_user.id}")
+    db_connection.commit()
     bot.reply_to(message, "Вашу кандідатуру видалено!")
 
 
