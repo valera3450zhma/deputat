@@ -129,7 +129,7 @@ def elections_deputat(message, db_object, bot):
 
 def start_election(message, db_object, db_connection, bot, chat_id):
     db_object.execute(f"SELECT username, name, e.userid FROM deputats "
-                      f"JOIN elections e on deputats.userid = e.userid WHERE chatid = {chat_id}")
+                      f"JOIN elections e on deputats.userid = e.userid WHERE chatid = CAST({chat_id} AS varchar)")
     result = db_object.fetchall()
     if result is None:
         bot.send_message(message.chat.id, "Каво, куда і шо...")
@@ -192,7 +192,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
             buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
             db_object.execute(f"SELECT username, name FROM deputats "
-                              f"JOIN elections e on deputats.userid = e.userid WHERE chatid = {chat_id}")
+                              f"JOIN elections e on deputats.userid = e.userid WHERE chatid = CAST({chat_id} AS varchar)")
             result = db_object.fetchall()
             names = ""
             for resul in result:
