@@ -114,17 +114,27 @@ def lvlup_deputat(message, db_object, db_connection, bot):
 
 def elections_deputat(message, bot):
     buttons = types.InlineKeyboardMarkup()
-    buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='el'))
+    buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
+    buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
     bot.reply_to(message, "Ініційовано початок виборів! Кандидати:", reply_markup=buttons)
 
 
 def handle_elect_deputat(call, db_object, db_connection, bot):
+    global stop
     user_id = call.from_user.id
     chat_id = call.message.chat.id
+    call_type = call.data[2:3]
+    if call_type == 's':
+        stop = True
+    else:
+        stop = False
     db_object.execute(f"SELECT level, name FROM deputats WHERE userid = {user_id}")
     result = db_object.fetchone()
     name = result[1]
-    if result is None or result[0] is None:
+    if stop:
+        bot.send_message(call.message.chat.id, "Вибори почались!")
+        bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=None)
+    elif result is None or result[0] is None:
         bot.send_message(call.message.chat.id, "У вас нема депутата!")
     elif result[0] < 4:
         bot.send_message(call.message.chat.id, "У вас замалий рівень для подання кандидатури!")
@@ -139,7 +149,8 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             db_object.execute(f"INSERT INTO elections(userid, chatid) VALUES({user_id}, {chat_id})")
             db_connection.commit()
             buttons = types.InlineKeyboardMarkup()
-            buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='el'))
+            buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
+            buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
             bot.edit_message_text(call.message.text + '\n' + name, call.message.chat.id, call.message.message_id, reply_markup=buttons)
 
 
