@@ -230,7 +230,7 @@ def election_vote(message, db_object, db_connection, bot):
     votes = int(result[0]) + 1
     db_object.execute(f"UPDATE elections SET votes = {votes} WHERE chatid = CAST({chat_id} AS varchar) and userid = (select userid from elections order by userid offset 0 limit 1)")
     db_connection.commit()
-    db_object.execute(f"INSERT INTO voted(userid, chatid) VALUES({user_id, chat_id})")
+    db_object.execute(f"INSERT INTO voted(userid, chatid) VALUES {user_id, chat_id}")
     db_connection.commit()
     bot.send_message(message.chat.id, "Голос прийнято!")
 
