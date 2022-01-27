@@ -123,7 +123,6 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
     global stop
     user_id = call.from_user.id
     chat_id = str(call.message.chat.id)
-    bot.reply_to(call.message, str(chat_id))
     call_type = call.data[2:3]
     if call_type == 's':
         stop = True
@@ -151,7 +150,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             db_connection.commit()
             buttons = types.InlineKeyboardMarkup()
             buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
-            buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
+            buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
             bot.edit_message_text(call.message.text + '\n' + name, call.message.chat.id, call.message.message_id, reply_markup=buttons)
 
 
