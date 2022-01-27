@@ -139,7 +139,7 @@ def start_election(message, db_object, bot, chat_id):
         i = 1
         bot.send_message(message.chat.id, "ВО ТОВО ВАШІ КАНДИДАТИ Є")
         for ress in result:
-            text = str(i) + ' ' + ress[1] + ' (' + ress[0] + ') 💰' + str(ress[4]) + '$ ⭐' + str(ress[5]) + ' 📊' + ress[6]
+            text = str(i) + ' ' + ress[1] + ' (' + ress[0] + ') 💰' + str(ress[4]) + '$ ⭐' + str(ress[5]) + ' 📊' + str(ress[6])
             bot.send_photo(message.chat.id, res.level_photos[ress[3]-1][ress[2]], caption=text)
             i += 1
 
