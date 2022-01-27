@@ -131,7 +131,7 @@ def elections_deputat(message, db_object, bot):
 
 def start_election(message, db_object, bot, chat_id):
     db_object.execute(f"SELECT username, name, photo, level, money, rating FROM deputats "
-                      f"JOIN elections e on deputats.userid = e.userid WHERE chatid = CAST({chat_id} AS varchar)")
+                      f"JOIN elections e on deputats.userid = e.userid WHERE chatid = CAST({chat_id} AS varchar) order by e.userid")
     result = db_object.fetchall()
     if result is None:
         bot.send_message(message.chat.id, "Каво, куда і шо...")
@@ -216,10 +216,10 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
 def election_results(message, db_object, db_connection, bot):
     chat_id = message.chat.id
     vote = int(message.text[6:]) - 1
-    db_object.execute(f"SELECT votes FROM elections WHERE chatid = CAST({chat_id} AS varchar) OFFSET {vote} LIMIT 1")
+    db_object.execute(f"SELECT votes FROM elections WHERE chatid = CAST({chat_id} AS varchar) order by userid OFFSET {vote} LIMIT 1")
     result = db_object.fetchone()
     votes = int(result[0]) + 1
-    db_object.execute(f"UPDATE elections SET votes = {votes} WHERE chatid = CAST({chat_id} AS varchar) and userid = (select userid from elections offset 0 limit 1)")
+    db_object.execute(f"UPDATE elections SET votes = {votes} WHERE chatid = CAST({chat_id} AS varchar) and userid = (select userid from elections order by userid offset 0 limit 1)")
     db_connection.commit()
     bot.send_message(message.chat.id, "Голос прийнято!")
 
