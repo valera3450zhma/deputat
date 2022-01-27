@@ -253,7 +253,8 @@ def finish_election(message, db_object, db_connection, bot):
     if result is None:
         bot.send_message(message.chat.id, "Ну ти зовсім дебіл, чи хіба трошка?")
         return
-    db_object.execute(f"UPDATE deputats SET level = {result[1] + 1} WHERE userid = {result[0]}")
+    photo = random.randint(0, len(res.level_photos[result[1]]) - 1)
+    db_object.execute(f"UPDATE deputats SET level = {result[1] + 1}, photo = {photo} WHERE userid = {result[0]}")
     db_connection.commit()
     bot.send_message(message.chat.id, f"УРА УРА УРА\nВот наш переможець туво є да - {result[2]}")
     bot.send_sticker(message.chat.id, res.happy_sticker)
