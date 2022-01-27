@@ -49,13 +49,6 @@ def elect_deputat_handler(message):
     deputat.elections_deputat(message, db_object, bot)
 
 
-@bot.message_handler(commands=['removeme'])
-def elect_deputat_handler(message):
-    db_object.execute(f"DELETE FROM elections WHERE userid = {message.from_user.id}")
-    db_connection.commit()
-    bot.reply_to(message, "Вашу кандідатуру видалено!")
-
-
 @bot.message_handler(commands=['provide_business'])
 def buy_business_deputat_handler(message):
     deputat.provide_business_deputat(message, db_object, bot)

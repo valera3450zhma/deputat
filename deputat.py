@@ -141,29 +141,35 @@ def start_election(message, db_object, db_connection, bot, chat_id):
         bot.send_poll(message.chat.id, "Вибирай давай", options[1:])
 
 
+def _show_candidates_(call, db_object, db_connection, bot, chat_id):
+    db_connection.commit()
+    buttons = types.InlineKeyboardMarkup()
+    buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
+    buttons.add(types.InlineKeyboardButton(text="Забрати свою кандидатуру", callback_data='eld'))
+    buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
+
+    db_object.execute(f"SELECT username, name FROM deputats "
+                      f"JOIN elections e on deputats.userid = e.userid WHERE chatid = CAST({chat_id} AS varchar)")
+    result = db_object.fetchall()
+    names = ""
+    for resul in result:
+        names += f"\n{resul[1]} ({resul[0]})"
+    bot.edit_message_text(f"Ініційовано початок виборів! Кандидати:{names}", call.message.chat.id,
+                          call.message.message_id, reply_markup=buttons)
+
 
 def handle_elect_deputat(call, db_object, db_connection, bot):
-    global stop
     user_id = call.from_user.id
     chat_id = str(call.message.chat.id)
     call_type = call.data[2:3]
     if call_type == 's':
-        stop = True
-    else:
-        stop = False
-    db_object.execute(f"SELECT level, name, username FROM deputats WHERE userid = {user_id}")
-    result = db_object.fetchone()
-    name = result[1]
-    username = result[2]
-    global isAdmin
-    isAdmin = False
-    if stop:
+        isadmin = False
         admins_t = bot.get_chat_administrators(call.message.chat.id)
         for admin in admins_t:
             if user_id == admin.user.id:
-                isAdmin = True
+                isadmin = True
                 break
-        if not isAdmin:
+        if not isadmin:
             bot.send_message(call.message.chat.id, "Ти хто такий шоб сюда тикать, сука? АДМІНА ЗОВИ!!!")
             return
         db_object.execute(f"SELECT COUNT(*) FROM elections WHERE userid = {user_id}")
@@ -174,7 +180,15 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             bot.send_message(call.message.chat.id, "Вибори почались!")
             start_election(call.message, db_object, db_connection, bot, call.message.chat.id)
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=None)
-    elif result is None or result[0] is None:
+        return
+    if call_type == 'd':
+        db_object.execute(f"DELETE FROM elections WHERE userid = {call.message.from_user.id}")
+        _show_candidates_(call, db_object, db_connection, bot, chat_id)
+        bot.send_message(call.message.chat.id, "Вашу кандідатуру видалено!")
+
+    db_object.execute(f"SELECT level, name, username FROM deputats WHERE userid = {user_id}")
+    result = db_object.fetchone()
+    if result is None or result[0] is None:
         bot.send_message(call.message.chat.id, "У вас нема депутата!")
     elif result[0] < 4:
         bot.send_message(call.message.chat.id, "У вас замалий рівень для подання кандидатури!")
@@ -187,18 +201,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             bot.send_message(call.message.chat.id, "Ваша кандидатура вже на виборах!")
         else:
             db_object.execute(f"INSERT INTO elections(userid, chatid) VALUES({user_id}, {chat_id})")
-            db_connection.commit()
-            buttons = types.InlineKeyboardMarkup()
-            buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
-            buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
-            db_object.execute(f"SELECT username, name FROM deputats "
-                              f"JOIN elections e on deputats.userid = e.userid WHERE chatid = CAST({chat_id} AS varchar)")
-            result = db_object.fetchall()
-            names = ""
-            for resul in result:
-                names += f"\n{resul[1]} ({resul[0]})"
-            bot.edit_message_text(f"Ініційовано початок виборів! Кандидати:{names}", call.message.chat.id, call.message.message_id, reply_markup=buttons)
-
+            _show_candidates_(call, db_object, db_connection, bot, chat_id)
 
 def _create_buttons_(modifier, message, db_object, bot, price):
     user_id = message.from_user.id
