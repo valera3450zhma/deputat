@@ -122,7 +122,7 @@ def elections_deputat(message, bot):
 def handle_elect_deputat(call, db_object, db_connection, bot):
     global stop
     user_id = call.from_user.id
-    chat_id = call.message.chat.id
+    chat_id = str(call.message.chat.id)
     bot.reply_to(call.message, str(chat_id))
     call_type = call.data[2:3]
     if call_type == 's':
