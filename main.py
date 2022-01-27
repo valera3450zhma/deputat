@@ -56,7 +56,7 @@ def elect_deputat_handler(message):
 
 @bot.message_handler(commands=['vote'])
 def elect_deputat_handler(message):
-    deputat.election_results(message, db_object, db_connection, bot)
+    deputat.election_vote(message, db_object, db_connection, bot)
 
 
 @bot.message_handler(commands=['provide_business'])

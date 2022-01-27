@@ -174,7 +174,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
         if not isadmin:
             bot.send_message(call.message.chat.id, "Ти хто такий шоб сюда тикать, сука? АДМІНА ЗОВИ!!!")
             return
-        db_object.execute(f"SELECT COUNT(*) FROM elections")
+        db_object.execute(f"SELECT COUNT(*) FROM elections WHERE chatid = CAST({chat_id} AS varchar)")
         count = db_object.fetchone()
         if count is None or count[0] < 3:
             bot.send_message(call.message.chat.id, "Замало кандидатів! Мінімум 3 чибзоїда")
@@ -213,13 +213,24 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             _show_candidates_(call, db_object, db_connection, bot, chat_id)
 
 
-def election_results(message, db_object, db_connection, bot):
+def election_vote(message, db_object, db_connection, bot):
+    user_id = message.from_user.id
     chat_id = message.chat.id
-    vote = int(message.text[6:]) - 1
+    db_object.execute(f"SELECT COUNT(*) FROM elections WHERE chatid = CAST({chat_id} AS varchar)")
+    count = db_object.fetchone()
+    db_object.execute(f"SELECT userid FROM voted WHERE chatid = CAST({chat_id} AS varchar) and userid = {user_id}")
+    result = db_object.fetchone()
+    vote = int(message.text[6:])
+    if vote < 0 or vote > count or result is not None:
+        bot.send_message(message.chat.id, "Уїбати чи в'єбати?")
+        return
+    vote -= 1
     db_object.execute(f"SELECT votes FROM elections WHERE chatid = CAST({chat_id} AS varchar) order by userid OFFSET {vote} LIMIT 1")
     result = db_object.fetchone()
     votes = int(result[0]) + 1
     db_object.execute(f"UPDATE elections SET votes = {votes} WHERE chatid = CAST({chat_id} AS varchar) and userid = (select userid from elections order by userid offset 0 limit 1)")
+    db_connection.commit()
+    db_object.execute(f"INSERT INTO voted(userid, chatid) VALUES({user_id, chat_id})")
     db_connection.commit()
     bot.send_message(message.chat.id, "Голос прийнято!")
 
