@@ -135,10 +135,9 @@ def start_election(message, db_object, db_connection, bot, chat_id):
     if result is None:
         bot.send_message(message.chat.id, "Каво, куда і шо...")
     else:
-        global options
-        options = {""}
+        options = []
         for ress in result:
-            options.add(f"{ress[1] (ress[0])}")
+            options.append(f"{ress[1] (ress[0])}")
         bot.send_poll(message.chat.id, "Вибирай давай", options[1:])
 
 
@@ -174,7 +173,6 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             return
         db_object.execute(f"SELECT COUNT(*) FROM elections")
         count = db_object.fetchone()
-        bot.send_message(call.message.chat.id, count[0])
         if count is None or count[0] < 3:
             bot.send_message(call.message.chat.id, "Замало кандидатів! Мінімум 3 чибзоїда")
         else:
