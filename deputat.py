@@ -181,7 +181,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=None)
         return
     if call_type == 'd':
-        db_object.execute(f"DELETE FROM elections WHERE userid = {call.message.from_user.id}")
+        db_object.execute(f"DELETE FROM elections WHERE userid = {user_id}")
         db_connection.commit()
         _show_candidates_(call, db_object, db_connection, bot, chat_id)
         bot.send_message(call.message.chat.id, "Вашу кандідатуру видалено!")
