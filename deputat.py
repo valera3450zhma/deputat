@@ -112,13 +112,20 @@ def lvlup_deputat(message, db_object, db_connection, bot):
         bot.send_sticker(message.chat.id, res.happy_sticker)
 
 
-def elections_deputat(message, bot):
+def elections_deputat(message, db_object, bot):
     if (message.chat.type == "private"):
         bot.reply_to(message, "І шо блять? Ти тут один, тому сю команду в груповий чат писать надо да")
     buttons = types.InlineKeyboardMarkup()
     buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
     buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
-    bot.reply_to(message, "Ініційовано початок виборів! Кандидати:", reply_markup=buttons)
+    chat_id = message.chat.id
+    db_object.execute(f"SELECT username, name FROM deputats "
+                      f"JOIN elections e on deputats.userid = e.userid WHERE chatid = {chat_id}")
+    result = db_object.fetchall()
+    names = ""
+    for resul in result:
+        names += f"\n{resul[1]} ({resul[0]})"
+    bot.reply_to(message, f"Ініційовано початок виборів! Кандидати:{names}", reply_markup=buttons)
 
 
 def start_election(message, db_object, db_connection, bot, chat_id):

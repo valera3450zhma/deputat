@@ -46,7 +46,7 @@ def kill_deputat_handler(message):
 
 @bot.message_handler(commands=['elections'])
 def kill_deputat_handler(message):
-    deputat.elections_deputat(message, bot)
+    deputat.elections_deputat(message, db_object, bot)
 
 
 @bot.message_handler(commands=['provide_business'])
