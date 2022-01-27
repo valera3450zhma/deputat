@@ -142,6 +142,7 @@ def start_election(message, db_object, bot, chat_id):
             text = str(i) + ' ' + ress[1] + ' (' + ress[0] + ') 💰' + str(ress[4]) + '$ ⭐' + str(ress[5]) + ' 📊' + str(ress[6])
             bot.send_photo(message.chat.id, res.level_photos[ress[3]-1][ress[2]], caption=text)
             i += 1
+        bot.send_message(message.chat.id, "Для голосування введіть команду /vote та номер кандидата відповідно до вище наданого списку\nНаприклад: /vote 3 - проголосувати за 3 кандидата")
 
 
 def _show_candidates_(call, db_object, db_connection, bot, chat_id):
