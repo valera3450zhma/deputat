@@ -222,7 +222,7 @@ def election_vote(message, db_object, db_connection, bot):
     db_object.execute(f"SELECT userid FROM voted WHERE chatid = CAST({chat_id} AS varchar) and userid = {user_id}")
     result = db_object.fetchone()
     vote = int(message.text[6:])
-    if count is None or vote < 0 or vote > count[0] or result is not None:
+    if count is None or vote <= 0 or vote > count[0] or result is not None:
         bot.send_message(message.chat.id, "Уїбати чи в'єбати?")
         return
     vote -= 1
