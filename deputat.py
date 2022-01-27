@@ -172,9 +172,9 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
         if not isadmin:
             bot.send_message(call.message.chat.id, "Ти хто такий шоб сюда тикать, сука? АДМІНА ЗОВИ!!!")
             return
-        db_object.execute(f"SELECT COUNT(*) FROM elections WHERE userid = {user_id}")
+        db_object.execute(f"SELECT COUNT(*) FROM elections")
         count = db_object.fetchall()
-        bot.send_message(call.message.chat.id, count)
+        bot.send_message(call.message.chat.id, count[0])
         if count is None or count[0] is None or count[0] < 3:
             bot.send_message(call.message.chat.id, "Замало кандидатів! Мінімум 3 чибзоїда")
         else:
