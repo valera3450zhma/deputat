@@ -51,7 +51,7 @@ def elect_deputat_handler(message):
 
 @bot.message_handler(commands=['show_candidates'])
 def elect_deputat_handler(message):
-    deputat.start_election(message, db_object, db_connection, bot)
+    deputat.start_election(message, db_object, bot, message.chat.id)
 
 
 @bot.message_handler(commands=['vote'])
