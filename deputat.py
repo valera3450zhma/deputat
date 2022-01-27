@@ -137,10 +137,8 @@ def start_election(message, db_object, db_connection, bot, chat_id):
     else:
         optionss = []
         for ress in result:
-            text = ress[1] + ' (' + ress[0] + ')'
-            bot.send_message(message.chat.id, text)
-            optionss.append(text)
-        bot.send_poll(message.chat.id, "Вибирай давай", optionss[1:], is_anonymous=False)
+            optionss.append(ress[1] + ' (' + ress[0] + ')')
+        bot.send_poll(message.chat.id, "Вибирай давай", optionss[], is_anonymous=False)
 
 
 def _show_candidates_(call, db_object, db_connection, bot, chat_id):
