@@ -139,7 +139,7 @@ def start_election(message, db_object, bot, chat_id):
         i = 1
         bot.send_message(message.chat.id, "ВО ТОВО ВАШІ КАНДИДАТИ Є")
         for ress in result:
-            text = str(i) + ' - ' + ress[1] + ' (' + ress[0] + ') - 💰' + ress[4] + '$ - ⭐' + ress[5]
+            text = str(i) + ' - ' + ress[1] + ' (' + ress[0] + ') - 💰' + str(ress[4]) + '$ - ⭐' + str(ress[5])
             bot.send_photo(message.chat.id, res.level_photos[ress[3]-1][ress[2]], caption=text)
             i += 1
 
@@ -215,7 +215,11 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
 
 def election_results(message, db_object, db_connection, bot):
     chat_id = message.chat.id
-    db_object.execute(f"SELECT pollid FROM elections WHERE chatid = CAST({chat_id} AS varchar)")
+    vote = int(message.text[6:]) - 1
+    db_object.execute(f"SELECT votes FROM elections WHERE chatid = CAST({chat_id} AS varchar) OFFSET {vote} LIMIT 1")
+    result = db_object.fetchone()
+    votes = int(result[0]) + 1
+    db_object.execute(f"UPDATE elections SET votes = {votes} WHERE chatid = CAST({chat_id} AS varchar) OFFSET {vote} LIMIT 1")
     result = db_object.fetchone()
 
 
