@@ -236,7 +236,17 @@ def election_vote(message, db_object, db_connection, bot):
 
 
 def finish_election(message, db_object, db_connection, bot):
+    user_id = message.from_user.id
     chat_id = message.chat.id
+    isadmin = False
+    admins_t = bot.get_chat_administrators(message.chat.id)
+    for admin in admins_t:
+        if user_id == admin.user.id:
+            isadmin = True
+            break
+    if not isadmin:
+        bot.send_message(message.chat.id, "Ти хто такий шоб сюда тикать, сука? АДМІНА ЗОВИ!!!")
+        return
     db_object.execute(f"SELECT elections.userid, d.level, d.username FROM elections JOIN deputats d on elections.userid = d.userid WHERE chatid = CAST({chat_id} AS varchar) ORDER BY votes DESC LIMIT 1")
     result = db_object.fetchone()
     if result is None:
