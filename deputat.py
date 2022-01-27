@@ -185,6 +185,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
         db_connection.commit()
         _show_candidates_(call, db_object, db_connection, bot, chat_id)
         bot.send_message(call.message.chat.id, "Вашу кандідатуру видалено!")
+        return
 
     db_object.execute(f"SELECT level, name, username FROM deputats WHERE userid = {user_id}")
     result = db_object.fetchone()
