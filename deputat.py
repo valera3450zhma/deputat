@@ -135,10 +135,10 @@ def start_election(message, db_object, db_connection, bot, chat_id):
     if result is None:
         bot.send_message(message.chat.id, "Каво, куда і шо...")
     else:
-        options = []
+        optionss = []
         for ress in result:
-            options.append(f"{ress[1] (ress[0])}")
-        bot.send_poll(message.chat.id, "Вибирай давай", options[1:])
+            optionss.append(f"{ress[1] (ress[0])}")
+        bot.send_poll(message.chat.id, "Вибирай давай", optionss[1:])
 
 
 def _show_candidates_(call, db_object, db_connection, bot, chat_id):
