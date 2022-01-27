@@ -117,6 +117,7 @@ def elections_deputat(message, db_object, bot):
         bot.reply_to(message, "І шо блять? Ти тут один, тому сю команду в груповий чат писать надо да")
     buttons = types.InlineKeyboardMarkup()
     buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
+    buttons.add(types.InlineKeyboardButton(text="Забрати свою кандидатуру", callback_data='eld'))
     buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
     chat_id = message.chat.id
     db_object.execute(f"SELECT username, name FROM deputats JOIN elections e on deputats.userid = e.userid WHERE chatid = CAST({chat_id} AS varchar)")
@@ -181,6 +182,10 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=None)
         return
     if call_type == 'd':
+        db_object.execute(f"SELECT userid FROM elections WHERE userid = {user_id}")
+        result = db_object.fetchone()
+        if result is None:
+            return
         db_object.execute(f"DELETE FROM elections WHERE userid = {user_id}")
         db_connection.commit()
         _show_candidates_(call, db_object, db_connection, bot, chat_id)
