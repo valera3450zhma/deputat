@@ -137,7 +137,8 @@ def start_election(message, db_object, db_connection, bot, chat_id):
     else:
         optionss = []
         for ress in result:
-            optionss.append(f"{ress[1] (ress[0])}")
+            text = f"{ress[1] (ress[0])}"
+            optionss.append(text)
         bot.send_poll(message.chat.id, "Вибирай давай", optionss[1:])
 
 
