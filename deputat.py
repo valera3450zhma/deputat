@@ -175,7 +175,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
         db_object.execute(f"SELECT COUNT(*) FROM elections WHERE userid = {user_id}")
         count = db_object.fetchone()
         if count is None or count[0] is None or count[0] < 3:
-            bot.send_message(call.message.chat.id, "Замало кандидатів! Мінімум 3 чибзоїда")
+            bot.send_message(call.message.chat.id, f"Замало кандидатів! Мінімум 3 чибзоїда, є {count[0]}")
         else:
             bot.send_message(call.message.chat.id, "Вибори почались!")
             start_election(call.message, db_object, db_connection, bot, call.message.chat.id)
