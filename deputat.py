@@ -113,10 +113,27 @@ def lvlup_deputat(message, db_object, db_connection, bot):
 
 
 def elections_deputat(message, bot):
+    if (message.chat.type == "private"):
+        bot.reply_to(message, "І шо блять? Ти тут один, тому сю команду в груповий чат писать надо да")
     buttons = types.InlineKeyboardMarkup()
     buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
     buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
     bot.reply_to(message, "Ініційовано початок виборів! Кандидати:", reply_markup=buttons)
+
+
+def start_election(message, db_object, db_connection, bot, chat_id):
+    db_object.execute(f"SELECT username, name, e.userid FROM deputats "
+                      f"JOIN elections e on deputats.userid = e.userid WHERE chatid = {chat_id}")
+    result = db_object.fetchall()
+    if result is None:
+        bot.send_message(message.chat.id, "Каво, куда і шо...")
+    else:
+        global options
+        options = {""}
+        for ress in result:
+            options.add(f"{ress[1] (ress[0])}")
+        bot.send_poll(message.chat.id, "Вибирай давай", options[1:])
+
 
 
 def handle_elect_deputat(call, db_object, db_connection, bot):
@@ -145,10 +162,11 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             return
         db_object.execute(f"SELECT COUNT(*) FROM elections WHERE userid = {user_id}")
         count = db_object.fetchone()
-        if count is None or count[0] is None or count[0] < 3:
+        if count is None or count[0] is None or count[0] <= 3:
             bot.send_message(call.message.chat.id, "Замало кандидатів! Мінімум 3 чибзоїда")
         else:
             bot.send_message(call.message.chat.id, "Вибори почались!")
+            start_election(call.message, db_object, db_connection, bot, call.message.chat.id)
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=None)
     elif result is None or result[0] is None:
         bot.send_message(call.message.chat.id, "У вас нема депутата!")
@@ -167,7 +185,13 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             buttons = types.InlineKeyboardMarkup()
             buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
             buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
-            bot.edit_message_text(f"{call.message.text}\n{name} ({username})", call.message.chat.id, call.message.message_id, reply_markup=buttons)
+            db_object.execute(f"SELECT username, name FROM deputats "
+                              f"JOIN elections e on deputats.userid = e.userid WHERE chatid = {chat_id}")
+            result = db_object.fetchall()
+            names = ""
+            for resul in result:
+                names += f"\n{resul[1]} ({resul[0]})"
+            bot.edit_message_text(f"{call.message.text}{names}", call.message.chat.id, call.message.message_id, reply_markup=buttons)
 
 
 def _create_buttons_(modifier, message, db_object, bot, price):
