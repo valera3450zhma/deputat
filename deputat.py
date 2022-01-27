@@ -120,7 +120,8 @@ def elections_deputat(message, db_object, bot):
     buttons.add(types.InlineKeyboardButton(text="Забрати свою кандидатуру", callback_data='eld'))
     buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
     chat_id = message.chat.id
-    db_object.execute(f"SELECT username, name FROM deputats JOIN elections e on deputats.userid = e.userid WHERE chatid = CAST({chat_id} AS varchar)")
+    db_object.execute(
+        f"SELECT username, name FROM deputats JOIN elections e on deputats.userid = e.userid WHERE chatid = CAST({chat_id} AS varchar)")
     result = db_object.fetchall()
     names = ""
     for resul in result:
@@ -128,19 +129,19 @@ def elections_deputat(message, db_object, bot):
     bot.reply_to(message, f"Ініційовано початок виборів! Кандидати:{names}", reply_markup=buttons)
 
 
-def start_election(message, db_object, db_connection, bot, chat_id):
-    db_object.execute(f"SELECT username, name, e.userid FROM deputats "
+def start_election(message, db_object, bot, chat_id):
+    db_object.execute(f"SELECT username, name, photo, level FROM deputats "
                       f"JOIN elections e on deputats.userid = e.userid WHERE chatid = CAST({chat_id} AS varchar)")
     result = db_object.fetchall()
     if result is None:
         bot.send_message(message.chat.id, "Каво, куда і шо...")
     else:
-        optionss = []
+        i = 1
+        bot.send_message(message.chat.id, "ВО ТОВО ВАШІ КАНДИДАТИ Є")
         for ress in result:
-            optionss.append(ress[1] + ' (' + ress[0] + ')')
-        poll = bot.send_poll(message.chat.id, "Вибирай давай", optionss, is_anonymous=False)
-        db_object.execute(f"UPDATE elections SET pollid = CAST({poll.message_id} AS varchar) WHERE chatid = CAST({chat_id} AS varchar)")
-        db_connection.commit()
+            text = str(i) + ' - ' + ress[1] + ' (' + ress[0] + ')'
+            bot.send_photo(message.chat.id, res.level_photos[result[3]-1][result[2]], caption=text)
+            i += 1
 
 
 def _show_candidates_(call, db_object, db_connection, bot, chat_id):
@@ -179,7 +180,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             bot.send_message(call.message.chat.id, "Замало кандидатів! Мінімум 3 чибзоїда")
         else:
             bot.send_message(call.message.chat.id, "Вибори почались!")
-            start_election(call.message, db_object, db_connection, bot, call.message.chat.id)
+            start_election(call.message, db_object, bot, call.message.chat.id)
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=None)
         return
     if call_type == 'd':
@@ -210,6 +211,13 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             db_object.execute(f"INSERT INTO elections(userid, chatid) VALUES({user_id}, {chat_id})")
             db_connection.commit()
             _show_candidates_(call, db_object, db_connection, bot, chat_id)
+
+
+def election_results(message, db_object, db_connection, bot):
+    chat_id = message.chat.id
+    db_object.execute(f"SELECT pollid FROM elections WHERE chatid = CAST({chat_id} AS varchar)")
+    result = db_object.fetchone()
+
 
 def _create_buttons_(modifier, message, db_object, bot, price):
     user_id = message.from_user.id

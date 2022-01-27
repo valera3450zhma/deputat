@@ -49,6 +49,11 @@ def elect_deputat_handler(message):
     deputat.elections_deputat(message, db_object, bot)
 
 
+@bot.message_handler(commands=['results'])
+def elect_deputat_handler(message):
+    deputat.election_results(message, db_object, db_connection, bot)
+
+
 @bot.message_handler(commands=['provide_business'])
 def buy_business_deputat_handler(message):
     deputat.provide_business_deputat(message, db_object, bot)
