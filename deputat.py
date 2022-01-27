@@ -137,7 +137,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
     if stop:
         admins_t = bot.get_chat_administrators(call.message.chat.id)
         for admin in admins_t:
-            if user_id == admin.id:
+            if user_id == admin.user.id:
                 isAdmin = True
                 break
         if not isAdmin:
