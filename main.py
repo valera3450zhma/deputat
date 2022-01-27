@@ -54,6 +54,11 @@ def elect_deputat_handler(message):
     deputat.start_election(message, db_object, bot, message.chat.id)
 
 
+@bot.message_handler(commands=['finish_election'])
+def elect_deputat_handler(message):
+    deputat.finish_election(message, db_object, bot, message.chat.id)
+
+
 @bot.message_handler(commands=['vote'])
 def elect_deputat_handler(message):
     deputat.election_vote(message, db_object, db_connection, bot)

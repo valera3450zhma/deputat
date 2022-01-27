@@ -235,6 +235,23 @@ def election_vote(message, db_object, db_connection, bot):
     bot.send_message(message.chat.id, "Голос прийнято!")
 
 
+def finish_election(message, db_object, db_connection, bot):
+    chat_id = message.chat.id
+    db_object.execute(f"SELECT elections.userid, d.level, d.username FROM elections JOIN deputats d on elections.userid = d.userid WHERE chatid = CAST({chat_id} AS varchar) ORDER BY votes DESC LIMIT 1")
+    result = db_object.fetchone()
+    if result is None:
+        bot.send_message(message.chat.id, "Ну ти зовсім дебіл, чи хіба трошка?")
+        return
+    db_object.execute(f"UPDATE deputats SET level = {result[1] + 1} WHERE userid = {result[0]}")
+    db_connection.commit()
+    bot.send_message(message.chat.id, f"УРА УРА УРА\nВот наш переможець туво є да - {result[2]}")
+    bot.send_sticker(message.chat.id, res.happy_sticker)
+    db_object.execute(f"DELETE FROM elections WHERE chatid = CAST({chat_id} AS varchar)")
+    db_connection.commit()
+    db_object.execute(f"DELETE FROM voted WHERE chatid = CAST({chat_id} AS varchar)")
+    db_connection.commit()
+
+
 def _create_buttons_(modifier, message, db_object, bot, price):
     user_id = message.from_user.id
     db_object.execute(f"SELECT kid, negr, kiosk FROM business WHERE userid = {user_id}")
