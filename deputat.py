@@ -142,7 +142,6 @@ def start_election(message, db_object, db_connection, bot, chat_id):
 
 
 def _show_candidates_(call, db_object, db_connection, bot, chat_id):
-    db_connection.commit()
     buttons = types.InlineKeyboardMarkup()
     buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
     buttons.add(types.InlineKeyboardButton(text="Забрати свою кандидатуру", callback_data='eld'))
@@ -183,6 +182,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
         return
     if call_type == 'd':
         db_object.execute(f"DELETE FROM elections WHERE userid = {call.message.from_user.id}")
+        db_connection.commit()
         _show_candidates_(call, db_object, db_connection, bot, chat_id)
         bot.send_message(call.message.chat.id, "Вашу кандідатуру видалено!")
 
@@ -201,6 +201,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             bot.send_message(call.message.chat.id, "Ваша кандидатура вже на виборах!")
         else:
             db_object.execute(f"INSERT INTO elections(userid, chatid) VALUES({user_id}, {chat_id})")
+            db_connection.commit()
             _show_candidates_(call, db_object, db_connection, bot, chat_id)
 
 def _create_buttons_(modifier, message, db_object, bot, price):
