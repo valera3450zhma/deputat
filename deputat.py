@@ -113,7 +113,7 @@ def lvlup_deputat(message, db_object, db_connection, bot):
 
 
 def elections_deputat(message, db_object, bot):
-    if (message.chat.type == "private"):
+    if message.chat.type == "private":
         bot.reply_to(message, "І шо блять? Ти тут один, тому сю команду в груповий чат писать надо да")
     buttons = types.InlineKeyboardMarkup()
     buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
@@ -174,7 +174,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             return
         db_object.execute(f"SELECT COUNT(*) FROM elections WHERE userid = {user_id}")
         count = db_object.fetchone()
-        if count is None or count[0] is None or count[0] <= 3:
+        if count is None or count[0] is None or count[0] < 3:
             bot.send_message(call.message.chat.id, "Замало кандидатів! Мінімум 3 чибзоїда")
         else:
             bot.send_message(call.message.chat.id, "Вибори почались!")
