@@ -128,12 +128,28 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
         stop = True
     else:
         stop = False
-    db_object.execute(f"SELECT level, name FROM deputats WHERE userid = {user_id}")
+    db_object.execute(f"SELECT level, name, username FROM deputats WHERE userid = {user_id}")
     result = db_object.fetchone()
     name = result[1]
+    username = result[2]
+    global isAdmin
+    isAdmin = False
     if stop:
-        bot.send_message(call.message.chat.id, "Вибори почались!")
-        bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=None)
+        admins_t = bot.get_chat_administrators(call.message.chat.id)
+        for admin in admins_t:
+            if user_id == admin.id:
+                isAdmin = True
+                break
+        if not isAdmin:
+            bot.send_message(call.message.chat.id, "Ти хто такий шоб сюда тикать, сука? АДМІНА ЗОВИ!!!")
+            return
+        db_object.execute(f"SELECT COUNT(*) FROM elections WHERE userid = {user_id}")
+        count = db_object.fetchone()
+        if count is None or count[0] is None or count[0] < 3:
+            bot.send_message(call.message.chat.id, "Замало кандидатів! Мінімум 3 чибзоїда")
+        else:
+            bot.send_message(call.message.chat.id, "Вибори почались!")
+            bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=None)
     elif result is None or result[0] is None:
         bot.send_message(call.message.chat.id, "У вас нема депутата!")
     elif result[0] < 4:
@@ -151,7 +167,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
             buttons = types.InlineKeyboardMarkup()
             buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
             buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
-            bot.edit_message_text(call.message.text + '\n' + name, call.message.chat.id, call.message.message_id, reply_markup=buttons)
+            bot.edit_message_text(f"{call.message.text}\n{name} ({username})", call.message.chat.id, call.message.message_id, reply_markup=buttons)
 
 
 def _create_buttons_(modifier, message, db_object, bot, price):
