@@ -206,7 +206,7 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
     elif result[3] < res.lvlup_requirements[result[0] - 1]:
         bot.send_message(call.message.chat.id, f"Твій депутат надто бідний, для поданя кандидатури на вибори!\nНеобхідно бабла:💰{res.lvlup_requirements[result[0]-1]}$")
     elif result[4] < res.lvlup_rating[result[0] - 1]:
-        bot.send_message(call.message.chat.id, f"У твого депутата надто малий рейтинг серед громади!\nНеобхідно рейтингу:⭐{res.lvlup_rating[result[0]-1]}$")
+        bot.send_message(call.message.chat.id, f"У твого депутата надто малий рейтинг серед громади!\nНеобхідно рейтингу:⭐{res.lvlup_rating[result[0]-1]}")
     elif level is not None and result[0] != level[0]:
         bot.send_message(call.message.chat.id, "У вас опше не той рівень шо у кандидатів!")
     elif result[0] == res.MAX_LEVEL:
