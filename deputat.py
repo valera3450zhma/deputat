@@ -197,10 +197,14 @@ def handle_elect_deputat(call, db_object, db_connection, bot):
 
     db_object.execute(f"SELECT level, name, username FROM deputats WHERE userid = {user_id}")
     result = db_object.fetchone()
+    db_object.execute(f"SELECT level FROM deputats JOIN elections e on deputats.userid = e.userid")
+    level = db_object.fetchone()
     if result is None or result[0] is None:
         bot.send_message(call.message.chat.id, "У вас нема депутата!")
     elif result[0] < 4:
         bot.send_message(call.message.chat.id, "У вас замалий рівень для подання кандидатури!")
+    elif level is not None and result[0] != level[0]:
+        bot.send_message(call.message.chat.id, "У вас опше не той рівень шо у кандидатів!")
     elif result[0] == res.MAX_LEVEL:
         bot.send_message(call.message.chat.id, "У вашого депутата максимальний рівень!")
     else:

@@ -1,4 +1,4 @@
-MAX_LEVEL = 5
+MAX_LEVEL = 6
 
 hour_adjust = 2
 
@@ -98,6 +98,18 @@ level_photos = [
         "AgACAgIAAxkBAAIQ7WHuvEyjqhGVODPHozgKDxLp-kccAAL2tzEbuAF5S2Noh30oZMsfAQADAgADbQADIwQ",
         "AgACAgIAAxkBAAIQ72HuvHUhmH_g6stfVzjzBMUKzXY5AAL3tzEbuAF5S9ng2LmGhblHAQADAgADbQADIwQ",
         "AgACAgIAAxkBAAIQ8WHuvJOwBJ58sgwwoH3D9dk2l5d3AAL4tzEbuAF5S4QsmCLfxdY3AQADAgADeAADIwQ"
+    ],
+    [
+        "AgACAgIAAxkBAAITw2Hz0cCwnH-uuuzV0Z1iL6kqGXqAAALlvDEbTJmYS-f4GaWGPAHCAQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAITxWHz0caK9M03wyprq80dGV-zvn8qAALmvDEbTJmYSzxfS_8NtMKyAQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAITx2Hz0c4TPx-TtyJez8hNuRCLzvZJAALnvDEbTJmYSxiy9vl1WJYCAQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAITyWHz0dZQSk4s7lPjsMj5CizbzNq0AALovDEbTJmYS-EnYp2q5uJ1AQADAgADbQADIwQ",
+        "AgACAgIAAxkBAAITy2Hz0d3cmsCwmyjcrhWFzElxiq_cAALpvDEbTJmYS51VoDPRqxJDAQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAITzWHz0eQaKv_Nz5jWncwc0_UO5vL4AALqvDEbTJmYS02ckS3ENrGcAQADAgADeQADIwQ",
+        "AgACAgIAAxkBAAITz2Hz0fH9IwoQq0BFeWWXN_kD1b4vAALrvDEbTJmYS6jCnO7PTknMAQADAgADbQADIwQ",
+        "AgACAgIAAxkBAAIT0WHz0gLWlGI6OA4OjpQfcGQE5LHVAALsvDEbTJmYS0_Fb8PrX8c4AQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAIT02Hz0gnlE3-CScyMXjIBes82zHURAALtvDEbTJmYS1D2vtPuN-AZAQADAgADeAADIwQ",
+        "AgACAgIAAxkBAAIT1WHz0hOkTZwo19Wa4q1Nyk-EFSVnAALuvDEbTJmYS8YxSNbuimLhAQADAgADeQADIwQ"
     ]
 ]
 
@@ -107,14 +119,16 @@ level_captions = [
     "Депутат міської ради. Я хачю вєласіпєд...",
     "Мер міста. Я раніше жив бідно, пас корови, продавав гриби. Одягався бідно. Мене ображали. Не вірили в "
     "мої таланти вчителі. Я не здався і доказав всім!",
-    "Губернатор області. В Тернополі торчав катав у ширку дімідрол, я ненавидів поп я слухав тіко рок-н-рол"
+    "Губернатор області. В Тернополі торчав катав у ширку дімідрол, я ненавидів поп я слухав тіко рок-н-рол",
+    "Депутат Верховної Ради. КОЛИ ТЕБЕ НЕМААААА"
 ]
 
 lvlup_requirements = [
     500,
     2000,
     8000,
-    15000
+    15000,
+    30000
 ]
 
 lvlup_rating = [
@@ -122,7 +136,8 @@ lvlup_rating = [
     10,
     20,
     50,
-    120
+    120,
+    300
 ]
 
 money_earn_multiplier = [
@@ -134,7 +149,8 @@ work_text = [
     " натиряв грошей з бюджету села!",
     " провів збір коштів на реконструкцію пам'ятника!",
     " відкрив нову школу в найзалупнішому районі міста!",
-    " проклав дорогу до свого рідного села!"
+    " проклав дорогу до свого рідного села!",
+    " зачитав текст, який йому дав олігарх, на трибуні ради!"
 ]
 
 work_photos = [
@@ -142,7 +158,8 @@ work_photos = [
     "AgACAgIAAxkBAAIEsGHh1bqKQfABCFf-i70s5xsq62MWAAJpuDEb9xwQS63g-PHzSoP6AQADAgADeAADIwQ",
     "AgACAgIAAxkBAAIHjGHj-HLMK5u4ozcjaZ_krnFik-MxAAIZujEb2msgS30E1LSLhD0aAQADAgADeAADIwQ",
     "AgACAgIAAxkBAAIPj2Hr-scC_2n2DkT4LKJGU5S1JmxLAAK4uDEbTFVhSxxdjS8sRAkAAQEAAwIAA3kAAyME",
-    "AgACAgIAAxkBAAIQ82Huvw8sNS5Ht3Nr-EgrWT06oT4bAAO4MRu4AXlLnREmIFnwFG4BAAMCAAN5AAMjBA"
+    "AgACAgIAAxkBAAIQ82Huvw8sNS5Ht3Nr-EgrWT06oT4bAAO4MRu4AXlLnREmIFnwFG4BAAMCAAN5AAMjBA",
+    "AgACAgIAAxkBAAIT12Hz01I_SUVk-Bed2i_vk_j7VSdLAAL0vDEbTJmYS6AeM8CrKcFBAQADAgADeQADIwQ"
 ]
 
 not_working_photos = [
