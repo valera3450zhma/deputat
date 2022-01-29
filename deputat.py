@@ -3,14 +3,6 @@ import random
 import res
 from telebot import types
 
-# DOCUMENTATION
-# Мене їбало робити нормальну документацію типу Java-Doc, тому буде таке
-# Typical operations TO-DO:
-# Add new level
-#
-#
-#
-
 
 class Deputat(object):
     def __init__(self, db_object, db_connection, bot):
