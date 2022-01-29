@@ -312,19 +312,20 @@ class Deputat(object):
         db_object = self.db_object
         if message.chat.type == "private":
             bot.reply_to(message, "І шо блять? Ти тут один, тому сю команду в груповий чат писать надо да")
-        buttons = types.InlineKeyboardMarkup()
-        buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
-        buttons.add(types.InlineKeyboardButton(text="Забрати свою кандидатуру", callback_data='eld'))
-        buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
-        chat_id = message.chat.id
-        db_object.execute(
-            f"SELECT username, name FROM deputats JOIN elections e on deputats.userid = e.userid "
-            f"WHERE chatid = CAST({chat_id} AS varchar)")
-        result = db_object.fetchall()
-        names = ""
-        for resul in result:
-            names += f"\n{resul[1]} ({resul[0]})"
-        bot.reply_to(message, f"Ініційовано початок виборів! Кандидати:{names}", reply_markup=buttons)
+        else:
+            buttons = types.InlineKeyboardMarkup()
+            buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
+            buttons.add(types.InlineKeyboardButton(text="Забрати свою кандидатуру", callback_data='eld'))
+            buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
+            chat_id = message.chat.id
+            db_object.execute(
+                f"SELECT username, name FROM deputats JOIN elections e on deputats.userid = e.userid "
+                f"WHERE chatid = CAST({chat_id} AS varchar)")
+            result = db_object.fetchall()
+            names = ""
+            for resul in result:
+                names += f"\n{resul[1]} ({resul[0]})"
+            bot.reply_to(message, f"Ініційовано початок виборів! Кандидати:{names}", reply_markup=buttons)
 
     # handles elections (call-buttons)
     def handle_elect_deputat(self, call):  # this method handles buttons from elections_deputat method
