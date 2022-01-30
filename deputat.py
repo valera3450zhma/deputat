@@ -674,7 +674,7 @@ class Deputat(object):
                                 f" WHERE userid = {user_id}"
             db_object.execute(sql_update_killed)
             db_connection.commit()
-            sql_delete_business = "DELETE FROM business WHERE userid = %s", [user_id]
+            sql_delete_business = f"DELETE FROM business WHERE userid = {user_id}"
             db_object.execute(sql_delete_business)
             db_connection.commit()
             bot.reply_to(message, "Депутату розірвало сраку...\nОтримати нового - /get")
