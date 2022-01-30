@@ -310,9 +310,9 @@ class Deputat(object):
             buttons.add(types.InlineKeyboardButton(text="Забрати свою кандидатуру", callback_data='eld'))
             buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
             chat_id = message.chat.id
-            db_object.execute(
-                f"SELECT username, name FROM deputats JOIN elections e on deputats.userid = e.userid "
-                f"WHERE chatid = CAST({chat_id} AS varchar)")
+            sql_get_candidates = f"SELECT username, name FROM deputats JOIN elections e on deputats.userid = e.userid " \
+                  f"WHERE chatid = CAST({chat_id} AS varchar)"
+            db_object.execute(sql_get_candidates)
             result = db_object.fetchall()
             names = ""
             for resul in result:
@@ -469,7 +469,7 @@ class Deputat(object):
             db_object.execute(sql_update_money)
             db_connection.commit()
             today_str = (datetime.datetime.today() + datetime.timedelta(hours=res.hour_adjust)).strftime("%Y/%m/%d")
-            sql_update_biz_worked = f"UPDATE business SET {biz_work} = %s WHERE userid=%s", (today_str, user_id)
+            sql_update_biz_worked = f"UPDATE business SET {biz_work} = {today_str} WHERE userid={user_id}"
             db_object.execute(sql_update_biz_worked)
             db_connection.commit()
             bot.send_photo(call.message.chat.id, res.biz_photos[biz_id],
