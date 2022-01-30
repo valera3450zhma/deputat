@@ -206,7 +206,7 @@ class Deputat(object):
         elif result[1] is None:     # user doesn't have a deputat, use UPDATE
             deputat_id = self._set_deputat_id(last_deputat)
             sql_new_deputat = f"UPDATE deputats SET deputatid = {deputat_id}, money = {random.randint(10, 100)}, " \
-                              f"name = {random.choice(res.deputatNames)}, level = {1},  photo = {random.randint(0, len(res.level_photos[0]) - 1)}, rating = {0} " \
+                              f"name = '{random.choice(res.deputatNames)}', level = {1},  photo = {random.randint(0, len(res.level_photos[0]) - 1)}, rating = {0} " \
                               f"WHERE userid = {result[0]}"
             db_object.execute(sql_new_deputat)
             db_connection.commit()
