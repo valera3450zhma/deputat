@@ -636,6 +636,7 @@ class Deputat(object):
         user_id = message.from_user.id
         sql_top = "SELECT username, money, rating, deputats.userid FROM deputats" \
                   " FULL JOIN business b on deputats.deputatid = b.deputatid" \
+                  " WHERE deputats.deputatid is not null" \
                   " ORDER BY (money + COALESCE(b.kid*100, 0) + COALESCE(b.negr*500, 0) + COALESCE(b.kiosk*3000, 0))" \
                   " DESC;"
         db_object.execute(sql_top)
