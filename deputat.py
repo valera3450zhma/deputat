@@ -469,7 +469,7 @@ class Deputat(object):
             db_object.execute(sql_update_money)
             db_connection.commit()
             today_str = (datetime.datetime.today() + datetime.timedelta(hours=res.hour_adjust)).strftime("%Y/%m/%d")
-            sql_update_biz_worked = f"UPDATE business SET {biz_work} = {today_str} WHERE userid={user_id}"
+            sql_update_biz_worked = f"UPDATE business SET {biz_work} = '{today_str}' WHERE userid={user_id}"
             db_object.execute(sql_update_biz_worked)
             db_connection.commit()
             bot.send_photo(call.message.chat.id, res.biz_photos[biz_id],
