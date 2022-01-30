@@ -633,20 +633,23 @@ class Deputat(object):
     def top_deputat(self, message):
         db_object = self.db_object
         bot = self.bot
-        sql_top = "SELECT username, money, rating FROM deputats" \
+        user_id = message.from_user.id
+        sql_top = "SELECT username, money, rating, deputats.userid FROM deputats" \
                   " FULL JOIN business b on deputats.deputatid = b.deputatid" \
                   " ORDER BY (money + COALESCE(b.kid*100, 0) + COALESCE(b.negr*500, 0) + COALESCE(b.kiosk*3000, 0))" \
-                  " DESC LIMIT 30;"
+                  " DESC;"
         db_object.execute(sql_top)
         result = db_object.fetchall()
         if not result:
             bot.reply_to(message, "Здається, ніхто навіть не має дупетата...")
         else:
             text = ''
-            i = 1
+            i = 0
             for row in result:
-                text += f"{i} - {row[0]}\n💰{row[1]}$ - ⭐{row[2]}\n"
                 i += 1
+                if i > 10 and row[3] != user_id:
+                    continue
+                text += f"{i} - {row[0]}\n💰{row[1]}$ - ⭐{row[2]}\n"
             bot.reply_to(message, text)
 
     # kills user's deputat
