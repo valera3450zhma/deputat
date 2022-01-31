@@ -96,7 +96,11 @@ class Deputat(object):
         sql_get_level = f"SELECT level FROM deputats JOIN elections e on deputats.userid = e.userid"
         db_object.execute(sql_get_level)
         level = db_object.fetchone()
-        if result is None or result[0] is None:
+        db_object.execute(f"SELECT userid FROM elections WHERE userid = {user_id}")
+        on_elections = db_object.fetchone()
+        if on_elections is not None:
+            bot.send_message(chat_id, "Ваша кандидатура вже на виборах!")
+        elif result is None or result[0] is None:
             bot.send_message(chat_id, "У вас нема депутата!")
         elif result[0] < 4:
             bot.send_message(chat_id, "У вас замалий рівень для подання кандидатури!")
@@ -113,14 +117,9 @@ class Deputat(object):
         elif result[0] == res.MAX_LEVEL:
             bot.send_message(chat_id, "У вашого депутата максимальний рівень!")
         else:   # add candidate
-            db_object.execute(f"SELECT userid FROM elections WHERE userid = {user_id}")
-            result = db_object.fetchone()
-            if result is not None:
-                bot.send_message(chat_id, "Ваша кандидатура вже на виборах!")
-            else:
-                db_object.execute(f"INSERT INTO elections(userid, chatid, votes) VALUES({user_id}, {chat_id}, 0)")
-                db_connection.commit()
-                self._edit_candidates_(call)
+            db_object.execute(f"INSERT INTO elections(userid, chatid, votes) VALUES({user_id}, {chat_id}, 0)")
+            db_connection.commit()
+            self._edit_candidates_(call)
 
     # edits election-message, adds or removes candidates from it
     def _edit_candidates_(self, call):
