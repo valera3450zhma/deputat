@@ -51,14 +51,14 @@ class Deputat(object):
                 break
 
         if not is_admin:    # user is not admin
-            bot.answer_callback_query(call.id, "Ти хто такий шоб сюда тикать? Адміна зови!!!")
+            bot.answer_callback_query(call.id, "Ти хто такий шоб сюда тикать? Адміна зови!!!", show_alert=True)
         else:               # user is admin
             sql_get_candidates_count = f"SELECT COUNT(*) FROM elections WHERE chatid = CAST({chat_id} AS varchar)"
             db_object.execute(sql_get_candidates_count)
             count = db_object.fetchone()
 
             if count is None or count[0] < 3:
-                bot.answer_callback_query(call.id, "Замало кандидатів! Треба хоть 3")
+                bot.answer_callback_query(call.id, "Замало кандидатів! Треба хоть 3", show_alert=True)
             else:           # start elections
                 bot.send_message(chat_id, "Вибори почались!")
                 self.show_candidates(call.message)
@@ -75,12 +75,12 @@ class Deputat(object):
         db_object.execute(f"SELECT userid FROM elections WHERE userid = {user_id}")
         on_elections = db_object.fetchone()
         if on_elections is None or on_elections[0] is None:
-            bot.answer_callback_query(call.id, "і шо я сука маю видалити по твоєму")
+            bot.answer_callback_query(call.id, "і шо я сука маю видалити по твоєму", show_alert=True)
         else:
             db_object.execute(f"DELETE FROM elections WHERE userid = {user_id}")
             db_connection.commit()
             self._edit_candidates_(call)
-            bot.answer_callback_query(call.id, "всьо, нема тебе на виборах")
+            bot.answer_callback_query(call.id, "всьо, нема тебе на виборах", show_alert=True)
 
     # adds candidate to elections in DB
     def _add_candidate_(self, call):
@@ -101,24 +101,26 @@ class Deputat(object):
         if on_elections is not None:
             bot.answer_callback_query(call.id, "так ти вже на виборах", show_alert=True)
         elif result is None or result[0] is None:
-            bot.answer_callback_query(call.id, "кого ти блять на вибори посилаєш")
+            bot.answer_callback_query(call.id, "кого ти блять на вибори посилаєш", show_alert=True)
         elif result[0] < 4:
-            bot.answer_callback_query(call.id, "підрости")
+            bot.answer_callback_query(call.id, "підрости", show_alert=True)
         elif result[0] == res.MAX_LEVEL:
-            bot.answer_callback_query(call.id, "куда дальше, в тебе максимальний рівень")
+            bot.answer_callback_query(call.id, "куда дальше, в тебе максимальний рівень", show_alert=True)
         elif result[3] < res.lvlup_requirements[result[0] - 1]:
             bot.answer_callback_query(call.id, f"Твій депутат надто бідний, для поданя кандидатури на вибори!"
-                                               f"\nНеобхідно бабла:💰{res.lvlup_requirements[result[0] - 1]}$")
+                                               f"\nНеобхідно бабла:💰{res.lvlup_requirements[result[0] - 1]}$"
+                                      , show_alert=True)
         elif result[4] < res.lvlup_rating[result[0] - 1]:
             bot.answer_callback_query(call.id, f"У твого депутата надто малий рейтинг серед громади!"
-                                               f"\nНеобхідно рейтингу:⭐{res.lvlup_rating[result[0] - 1]}")
+                                               f"\nНеобхідно рейтингу:⭐{res.lvlup_rating[result[0] - 1]}"
+                                      , show_alert=True)
         elif level is not None and result[0] != level[0]:
-            bot.answer_callback_query(call.id, "в тебе опше не той же рівень, шо у кандидатів")
+            bot.answer_callback_query(call.id, "в тебе опше не той же рівень, шо у кандидатів", show_alert=True)
         else:   # add candidate
             db_object.execute(f"INSERT INTO elections(userid, chatid, votes) VALUES({user_id}, {chat_id}, 0)")
             db_connection.commit()
             self._edit_candidates_(call)
-            bot.answer_callback_query(call.id, "єсть кантакт")
+            bot.answer_callback_query(call.id, "єсть кантакт", show_alert=True)
 
     # edits election-message, adds or removes candidates from it
     def _edit_candidates_(self, call):
@@ -647,6 +649,8 @@ class Deputat(object):
             text = ''
             i = 0
             for row in result:
+                if row[3] in res.SU:
+                    continue
                 i += 1
                 if i > 10 and row[3] != user_id:
                     continue
