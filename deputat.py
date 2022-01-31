@@ -51,14 +51,14 @@ class Deputat(object):
                 break
 
         if not is_admin:    # user is not admin
-            bot.send_message(chat_id, "Ти хто такий шоб сюда тикать, сука? АДМІНА ЗОВИ!!!")
+            bot.answer_callback_query(call.id, "Ти хто такий шоб сюда тикать? Адміна зови!!!")
         else:               # user is admin
             sql_get_candidates_count = f"SELECT COUNT(*) FROM elections WHERE chatid = CAST({chat_id} AS varchar)"
             db_object.execute(sql_get_candidates_count)
             count = db_object.fetchone()
 
             if count is None or count[0] < 3:
-                bot.send_message(chat_id, "Замало кандидатів! Мінімум 3 чибзоїда")
+                bot.answer_callback_query(call.id, "Замало кандидатів! Треба хоть 3")
             else:           # start elections
                 bot.send_message(chat_id, "Вибори почались!")
                 self.show_candidates(call.message)
