@@ -443,7 +443,7 @@ class Deputat(object):
         biz_name = res.biz_db_name[biz_id]
         biz_work = biz_name + 'work'
         biz_visit = biz_name + 'visit'
-        bot.answer_callback_query(call.id, call.message.from_user.id)
+
         sql_get_businesses = f"SELECT deputatid, {biz_name}, {biz_visit}, {biz_work} FROM business " \
                              f"WHERE userid = {user_id}"
         db_object.execute(sql_get_businesses)
