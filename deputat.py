@@ -91,7 +91,7 @@ class Deputat(object):
         bot = self.bot
         user_id = call.from_user.id
         chat_id = call.message.chat.id
-
+        bot.answer_callback_query(call.id, user_id)
         sql_get_user_info = f"SELECT level, name, username, money, rating FROM deputats WHERE userid = {user_id}"
         db_object.execute(sql_get_user_info)
         result = db_object.fetchone()
@@ -119,6 +119,7 @@ class Deputat(object):
         elif result[0] == res.MAX_LEVEL:
             bot.send_message(chat_id, "У вашого депутата максимальний рівень!")
         else:   # add candidate
+            bot.answer_callback_query(call.id, user_id)
             db_object.execute(f"INSERT INTO elections(userid, chatid, votes) VALUES({user_id}, {chat_id}, 0)")
             db_connection.commit()
             self._edit_candidates_(call)
