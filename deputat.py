@@ -75,7 +75,7 @@ class Deputat(object):
         db_object.execute(f"SELECT userid FROM elections WHERE userid = {user_id}")
         on_elections = db_object.fetchone()
         if on_elections is None or on_elections[0] is None:
-            bot.send_message(chat_id, "Ваша кандидатура вже на виборах!")
+            bot.send_message(chat_id, "Тебе нема на туво да")
         else:
             db_object.execute(f"DELETE FROM elections WHERE userid = {user_id}")
             db_connection.commit()
