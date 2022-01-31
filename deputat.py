@@ -100,6 +100,8 @@ class Deputat(object):
             bot.send_message(chat_id, "У вас нема депутата!")
         elif result[0] < 4:
             bot.send_message(chat_id, "У вас замалий рівень для подання кандидатури!")
+        elif result[0] == res.MAX_LEVEL:
+            bot.send_message(chat_id, "У вашого депутата максимальний рівень!")
         elif result[3] < res.lvlup_requirements[result[0] - 1]:
             bot.send_message(chat_id, f"Твій депутат надто бідний, для поданя кандидатури на вибори!\nНеобхідно бабла:"
                                       f"💰{res.lvlup_requirements[result[0] - 1]}$")
