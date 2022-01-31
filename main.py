@@ -135,7 +135,7 @@ def answer(call):
 
 @bot.message_handler(commands=['nwork'])
 def money_deputat_handler(message):
-    if message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1]:
+    if message.from_user.id in res.SU:
         user_id = message.from_user.id
         db_object.execute("UPDATE deputats SET lastworked = NULL WHERE userid = %s", [user_id])
         db_connection.commit()
@@ -144,7 +144,7 @@ def money_deputat_handler(message):
 
 @bot.message_handler(commands=['nprovide'])
 def money_deputat_handler(message):
-    if message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1]:
+    if message.from_user.id in res.SU:
         user_id = message.from_user.id
         for name in res.biz_db_name:
             name += 'visit'
@@ -155,7 +155,7 @@ def money_deputat_handler(message):
 
 @bot.message_handler(commands=['nbusiness'])
 def money_deputat_handler(message):
-    if message.from_user.id == res.SU[0] or message.from_user.id == res.SU[1]:
+    if message.from_user.id in res.SU:
         user_id = message.from_user.id
         for name in res.biz_db_name:
             name += 'work'
