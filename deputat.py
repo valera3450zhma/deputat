@@ -99,7 +99,7 @@ class Deputat(object):
         db_object.execute(f"SELECT userid FROM elections WHERE userid = {user_id}")
         on_elections = db_object.fetchone()
         if on_elections is not None:
-            bot.answer_callback_query(call.id, "так ти вже на виборах")
+            bot.answer_callback_query(call.id, "так ти вже на виборах", show_alert=True)
         elif result is None or result[0] is None:
             bot.answer_callback_query(call.id, "кого ти блять на вибори посилаєш")
         elif result[0] < 4:
