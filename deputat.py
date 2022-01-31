@@ -72,7 +72,6 @@ class Deputat(object):
         user_id = call.from_user.id
         chat_id = call.message.chat.id
 
-        bot.answer_callback_query(call.id, user_id)
         db_object.execute(f"SELECT userid FROM elections WHERE userid = {user_id}")
         on_elections = db_object.fetchone()
         if on_elections is None or on_elections[0] is None:
