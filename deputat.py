@@ -267,166 +267,6 @@ class Deputat(object):
                                caption="Твій депутат вже заїбався бо нині відхуячив своє",
                                reply_to_message_id=message.id)
 
-    # level-ups deputat
-    def lvlup_deputat(self, message):
-        db_object = self.db_object
-        db_connection = self.db_connection
-        bot = self.bot
-        user_id = message.from_user.id
-
-        sql_get_user_info = f"SELECT level, money, deputatid, rating FROM deputats WHERE deputats.userid = {user_id}"
-        db_object.execute(sql_get_user_info)
-        result = db_object.fetchone()
-
-        if not result or result[2] is None:     # deputat was not found
-            bot.reply_to(message, "А шо апати то?")
-        elif result[0] >= 4:                    # level too high to lvlup
-            bot.reply_to(message, "Для підвищення рівня, необхідно ініціювати вибори!")
-        elif result[1] < res.lvlup_requirements[result[0] - 1]:     # not enough money
-            bot.reply_to(message, f"Твій депутат надто бідний, щоб перейти на новий рівень!"
-                                  f"\n💰 Необхідно грошей: ${res.lvlup_requirements[result[0] - 1]}")
-            bot.send_sticker(message.chat.id, res.sad_sticker)
-        elif result[3] < res.lvlup_rating[result[0] - 1]:           # not enough rating
-            bot.reply_to(message, f"У твого депутата надто низький рейтинг, щоб перейти на новий рівень!"
-                                  f"\n⭐ Необхідно рейтингу: {res.lvlup_rating[result[0] - 1]}")
-            bot.send_sticker(message.chat.id, res.sad_sticker)
-        else:                                   # deputat will lvlup
-            sql_lvlup = f"UPDATE deputats SET level = {result[0] + 1}," \
-                        f" photo = {random.randint(0, len(res.level_photos[result[0]]) - 1)}," \
-                        f" lastworked = NULL, money = {result[1] - res.lvlup_requirements[result[0] - 1]} " \
-                        f"WHERE userid = {user_id}"
-            db_object.execute(sql_lvlup)
-            db_connection.commit()
-            bot.reply_to(message, "Депутата підвищено до нового рівня! - /show")
-            bot.send_sticker(message.chat.id, res.happy_sticker)
-
-    # starts election's recruitment
-    def elections_deputat(self, message):
-        bot = self.bot
-        db_object = self.db_object
-        if message.chat.type == "private":
-            bot.reply_to(message, "І шо блять? Ти тут один, тому сю команду в груповий чат писать надо да")
-        else:
-            buttons = types.InlineKeyboardMarkup()
-            buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
-            buttons.add(types.InlineKeyboardButton(text="Забрати свою кандидатуру", callback_data='eld'))
-            buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
-            chat_id = message.chat.id
-            sql_get_candidates = f"SELECT username, name FROM deputats JOIN elections e on deputats.userid = e.userid " \
-                  f"WHERE chatid = CAST({chat_id} AS varchar)"
-            db_object.execute(sql_get_candidates)
-            result = db_object.fetchall()
-            names = ""
-            for resul in result:
-                names += f"\n{resul[1]} ({resul[0]})"
-            bot.reply_to(message, f"Ініційовано початок виборів! Кандидати:{names}", reply_markup=buttons)
-
-    # handles elections (call-buttons)
-    def handle_elect_deputat(self, call):  # this method handles buttons from elections_deputat method
-        call_type = call.data[2:3]
-
-        if call_type == 's':
-            self._start_elections_(call)
-        elif call_type == 'd':
-            self._delete_candidate_(call)
-        elif call_type == 'a':
-            self._add_candidate_(call)
-
-    # shows candidates in current elections
-    def show_candidates(self, message):
-        db_object = self.db_object
-        bot = self.bot
-        chat_id = message.chat.id
-        sql_get_candidates = f"SELECT username, name, photo, level, money, rating, e.votes FROM deputats " \
-                             f"JOIN elections e on deputats.userid = e.userid " \
-                             f"WHERE chatid = CAST({chat_id} AS varchar) order by e.userid"
-        db_object.execute(sql_get_candidates)
-        result = db_object.fetchall()
-
-        if result is None:  # no candidates
-            bot.send_message(message.chat.id, "Каво, куда і шо...")
-        else:
-            i = 1
-            bot.send_message(message.chat.id, "ВО ТОВО ВАШІ КАНДИДАТИ Є")
-            for ress in result:
-                text = str(i) + ' ' + ress[1] + ' (' + ress[0] + ') 💰' + str(ress[4]) + '$ ⭐' + str(ress[5]) + ' 📊'\
-                       + str(ress[6])
-                bot.send_photo(message.chat.id, res.level_photos[ress[3] - 1][ress[2]], caption=text)
-                i += 1
-            text = "Для голосування введіть команду /vote та номер кандидата відповідно до вище наданого списку" \
-                   "\nНаприклад: /vote 3 - проголосувати за 3 кандидата"
-            bot.send_message(message.chat.id, text)
-
-    # vote for some candidate
-    def election_vote(self, message):
-        db_object = self.db_object
-        db_connection = self.db_connection
-        bot = self.bot
-        user_id = message.from_user.id
-        chat_id = message.chat.id
-
-        sql_get_candidates_count = f"SELECT COUNT(*) FROM elections WHERE chatid = CAST({chat_id} AS varchar)"
-        db_object.execute(sql_get_candidates_count)
-        count = db_object.fetchone()
-        sql_get_voted = f"SELECT userid FROM voted WHERE chatid = CAST({chat_id} AS varchar) and userid = {user_id}"
-        db_object.execute(sql_get_voted)
-        result = db_object.fetchone()
-        vote_for = int(message.text[6:])    # get number of candidate
-        if count is None or vote_for <= 0 or vote_for > count[0] or result is not None:     # wrong input
-            bot.send_message(message.chat.id, "Уїбати чи в'єбати?")
-        else:
-            vote_for -= 1
-            sql_get_votes = f"SELECT votes FROM elections WHERE chatid = CAST({chat_id} AS varchar) order by userid " \
-                            f"OFFSET {vote_for} LIMIT 1"
-            db_object.execute(sql_get_votes)
-            result = db_object.fetchone()
-            votes = int(result[0]) + 1
-            sql_vote = f"UPDATE elections SET votes = {votes} WHERE chatid = CAST({chat_id} AS varchar) and " \
-                       f"userid = (select userid from elections order by userid offset {vote_for} limit 1)"
-            db_object.execute(sql_vote)
-            db_connection.commit()
-            sql_update_voted = f"INSERT INTO voted(userid, chatid) VALUES {user_id, chat_id}"
-            db_object.execute(sql_update_voted)
-            db_connection.commit()
-            bot.send_message(message.chat.id, "Голос прийнято!")
-
-    # choose winner, lvlup
-    def finish_election(self, message):
-        bot = self.bot
-        db_object = self.db_object
-        db_connection = self.db_connection
-        user_id = message.from_user.id
-        chat_id = message.chat.id
-        isadmin = False
-        admins_t = bot.get_chat_administrators(message.chat.id)
-        for admin in admins_t:
-            if user_id == admin.user.id:
-                isadmin = True
-                break
-        if not isadmin:
-            bot.send_message(message.chat.id, "Ти хто такий шоб сюда тикать, сука? АДМІНА ЗОВИ!!!")
-        else:
-            sql_get_winner = f"SELECT elections.userid, d.level, d.username FROM elections " \
-                             f"JOIN deputats d on elections.userid = d.userid " \
-                             f"WHERE chatid = CAST({chat_id} AS varchar) ORDER BY votes DESC LIMIT 1"
-            db_object.execute(sql_get_winner)
-            result = db_object.fetchone()
-            if result is None:  # if no elections are held in chat
-                bot.send_message(message.chat.id, "Ну ти зовсім дебіл, чи хіба трошка?")
-            else:               # lvlup winner, finish-up
-                photo = random.randint(0, len(res.level_photos[result[1]]) - 1)
-                sql_lvlup = f"UPDATE deputats SET level = {result[1] + 1}, photo = {photo} WHERE userid = {result[0]}"
-                db_object.execute(sql_lvlup)
-                db_connection.commit()
-                bot.send_message(message.chat.id, f"УРА УРА УРА\nВот наш переможець туво є да - {result[2]}")
-                bot.send_sticker(message.chat.id, res.happy_sticker)
-                sql_clear_elections = f"DELETE FROM elections WHERE chatid = CAST({chat_id} AS varchar)"
-                db_object.execute(sql_clear_elections)
-                db_connection.commit()
-                sql_clear_voted = f"DELETE FROM voted WHERE chatid = CAST({chat_id} AS varchar)"
-                db_object.execute(sql_clear_voted)
-                db_connection.commit()
-
     # visit user's business
     def visit_business_deputat(self, message):
         bot = self.bot
@@ -591,6 +431,166 @@ class Deputat(object):
                     reply_text += f"\n{res.biz_name[i]} - {result[i]}"
             bot.reply_to(message, reply_text)
             bot.send_sticker(message.chat.id, res.money_pagulich_sticker)
+
+    # level-ups deputat
+    def lvlup_deputat(self, message):
+        db_object = self.db_object
+        db_connection = self.db_connection
+        bot = self.bot
+        user_id = message.from_user.id
+
+        sql_get_user_info = f"SELECT level, money, deputatid, rating FROM deputats WHERE deputats.userid = {user_id}"
+        db_object.execute(sql_get_user_info)
+        result = db_object.fetchone()
+
+        if not result or result[2] is None:     # deputat was not found
+            bot.reply_to(message, "А шо апати то?")
+        elif result[0] >= 4:                    # level too high to lvlup
+            bot.reply_to(message, "Для підвищення рівня, необхідно ініціювати вибори!")
+        elif result[1] < res.lvlup_requirements[result[0] - 1]:     # not enough money
+            bot.reply_to(message, f"Твій депутат надто бідний, щоб перейти на новий рівень!"
+                                  f"\n💰 Необхідно грошей: ${res.lvlup_requirements[result[0] - 1]}")
+            bot.send_sticker(message.chat.id, res.sad_sticker)
+        elif result[3] < res.lvlup_rating[result[0] - 1]:           # not enough rating
+            bot.reply_to(message, f"У твого депутата надто низький рейтинг, щоб перейти на новий рівень!"
+                                  f"\n⭐ Необхідно рейтингу: {res.lvlup_rating[result[0] - 1]}")
+            bot.send_sticker(message.chat.id, res.sad_sticker)
+        else:                                   # deputat will lvlup
+            sql_lvlup = f"UPDATE deputats SET level = {result[0] + 1}," \
+                        f" photo = {random.randint(0, len(res.level_photos[result[0]]) - 1)}," \
+                        f" lastworked = NULL, money = {result[1] - res.lvlup_requirements[result[0] - 1]} " \
+                        f"WHERE userid = {user_id}"
+            db_object.execute(sql_lvlup)
+            db_connection.commit()
+            bot.reply_to(message, "Депутата підвищено до нового рівня! - /show")
+            bot.send_sticker(message.chat.id, res.happy_sticker)
+
+    # starts election's recruitment
+    def elections_deputat(self, message):
+        bot = self.bot
+        db_object = self.db_object
+        if message.chat.type == "private":
+            bot.reply_to(message, "І шо блять? Ти тут один, тому сю команду в груповий чат писать надо да")
+        else:
+            buttons = types.InlineKeyboardMarkup()
+            buttons.add(types.InlineKeyboardButton(text="Подати свою кандидатуру", callback_data='ela'))
+            buttons.add(types.InlineKeyboardButton(text="Забрати свою кандидатуру", callback_data='eld'))
+            buttons.add(types.InlineKeyboardButton(text="Завершити набір кандидатів", callback_data='els'))
+            chat_id = message.chat.id
+            sql_get_candidates = f"SELECT username, name FROM deputats JOIN elections e on deputats.userid = e.userid " \
+                  f"WHERE chatid = CAST({chat_id} AS varchar)"
+            db_object.execute(sql_get_candidates)
+            result = db_object.fetchall()
+            names = ""
+            for resul in result:
+                names += f"\n{resul[1]} ({resul[0]})"
+            bot.reply_to(message, f"Ініційовано початок виборів! Кандидати:{names}", reply_markup=buttons)
+
+    # handles elections (call-buttons)
+    def handle_elect_deputat(self, call):  # this method handles buttons from elections_deputat method
+        call_type = call.data[2:3]
+
+        if call_type == 's':
+            self._start_elections_(call)
+        elif call_type == 'd':
+            self._delete_candidate_(call)
+        elif call_type == 'a':
+            self._add_candidate_(call)
+
+    # shows candidates in current elections
+    def show_candidates(self, message):
+        db_object = self.db_object
+        bot = self.bot
+        chat_id = message.chat.id
+        sql_get_candidates = f"SELECT username, name, photo, level, money, rating, e.votes FROM deputats " \
+                             f"JOIN elections e on deputats.userid = e.userid " \
+                             f"WHERE chatid = CAST({chat_id} AS varchar) order by e.userid"
+        db_object.execute(sql_get_candidates)
+        result = db_object.fetchall()
+
+        if result is None:  # no candidates
+            bot.send_message(message.chat.id, "Каво, куда і шо...")
+        else:
+            i = 1
+            bot.send_message(message.chat.id, "ВО ТОВО ВАШІ КАНДИДАТИ Є")
+            for ress in result:
+                text = str(i) + ' ' + ress[1] + ' (' + ress[0] + ') 💰' + str(ress[4]) + '$ ⭐' + str(ress[5]) + ' 📊'\
+                       + str(ress[6])
+                bot.send_photo(message.chat.id, res.level_photos[ress[3] - 1][ress[2]], caption=text)
+                i += 1
+            text = "Для голосування введіть команду /vote та номер кандидата відповідно до вище наданого списку" \
+                   "\nНаприклад: /vote 3 - проголосувати за 3 кандидата"
+            bot.send_message(message.chat.id, text)
+
+    # vote for some candidate
+    def election_vote(self, message):
+        db_object = self.db_object
+        db_connection = self.db_connection
+        bot = self.bot
+        user_id = message.from_user.id
+        chat_id = message.chat.id
+
+        sql_get_candidates_count = f"SELECT COUNT(*) FROM elections WHERE chatid = CAST({chat_id} AS varchar)"
+        db_object.execute(sql_get_candidates_count)
+        count = db_object.fetchone()
+        sql_get_voted = f"SELECT userid FROM voted WHERE chatid = CAST({chat_id} AS varchar) and userid = {user_id}"
+        db_object.execute(sql_get_voted)
+        result = db_object.fetchone()
+        vote_for = int(message.text[6:])    # get number of candidate
+        if count is None or vote_for <= 0 or vote_for > count[0] or result is not None:     # wrong input
+            bot.send_message(message.chat.id, "Уїбати чи в'єбати?")
+        else:
+            vote_for -= 1
+            sql_get_votes = f"SELECT votes FROM elections WHERE chatid = CAST({chat_id} AS varchar) order by userid " \
+                            f"OFFSET {vote_for} LIMIT 1"
+            db_object.execute(sql_get_votes)
+            result = db_object.fetchone()
+            votes = int(result[0]) + 1
+            sql_vote = f"UPDATE elections SET votes = {votes} WHERE chatid = CAST({chat_id} AS varchar) and " \
+                       f"userid = (select userid from elections order by userid offset {vote_for} limit 1)"
+            db_object.execute(sql_vote)
+            db_connection.commit()
+            sql_update_voted = f"INSERT INTO voted(userid, chatid) VALUES {user_id, chat_id}"
+            db_object.execute(sql_update_voted)
+            db_connection.commit()
+            bot.send_message(message.chat.id, "Голос прийнято!")
+
+    # choose winner, lvlup
+    def finish_election(self, message):
+        bot = self.bot
+        db_object = self.db_object
+        db_connection = self.db_connection
+        user_id = message.from_user.id
+        chat_id = message.chat.id
+        isadmin = False
+        admins_t = bot.get_chat_administrators(message.chat.id)
+        for admin in admins_t:
+            if user_id == admin.user.id:
+                isadmin = True
+                break
+        if not isadmin:
+            bot.send_message(message.chat.id, "Ти хто такий шоб сюда тикать, сука? АДМІНА ЗОВИ!!!")
+        else:
+            sql_get_winner = f"SELECT elections.userid, d.level, d.username FROM elections " \
+                             f"JOIN deputats d on elections.userid = d.userid " \
+                             f"WHERE chatid = CAST({chat_id} AS varchar) ORDER BY votes DESC LIMIT 1"
+            db_object.execute(sql_get_winner)
+            result = db_object.fetchone()
+            if result is None:  # if no elections are held in chat
+                bot.send_message(message.chat.id, "Ну ти зовсім дебіл, чи хіба трошка?")
+            else:               # lvlup winner, finish-up
+                photo = random.randint(0, len(res.level_photos[result[1]]) - 1)
+                sql_lvlup = f"UPDATE deputats SET level = {result[1] + 1}, photo = {photo} WHERE userid = {result[0]}"
+                db_object.execute(sql_lvlup)
+                db_connection.commit()
+                bot.send_message(message.chat.id, f"УРА УРА УРА\nВот наш переможець туво є да - {result[2]}")
+                bot.send_sticker(message.chat.id, res.happy_sticker)
+                sql_clear_elections = f"DELETE FROM elections WHERE chatid = CAST({chat_id} AS varchar)"
+                db_object.execute(sql_clear_elections)
+                db_connection.commit()
+                sql_clear_voted = f"DELETE FROM voted WHERE chatid = CAST({chat_id} AS varchar)"
+                db_object.execute(sql_clear_voted)
+                db_connection.commit()
 
     # upgrade user's rating
     def up_rating_deputat(self, message):
