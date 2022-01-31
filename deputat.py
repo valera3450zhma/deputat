@@ -72,7 +72,7 @@ class Deputat(object):
         user_id = call.message.from_user.id
         chat_id = call.message.chat.id
 
-        db_object.execute(f"SELECT userid FROM elections WHERE userid = {user_id}")
+        db_object.execute(f"SELECT * FROM elections WHERE userid = {user_id}")
         result = db_object.fetchone()
         if result is None:
             bot.send_message(chat_id, "я тут хочу вкидувати алер а не повідомлення")
