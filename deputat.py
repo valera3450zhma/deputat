@@ -72,9 +72,10 @@ class Deputat(object):
         user_id = call.message.from_user.id
         chat_id = call.message.chat.id
 
-        bot.answer_callback_query(call.id, "aboba")
+        bot.answer_callback_query(call.id, user_id)
         db_object.execute(f"SELECT userid FROM elections WHERE userid = {user_id}")
         on_elections = db_object.fetchone()
+        bot.answer_callback_query(call.id, on_elections)
         if on_elections is None or on_elections[0] is None:
             bot.send_message(chat_id, "Тебе нема на туво да")
         else:
