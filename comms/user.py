@@ -20,14 +20,14 @@ def top_deputat(deputat, call):
     db_object = deputat.db_object
     bot = deputat.bot
     user_id = call.from_user.id
-    sql_top = f"select user_firstname, d.money, users.user_id from users join deputats d on users.deputat_id = d.deputat_id " \
-              f"order by (d.money + (" \
+    sql_top = f"select user_firstname, d.money, d.rating, users.user_id from users join deputats d on " \
+              f"users.deputat_id = d.deputat_id order by (d.money + (" \
               f"((select count(level) from businesses " \
               f"where level = 1 and businesses.user_id = users.user_id) * {res.biz_prices[0]})" \
               f"+((select count(level) from businesses " \
-              f"where level = 2 and businesses.user_id = users.user_id) * 500)" \
+              f"where level = 2 and businesses.user_id = users.user_id) * {res.biz_prices[1]})" \
               f"+((select count(level) from businesses " \
-              f"where level = 3 and businesses.user_id = users.user_id) * 3000))" \
+              f"where level = 3 and businesses.user_id = users.user_id) * {res.biz_prices[2]}))" \
               f") DESC"
     db_object.execute(sql_top)
     result = db_object.fetchall()
