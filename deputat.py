@@ -164,49 +164,6 @@ class Deputat(object):
         buttons.add(visit, provide, buy, show)
         bot.send_message(message.chat.id, "Меню бізнесяк", reply_markup=buttons)
 
-
-    # handle's callback
-    def handle_visit_business_deputat(self, call):
-        db_object = self.db_object
-        db_connection = self.db_connection
-        bot = self.bot
-        user_id = call.from_user.id
-        biz_id = int(call.data[2:3])
-        biz_name = res.biz_db_name[biz_id]
-        biz_work = biz_name + 'work'
-        biz_visit = biz_name + 'visit'
-
-        sql_get_businesses = f"SELECT deputatid, {biz_name}, {biz_visit}, {biz_work} FROM business " \
-                             f"WHERE userid = {user_id}"
-        db_object.execute(sql_get_businesses)
-        result = db_object.fetchone()
-        sql_get_money = f"SELECT money FROM deputats WHERE userid = {user_id}"
-        db_object.execute(sql_get_money)
-        money = db_object.fetchone()
-        deputat_id = result[0]
-        biz_count = result[1]
-        visited = result[2] if result[2] is not None else datetime.date.min
-        worked = result[3] if result[3] is not None else datetime.date.min
-        today = datetime.date.today() + datetime.timedelta(hours=res.hour_adjust)
-
-        if not result or deputat_id is None or biz_count is None:
-            bot.send_message(call.message.chat.id, "І кого ти провідуєш? Мать свою чи шо?")
-        elif (today - worked).days < 1:     # business worked today
-            bot.send_message(call.message.chat.id, res.biz_worked_text[biz_id])
-        elif (today - visited).days >= 7:   # business was not suplied in 7 days
-            bot.send_message(call.message.chat.id, res.biz_not_visited_text[biz_id])
-        else:                               # collect money from business
-            earned = res.biz_profits[biz_id] * random.randint(1, 10) * biz_count
-            sql_update_money = f"UPDATE deputats SET money = {money[0] + earned} WHERE userid = {user_id}"
-            db_object.execute(sql_update_money)
-            db_connection.commit()
-            today_str = (datetime.datetime.today() + datetime.timedelta(hours=res.hour_adjust)).strftime("%Y/%m/%d")
-            sql_update_biz_worked = f"UPDATE business SET {biz_work} = '{today_str}' WHERE userid={user_id}"
-            db_object.execute(sql_update_biz_worked)
-            db_connection.commit()
-            bot.send_photo(call.message.chat.id, res.biz_photos[biz_id],
-                           caption=res.biz_work_text[biz_id] + str(earned))
-
     # supply business
     def provide_business_deputat(self, message):
         bot = self.bot
