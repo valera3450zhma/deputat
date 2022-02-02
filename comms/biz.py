@@ -26,8 +26,7 @@ def _get_businesses_(db_object, user_id):
         sql_get_businesses = f"SELECT count(level) FROM businesses WHERE user_id = {user_id} and level = {i+1};"
         db_object.execute(sql_get_businesses)
         result = db_object.fetchone()
-        if result[0] != 0:
-            lvls.append(result[0])
+        lvls.append(result[0])
     return lvls
 
 
@@ -43,7 +42,7 @@ def _create_business_buttons_(deputat, call, price, modifier):
     else:
         buttons = types.InlineKeyboardMarkup()
         for i in range(len(res.biz_prices)):
-            if lvls[i] is not None:
+            if lvls[i] != 0:
                 buttons.add(types.InlineKeyboardButton
                             (text=res.biz_provide_buttons(lvls, i, price), callback_data=f'{modifier}{i}'))
         buttons.add((types.InlineKeyboardButton(text="Назад", callback_data="business_menu")))
