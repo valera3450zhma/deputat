@@ -32,7 +32,7 @@ def _create_business_buttons_(deputat, call, price, modifier):
             if lvls[i] is not None:
                 buttons.add(types.InlineKeyboardButton
                             (text=res.biz_provide_buttons(lvls, i, price), callback_data=f'{modifier}{i}'))
-        bot.edit_message_text("Меню дєпутата", call.message.chat.id, call.message.message_id)
+        bot.edit_message_text("Меню дєпутата", call.message.chat.id, call.message.message_id, reply_markup=buttons)
 
 
 # collects money from business

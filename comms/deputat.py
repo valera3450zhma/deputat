@@ -141,9 +141,9 @@ def up_rating_deputat(deputat, call):
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.rating_name)):
         buttons.add(types.InlineKeyboardButton
-                    (text=res.rating_name[i] + ' $' + str(res.rating_price[i]), callback_data=f'rt{i}'))
+                    (text='⭐' + res.rating_name[i] + ' $' + str(res.rating_price[i]), callback_data=f'rt{i}'))
     buttons.add((types.InlineKeyboardButton(text="Назад", callback_data="deputat_menu")))
-    bot.edit_message_text("Доступні методи підняття рейтингу", call.message.chat.id, call.message.message_id, reply_markup=buttons)
+    bot.edit_message_text("Доступні методи підняття рейтингу", chat_id, call.message.message_id, reply_markup=buttons)
 
 
 # rating upgrade handler
@@ -189,6 +189,8 @@ def lvlup_deputat(deputat, call):
 
     if result is None:     # deputat was not found
         bot.answer_callback_query(call.id, "Кого ти блять апаєш, може депутата перше дістанеш?", show_alert=True)
+    elif result[0] == res.MAX_LEVEL:
+        bot.answer_callback_query(call.id, "Куда дальше, в тебе максимальний рівень", show_alert=True)
     elif result[0] >= 4:   # level too high to lvlup
         bot.answer_callback_query(call.id, "Смарі, ти вже дохуя піздатий, тому шоб бути піздатішим треба на вибори "
                                            "податись окда", show_alert=True)
