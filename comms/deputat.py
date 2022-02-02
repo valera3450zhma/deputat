@@ -25,7 +25,7 @@ def _work_(deputat, user_id, money, level):
     db_object = deputat.db_object
     db_connection = deputat.db_connection
     today_str = (datetime.datetime.today() + datetime.timedelta(hours=res.hour_adjust)).strftime("%Y/%m/%d")
-    earned = random.randint(10, 100) * res.money_earn_multiplier[level - 1]
+    earned = random.randint(30, 80) * res.money_earn_multiplier[level - 1]
     db_object.execute("UPDATE deputats SET last_worked = %s, money = %s WHERE user_id = %s",
                       (today_str, earned + int(money), user_id))
     db_connection.commit()
@@ -143,8 +143,7 @@ def up_rating_deputat(deputat, call):
         buttons.add(types.InlineKeyboardButton
                     (text=res.rating_name[i] + ' $' + str(res.rating_price[i]), callback_data=f'rt{i}'))
     buttons.add((types.InlineKeyboardButton(text="Назад", callback_data="deputat_menu")))
-    bot.edit_message_reply_markup(chat_id, call.message.message_id, reply_markup=buttons)
-    bot.edit_message_text("Доступні методи підняття рейтингу", call.message.chat.id, call.message.message_id)
+    bot.edit_message_text("Доступні методи підняття рейтингу", call.message.chat.id, call.message.message_id, reply_markup=buttons)
 
 
 # rating upgrade handler
@@ -220,5 +219,4 @@ def handle_deputat_menu(deputat, call):
     rating = types.InlineKeyboardButton(text='Підвищити рейтинг', callback_data="rating_deputat")
     lvlup = types.InlineKeyboardButton(text='Підвищити рівень', callback_data="lvlup_deputat")
     buttons.add(get, show, work, rating, lvlup)
-    bot.edit_message_reply_markup(call.message.chat_id, call.message.message_id, reply_markup=buttons)
-    bot.edit_message_text(res.biz_text, call.message.chat.id, call.message.message_id)
+    bot.edit_message_text(res.biz_text, call.message.chat.id, call.message.message_id, reply_markup=buttons)
