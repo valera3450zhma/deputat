@@ -106,10 +106,7 @@ def handle_collect_business(deputat, call):
             have_worked += 1
         if (today - last_provided).days >= 7:
             not_supplied += 1
-    bot.send_message(call.message.chat.id, can_work)
-    bot.send_message(call.message.chat.id, have_worked)
-    bot.send_message(call.message.chat.id, not_supplied)
-    bot.send_message(call.message.chat.id, biz_count)
+
     if biz_count == 0:
         bot.answer_callback_query(call.id, "Чел, це піздєц, якшо ти це бачиш - швидко пиши мені в пп, бо то є БАГ!!!!", show_alert=True)
     elif have_worked == biz_count:      # business worked today
@@ -147,10 +144,10 @@ def handle_provide_business(deputat, call):
 
     sql_get_business = f"SELECT level, last_provided FROM businesses WHERE user_id = {user_id} and level = {biz_id + 1}"
     db_object.execute(sql_get_business)
-    user_business = db_object.fetchone()
+    user_business = db_object.fetchall()
     sql_biz_count = f"SELECT count(*) FROM businesses WHERE user_id = {user_id} and level = {biz_id + 1}"
     db_object.execute(sql_biz_count)
-    biz_count_ = db_object.fetchall()
+    biz_count_ = db_object.fetchone()
     sql_get_money = f"SELECT money FROM deputats WHERE user_id = {user_id}"
     db_object.execute(sql_get_money)
     money = db_object.fetchone()
