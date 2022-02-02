@@ -122,7 +122,7 @@ def answer(call):
 def money_deputat_handler(message):
     if message.from_user.id in res.SU:
         user_id = message.from_user.id
-        db_object.execute("UPDATE deputats SET lastworked = NULL WHERE userid = %s", [user_id])
+        db_object.execute("UPDATE deputats SET last_worked = NULL WHERE userid = %s", [user_id])
         db_connection.commit()
         bot.reply_to(message, f"Параметр роботи оновлено. Депутат раніше не працював.")
 
@@ -131,10 +131,8 @@ def money_deputat_handler(message):
 def money_deputat_handler(message):
     if message.from_user.id in res.SU:
         user_id = message.from_user.id
-        for name in res.biz_db_name:
-            name += 'visit'
-            db_object.execute(f"UPDATE business SET {name} = NULL WHERE userid = %s", [user_id])
-            db_connection.commit()
+        db_object.execute(f"UPDATE business SET last_provided = NULL WHERE userid = %s", [user_id])
+        db_connection.commit()
         bot.reply_to(message, f"Параметр відвідування оновлено. Депутат раніше не відвідував жоден бізнес.")
 
 
@@ -142,10 +140,8 @@ def money_deputat_handler(message):
 def money_deputat_handler(message):
     if message.from_user.id in res.SU:
         user_id = message.from_user.id
-        for name in res.biz_db_name:
-            name += 'work'
-            db_object.execute(f"UPDATE business SET {name} = NULL WHERE userid = %s", [user_id])
-            db_connection.commit()
+        db_object.execute(f"UPDATE business SET last_worked = NULL WHERE userid = %s", [user_id])
+        db_connection.commit()
         bot.reply_to(message, f"Параметр збору оновлено. Депутат раніше не збирав гроші з жодного бізнесу.")
 
 
