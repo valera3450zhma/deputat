@@ -100,11 +100,11 @@ def handle_collect_business(deputat, call):
     for biz in user_businesses:
         last_provided = biz[1] if biz[1] is not None else datetime.date.min
         last_worked = biz[0] if biz[0] is not None else datetime.date.min
-        if (today - last_worked).days > 1 and (today-last_provided) < 7:
+        if (today - last_worked).days > 1 and (today-last_provided).days < 7:
             can_work += 1
         elif (today - last_worked).days < 1:
             have_worked += 1
-        elif (today - last_provided) >= 7:
+        elif (today - last_provided).days >= 7:
             not_supplied += 1
 
     if biz_count == 0:
