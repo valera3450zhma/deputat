@@ -183,7 +183,7 @@ def buy_business(deputat, call):
     bot = deputat.bot
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.biz_prices)):
-        buttons.add(types.InlineKeyboardButton(text=f'{res.biz_name[0]} - 💰{res.biz_prices[i]} $', callback_data=f'bb{i}'))
+        buttons.add(types.InlineKeyboardButton(text=f'{res.biz_name[i]} - 💰{res.biz_prices[i]} $', callback_data=f'bb{i}'))
     buttons.add(types.InlineKeyboardButton(text="І шо мені вибирати?", callback_data="help"))
     buttons.add((types.InlineKeyboardButton(text="Назад", callback_data="business_menu")))
     bot.edit_message_text("Во туво купит можеш да", call.message.chat.id, call.message.message_id, reply_markup=buttons)
