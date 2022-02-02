@@ -86,11 +86,11 @@ def handle_collect_business(deputat, call):
     user_businesses = db_object.fetchall()
     sql_biz_count = f"SELECT count(*) FROM businesses WHERE user_id = {user_id} and level = {biz_id + 1}"
     db_object.execute(sql_biz_count)
-    biz_count_ = db_object.fetchall()
+    biz_count_ = db_object.fetchone()
     sql_get_money = f"SELECT money FROM deputats WHERE user_id = {user_id}"
     db_object.execute(sql_get_money)
     deput = db_object.fetchone()
-    biz_count = int(str(biz_count_))
+    biz_count = biz_count_[0]
     money = deput[0]
 
     can_work = 0
