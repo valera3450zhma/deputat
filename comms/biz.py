@@ -37,7 +37,7 @@ def _create_business_buttons_(deputat, call, price, modifier):
     user_id = call.from_user.id
     lvls = _get_businesses_(db_object, user_id)
 
-    if len(lvls) == 0:
+    if 0 in lvls:
         bot.answer_callback_query(call.id, "У тебе нема бізнесів", show_alert=True)
     else:
         buttons = types.InlineKeyboardMarkup()
