@@ -90,6 +90,7 @@ def handle_collect_business(deputat, call):
     sql_get_money = f"SELECT money FROM deputats WHERE user_id = {user_id}"
     db_object.execute(sql_get_money)
     deput = db_object.fetchone()
+    biz_count = int(str(biz_count_))
     money = deput[0]
 
     can_work = 0
@@ -108,12 +109,12 @@ def handle_collect_business(deputat, call):
     bot.send_message(call.message.chat.id, can_work)
     bot.send_message(call.message.chat.id, have_worked)
     bot.send_message(call.message.chat.id, not_supplied)
-    bot.send_message(call.message.chat.id, biz_count_[0])
-    if biz_count_[0] == 0:
+    bot.send_message(call.message.chat.id, biz_count)
+    if biz_count == 0:
         bot.answer_callback_query(call.id, "Чел, це піздєц, якшо ти це бачиш - швидко пиши мені в пп, бо то є БАГ!!!!", show_alert=True)
-    elif have_worked == biz_count_[0]:      # business worked today
+    elif have_worked == biz_count:      # business worked today
         bot.answer_callback_query(call.id, res.biz_worked_text[biz_id], show_alert=True)
-    elif not_supplied == 5:     # business was not suplied in 7 days
+    elif not_supplied == biz_count:     # business was not suplied in 7 days
         bot.answer_callback_query(call.id, res.biz_not_visited_text[biz_id], show_alert=True)
     elif can_work == 0:
         bot.answer_callback_query(call.id, 'бля...', show_alert=True)
