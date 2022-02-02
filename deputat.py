@@ -164,53 +164,6 @@ class Deputat(object):
         buttons.add(visit, provide, buy, show)
         bot.send_message(message.chat.id, "Меню бізнесяк", reply_markup=buttons)
 
-    # supply business
-    def provide_business_deputat(self, message):
-        bot = self.bot
-        if message.chat.type != "private":
-            bot.reply_to(message, "Команду слід писати в ПП боту!")
-            return
-        self._create_business_buttons_(message, True, "pb")
-
-    # handles callback
-    def handle_provide_business_deputat(self, call):
-        db_object = self.db_object
-        db_connection = self.db_connection
-        bot = self.bot
-        user_id = call.from_user.id
-        biz_id = int(call.data[2:3])
-        biz_name = res.biz_db_name[biz_id]
-        biz_visit = biz_name + 'visit'
-
-        sql_get_business = f"SELECT deputatid, {biz_name}, {biz_visit} FROM business WHERE userid = {user_id}"
-        db_object.execute(sql_get_business)
-        result = db_object.fetchone()
-        sql_get_money = f"SELECT money FROM deputats WHERE userid = {user_id}"
-        db_object.execute(sql_get_money)
-        money = db_object.fetchone()
-        deputat_id = result[0]
-        biz_count = result[1]
-        visited = result[2] if result[2] is not None else datetime.date.min
-        today = datetime.date.today() + datetime.timedelta(hours=res.hour_adjust)
-        days_diff = (today - visited).days
-
-        if not result or deputat_id is None or biz_count is None:
-            bot.send_message(call.message.chat.id, "І кого ти провідуєш? Мать свою чи шо?")
-        elif visited is not None and days_diff < 7:
-            bot.send_message(call.message.chat.id,
-                             f"Бізнес не потребує забезпечення, приходьте за {7 - days_diff} дні(-в)")
-        elif money[0] < res.biz_provides[biz_id] * biz_count:
-            bot.send_message(call.message.chat.id, "В твого депутата замало грошей для підтримання цього бізнесу!")
-            bot.send_sticker(call.message.chat.id, res.money_valakas_sticker)
-        else:   # supply business
-            db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s",
-                              (money[0] - res.biz_provides[biz_id] * biz_count, user_id))
-            db_connection.commit()
-            today_str = (datetime.datetime.today() + datetime.timedelta(hours=res.hour_adjust)).strftime("%Y/%m/%d")
-            db_object.execute(f"UPDATE business SET {biz_visit} = %s WHERE userid=%s", (today_str, user_id))
-            db_connection.commit()
-            bot.send_photo(call.message.chat.id, res.biz_provide_photos[biz_id], caption=res.biz_provide_text[biz_id])
-
     # buy user a new business
     def buy_business_deputat(self, message):
         bot = self.bot

@@ -41,6 +41,7 @@ def collect_business(deputat, call):
     _create_business_buttons_(deputat, call, False, "cb")
 
 
+# processes money collect for some business
 def handle_collect_business(deputat, call):
     db_object = deputat.db_object
     db_connection = deputat.db_connection
@@ -54,11 +55,10 @@ def handle_collect_business(deputat, call):
     sql_biz_count = f"SELECT count(*) FROM businesses WHERE user_id = {user_id} and level = {biz_id + 1}"
     db_object.execute(sql_biz_count)
     biz_count_ = db_object.fetchall()
-    sql_get_money = f"SELECT money, deputat_id FROM deputats WHERE user_id = {user_id}"
+    sql_get_money = f"SELECT money FROM deputats WHERE user_id = {user_id}"
     db_object.execute(sql_get_money)
     deput = db_object.fetchone()
     money = deput[0]
-    deputat_id = deput[1]
     biz_count = biz_count_[0]
 
     can_work = 0
@@ -94,3 +94,54 @@ def handle_collect_business(deputat, call):
         db_connection.commit()
         bot.send_photo(call.message.chat.id, res.biz_photos[biz_id],
                        caption=res.biz_work_text[biz_id] + str(earned))
+
+
+def provide_business(deputat, call):
+    _create_business_buttons_(deputat, call, False, "pb")
+
+
+def handle_provide_business(deputat, call):
+    db_object = deputat.db_object
+    db_connection = deputat.db_connection
+    bot = deputat.bot
+    user_id = call.from_user.id
+    biz_id = int(call.data[2:3])
+    biz_name = res.biz_db_name[biz_id]
+    biz_visit = biz_name + 'visit'
+
+    sql_get_business = f"SELECT level, last_provided FROM businesses WHERE user_id = {user_id} and level = {biz_id + 1}"
+    db_object.execute(sql_get_business)
+    user_business = db_object.fetchone()
+    sql_biz_count = f"SELECT count(*) FROM businesses WHERE user_id = {user_id} and level = {biz_id + 1}"
+    db_object.execute(sql_biz_count)
+    biz_count_ = db_object.fetchall()
+    sql_get_money = f"SELECT money FROM deputats WHERE user_id = {user_id}"
+    db_object.execute(sql_get_money)
+    money = db_object.fetchone()
+
+    biz_count = biz_count_[0]
+    must_be_supplied = 0
+    today = datetime.date.today() + datetime.timedelta(hours=res.hour_adjust)
+    for biz in user_business:
+        if (today - biz[1]).days >= 7:
+            must_be_supplied += 1
+
+    if biz_count == 0:
+        bot.answer_callback_query(call.id, "Чел, це піздєц, якшо ти це бачиш - швидко пиши мені в пп, бо то є БАГ!!!!",
+                                  show_alert=True)
+    elif must_be_supplied == 0:
+        bot.answer_callback_query(call.id, f"Бізнеси не потребують забезпечення", show_alert=True)
+    elif money[0] < res.biz_provides[biz_id] * must_be_supplied:
+        bot.send_message(call.message.chat.id, "В твого депутата замало грошей для підтримання цього бізнесу!")
+        bot.send_sticker(call.message.chat.id, res.money_valakas_sticker)
+    else:  # supply business
+        sql_update_money = f"UPDATE deputats SET money = {money[0] - res.biz_provides[biz_id] * biz_count} " \
+                           f"WHERE user_id = {user_id}"
+        db_object.execute(sql_update_money)
+        db_connection.commit()
+        today_str = (datetime.datetime.today() + datetime.timedelta(hours=res.hour_adjust)).strftime("%Y/%m/%d")
+        sql_update_provided = f"UPDATE businesses SET last_provided = '{today_str}' WHERE user_id={user_id} and level = {biz_id + 1}"
+        db_object.execute(sql_update_provided)
+        db_connection.commit()
+        bot.send_photo(call.message.chat.id, res.biz_provide_photos[biz_id], caption=res.biz_provide_text[biz_id])
+
