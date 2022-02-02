@@ -20,7 +20,7 @@ def top_deputat(deputat, call):
     db_object = deputat.db_object
     bot = deputat.bot
     user_id = call.from_user.id
-    sql_top = f"select user_firstname, d.money from users join deputats d on users.deputat_id = d.deputat_id " \
+    sql_top = f"select user_firstname, d.money, users.user_id from users join deputats d on users.deputat_id = d.deputat_id " \
               f"order by (d.money + (" \
               f"((select count(level) from businesses " \
               f"where level = 1 and businesses.user_id = users.user_id) * {res.biz_prices[0]})" \
