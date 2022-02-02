@@ -34,5 +34,10 @@ def _create_business_buttons_(deputat, call, price, modifier):
         bot.edit_message_text("Меню дєпутата", call.message.chat.id, call.message.message_id)
 
 
+# collects money from business
 def collect_business(deputat, call):
     _create_business_buttons_(deputat, call, False, "cb")
+
+
+def handle_collect_business(deputat, call):
+    pass

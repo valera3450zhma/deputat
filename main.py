@@ -112,6 +112,8 @@ def answer(call):
 
     elif data[:2] == "rt":
         comms.deputat.handle_rating_deputat(deput, call)
+    elif data[:2] == "cb":
+        comms.deputat.handle_rating_deputat(deput, call)
 
 
 @bot.message_handler(commands=['nwork'])
