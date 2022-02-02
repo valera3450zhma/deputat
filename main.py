@@ -103,7 +103,7 @@ def answer(call):
     elif data == "provide_business":
         comms.biz.provide_business(deput, call)
     elif data == "buy_business":
-        pass
+        comms.biz.buy_business(deput, call)
     elif data == "show_business":
         pass
 
@@ -115,9 +115,11 @@ def answer(call):
     elif data[:2] == "rt":
         comms.deputat.handle_rating_deputat(deput, call)
     elif data[:2] == "cb":
-        comms.biz.collect_business(deput, call)
+        comms.biz.handle_collect_business(deput, call)
     elif data[:2] == "pb":
-        comms.biz.provide_business(deput, call)
+        comms.biz.handle_provide_business(deput, call)
+    elif data[:2] == "bb":
+        comms.biz.handle_buy_business(deput, call)
     elif data == "help":
         bot.send_message(call.message.chat.id, res.biz_help)
 

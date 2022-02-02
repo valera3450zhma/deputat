@@ -141,8 +141,6 @@ def handle_provide_business(deputat, call):
     bot = deputat.bot
     user_id = call.from_user.id
     biz_id = int(call.data[2:3])
-    biz_name = res.biz_db_name[biz_id]
-    biz_visit = biz_name + 'visit'
 
     sql_get_business = f"SELECT level, last_provided FROM businesses WHERE user_id = {user_id} and level = {biz_id + 1}"
     db_object.execute(sql_get_business)
@@ -185,7 +183,7 @@ def buy_business(deputat, call):
     bot = deputat.bot
     buttons = types.InlineKeyboardMarkup()
     for i in range(len(res.biz_prices)):
-        buttons.add(types.InlineKeyboardButton(text=res.biz_name[0] + ' - 💰' + res.biz_prices + '$'))
+        buttons.add(types.InlineKeyboardButton(text=res.biz_name[0] + ' - 💰' + res.biz_prices + '$', callback_data=f'bb{i}'))
     buttons.add(types.InlineKeyboardButton(text="І шо мені вибирати?", callback_data="help"))
     buttons.add((types.InlineKeyboardButton(text="Назад", callback_data="business_menu")))
     bot.edit_message_text("Во туво купит можеш да", call.message.chat.id, call.message.message_id, reply_markup=buttons)
@@ -200,7 +198,6 @@ def handle_buy_business(deputat, call):
     db_object.execute(sql_get_money)
     deput = db_object.fetchone()
     biz_lvl = int(call.data[2:3])
-    biz_name = res.biz_db_name[biz_lvl]
 
     if deput is None:  # if user doesn't have a deputat
         bot.answer_callback_query(call.id, "І кому ти зібрався купляти? Собі чи шо?")
