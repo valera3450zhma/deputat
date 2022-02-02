@@ -156,7 +156,8 @@ def handle_provide_business(deputat, call):
     must_be_supplied = 0
     today = datetime.date.today() + datetime.timedelta(hours=res.hour_adjust)
     for biz in user_business:
-        if (today - biz[1]).days >= 7:
+        last_provided = biz[1] if biz[1] is not None else datetime.date.min
+        if (today - last_provided).days >= 7:
             must_be_supplied += 1
 
     if biz_count == 0:
