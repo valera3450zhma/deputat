@@ -91,7 +91,7 @@ def handle_collect_business(deputat, call):
     db_object.execute(sql_get_money)
     deput = db_object.fetchone()
     money = deput[0]
-    biz_count = biz_count_[0]
+    biz_count = int(biz_count_[0])
 
     can_work = 0
     have_worked = 0
