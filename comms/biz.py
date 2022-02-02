@@ -111,11 +111,11 @@ def handle_collect_business(deputat, call):
     bot.send_message(call.message.chat.id, biz_count_[0])
     if biz_count_[0] == 0:
         bot.answer_callback_query(call.id, "Чел, це піздєц, якшо ти це бачиш - швидко пиши мені в пп, бо то є БАГ!!!!", show_alert=True)
-    if have_worked == biz_count_[0]:      # business worked today
+    elif have_worked == biz_count_[0]:      # business worked today
         bot.answer_callback_query(call.id, res.biz_worked_text[biz_id], show_alert=True)
-    if not_supplied == biz_count_[0]:     # business was not suplied in 7 days
+    elif not_supplied == 5:     # business was not suplied in 7 days
         bot.answer_callback_query(call.id, res.biz_not_visited_text[biz_id], show_alert=True)
-    if can_work == 0:
+    elif can_work == 0:
         bot.answer_callback_query(call.id, 'бля...', show_alert=True)
     else:                               # collect money from business
         earned = res.biz_profits[biz_id] * random.randint(3, 8) * can_work
