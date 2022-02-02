@@ -4,6 +4,9 @@ import os
 import config
 import res
 import deputat
+import comms.user
+import comms.deputat
+import comms.biz
 
 import telebot
 import logging
@@ -26,24 +29,19 @@ def start_handler(message):
     bot.reply_to(message, 'ага, ок, запустився я :))')
 
 
-@bot.message_handler(commands=['get'])
-def get_deputat_handler(message):
-    deput.get_deputat(message)
+@bot.message_handler(commands=['me'])
+def me_handler(message):
+    deput.me(message)
 
 
-@bot.message_handler(commands=['show'])
-def show_deputat_handler(message):
-    deput.show_deputat(message)
+@bot.message_handler(commands=['deputat'])
+def deputat_handler(message):
+    deput.deputat(message)
 
 
-@bot.message_handler(commands=['work'])
-def work_deputat_handler(message):
-    deput.work_deputat(message)
-
-
-@bot.message_handler(commands=['lvlup'])
-def kill_deputat_handler(message):
-    deput.lvlup_deputat(message)
+@bot.message_handler(commands=['business'])
+def business_handler(message):
+    deput.business(message)
 
 
 @bot.message_handler(commands=['elections'])
@@ -66,44 +64,9 @@ def elect_deputat_handler(message):
     deput.election_vote(message)
 
 
-@bot.message_handler(commands=['provide_business'])
-def buy_business_deputat_handler(message):
-    deput.provide_business_deputat(message)
-
-
-@bot.message_handler(commands=['business'])
-def buy_business_deputat_handler(message):
-    deput.visit_business_deputat(message)
-
-
-@bot.message_handler(commands=['buy_business'])
-def buy_business_deputat_handler(message):
-    deput.buy_business_deputat(message)
-
-
-@bot.message_handler(commands=['show_business'])
-def buy_business_deputat_handler(message):
-    deput.show_business_deputat(message)
-
-
-@bot.message_handler(commands=['rating'])
-def buy_business_deputat_handler(message):
-    deput.up_rating_deputat(message)
-
-
-@bot.message_handler(commands=['top'])
-def buy_business_deputat_handler(message):
-    deput.top_deputat(message)
-
-
 @bot.message_handler(commands=['kill'])
 def kill_deputat_handler(message):
     deput.kill_deputat(message)
-
-
-@bot.message_handler(commands=['killed'])
-def time_deputat_handler(message):
-    deput.killed_deputats(message)
 
 
 @bot.message_handler(commands=['time'])
@@ -118,19 +81,37 @@ def time_deputat_handler(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def answer(call):
-    call_type = call.data[0:2]
-    if call.data == "help":
-        bot.reply_to(call.message, res.biz_help)
-    elif call_type == "bb":
-        deput.handle_biz_purchase_deputat(call)
-    elif call_type == "pb":
-        deput.handle_provide_business_deputat(call)
-    elif call_type == "vb":
-        deput.handle_visit_business_deputat(call)
-    elif call_type == "rt":
-        deput.handle_rating_deputat(call)
-    elif call_type == "el":
-        deput.handle_elect_deputat(call)
+    data = call.data
+    if data == "killed_me":
+        comms.user.killed_deputats(deput, call)
+    elif data == "top_me":
+        comms.user.top_deputat(deput, call)
+
+    elif data == "get_deputat":
+        comms.deputat.get_deputat(deput, call)
+    elif data == "show_deputat":
+        comms.deputat.show_deputat(deput, call)
+    elif data == "work_deputat":
+        comms.deputat.work_deputat(deput, call)
+    elif data == "rating_deputat":
+        comms.deputat.up_rating_deputat(deput, call)
+    elif data == "lvlup_deputat":
+        comms.deputat.lvlup_deputat(deput, call)
+
+    elif data == "collect_business":
+        comms.biz.collect_business(deput, call)
+    elif data == "provide_business":
+        pass
+    elif data == "buy_business":
+        pass
+    elif data == "show_business":
+        pass
+
+    elif data == "deputat_menu":
+        comms.deputat.handle_deputat_menu(deput, call)
+
+    elif data[:2] == "rt":
+        comms.deputat.handle_rating_deputat(deput, call)
 
 
 @bot.message_handler(commands=['nwork'])

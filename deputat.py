@@ -10,32 +10,6 @@ class Deputat(object):
         self.db_connection = db_connection
         self.bot = bot
 
-    # sets minimal possible id
-    def _set_deputat_id(self, last_deputat):
-        db_object = self.db_object
-        deputat_id = -2147483648            # set minimal value for type int in PostgreSQL
-        if last_deputat is not None:        # user is not first in DB
-            while True:                     # run through all users and check if there is a deputat with that ID
-                sql_deputat_id = f"SELECT userid FROM deputats WHERE deputatid = {deputat_id}"
-                db_object.execute(sql_deputat_id)
-                dep = db_object.fetchone()
-                if dep is None:             # if deputat was not found
-                    break                   # id is suitable, we will use it
-                else:                       # else, we will try a bigger one
-                    deputat_id += 1
-        return deputat_id
-
-    # commits to DB work-info, returns earned money
-    def _work_(self, data, user_id):
-        db_object = self.db_object
-        db_connection = self.db_connection
-        today_str = (datetime.datetime.today() + datetime.timedelta(hours=res.hour_adjust)).strftime("%Y/%m/%d")
-        earned = random.randint(10, 100) * res.money_earn_multiplier[data[1] - 1]
-        db_object.execute("UPDATE deputats SET lastworked = %s, money = %s WHERE userid = %s",
-                          (today_str, earned + int(data[0]), user_id))
-        db_connection.commit()
-        return earned
-
     # starts elections (а шо)
     def _start_elections_(self, call):
         # first, check if user is admin, because start the elections can ONLY an admin
@@ -140,26 +114,6 @@ class Deputat(object):
             names += f"\n{resul[1]} ({resul[0]})"
         bot.edit_message_text(names, chat_id, call.message.message_id, reply_markup=buttons)
 
-    # set buttons with businesses names
-    def _create_business_buttons_(self, message, price, modifier):
-        db_object = self.db_object
-        bot = self.bot
-        user_id = message.from_user.id
-        sql_get_businesses = f"SELECT kid, negr, kiosk FROM business WHERE userid = {user_id}"
-        db_object.execute(sql_get_businesses)
-        result = db_object.fetchone()
-
-        if result is None:
-            bot.reply_to(message, "Бізнесів не знайдено!")
-            bot.send_sticker(message.chat.id, res.sad_sticker)
-        else:
-            buttons = types.InlineKeyboardMarkup()
-            for i in range(len(res.biz_prices)):
-                if result[i] is not None:
-                    buttons.add(types.InlineKeyboardButton
-                                (text=res.biz_provide_buttons(result, i, price), callback_data=f'{modifier}{i}'))
-            bot.reply_to(message, res.biz_text, reply_markup=buttons)
-
     # commit biz purchase to DB
     def _purchase_update_(self, call, result, biz_id):
         db_object = self.db_object
@@ -181,99 +135,35 @@ class Deputat(object):
             db_connection.commit()
             bot.send_photo(call.message.chat.id, res.biz_rating_photo[biz_id], caption=res.biz_rating_text[biz_id])
 
-    # gives user a deputat
-    def get_deputat(self, message):
-        db_object = self.db_object
-        db_connection = self.db_connection
+    def me(self, message):
         bot = self.bot
-        user_id = message.from_user.id
+        buttons = types.InlineKeyboardMarkup()
+        killed = types.InlineKeyboardButton(text='Кількість вбитих депутатів', callback_data="killed_me")
+        top = types.InlineKeyboardButton(text='Топ користувачів', callback_data="top_me")
+        buttons.add(killed, top)
+        bot.send_message(message.chat.id, "Меню користувача",reply_markup=buttons)
 
-        sql_user_info = f"SELECT userid, deputatid FROM deputats WHERE userid = {user_id}"
-        db_object.execute(sql_user_info)
-        result = db_object.fetchone()
-
-        db_object.execute("SELECT deputatid FROM deputats WHERE deputatid IS NOT NULL ORDER BY deputatid DESC LIMIT 1")
-        last_deputat = db_object.fetchone()
-
-        if result is None:  # user is not registered, use INSERT
-            deputat_id = self._set_deputat_id(last_deputat)
-            sql_new_user = f"INSERT INTO deputats(userid, money, name, level, photo, username, deputatid, rating)" \
-                           f" VALUES( {user_id}, {random.randint(10, 100)}, {random.choice(res.deputatNames)}, {1}," \
-                           f" {random.randint(0, len(res.level_photos[0]) - 1)}, {message.from_user.first_name}," \
-                           f" {deputat_id}, {0})"
-            db_object.execute(sql_new_user)
-            db_connection.commit()
-            bot.reply_to(message, "Осьо! Ваш перший дєпутат! Позирити на нього - /show")
-
-        elif result[1] is None:     # user doesn't have a deputat, use UPDATE
-            deputat_id = self._set_deputat_id(last_deputat)
-            sql_new_deputat = f"UPDATE deputats SET deputatid = {deputat_id}, money = {random.randint(10, 100)}, " \
-                              f"name = '{random.choice(res.deputatNames)}', level = {1},  photo = {random.randint(0, len(res.level_photos[0]) - 1)}, rating = {0} " \
-                              f"WHERE userid = {result[0]}"
-            db_object.execute(sql_new_deputat)
-            db_connection.commit()
-            bot.reply_to(message, "Гля який! Депута-а-а-атіще! Глянуть на підарасіка - /show")
-        else:
-            bot.reply_to(message, "В тебе вже є депутат")
-            bot.send_sticker(message.chat.id, res.what_sticker)
-
-    # show info about user's deputat
-    def show_deputat(self, message):
-        db_object = self.db_object
+    def deputat(self, message):
         bot = self.bot
-        user_id = message.from_user.id
-        sql_get_user_info = f"SELECT name, money, level, photo, deputatid, rating FROM deputats " \
-                            f"WHERE deputats.userid = {user_id}"
-        db_object.execute(sql_get_user_info)
-        result = db_object.fetchone()
+        buttons = types.InlineKeyboardMarkup()
+        get = types.InlineKeyboardButton(text='Получити дєпутата', callback_data="get_deputat")
+        show = types.InlineKeyboardButton(text='Позирити на депутата', callback_data="show_deputat")
+        work = types.InlineKeyboardButton(text='Працювати', callback_data="work_deputat")
+        rating = types.InlineKeyboardButton(text='Підвищити рейтинг', callback_data="rating_deputat")
+        lvlup = types.InlineKeyboardButton(text='Підвищити рівень', callback_data="lvlup_deputat")
+        buttons.add(get, show, work, rating, lvlup)
+        bot.send_message(message.chat.id, "Меню дєпутата", reply_markup=buttons)
 
-        if not result or result[4] is None:     # if user is not in DB or user doesn't have a deputat
-            bot.reply_to(message, "Ніхуя нема...")
-        else:                                   # user has deputat, show info
-            deputat_photo = res.level_photos[result[2] - 1][result[3]]
-            reply_message = f"👨🏻 Ім'я: {result[0]}\n💰 Бабло: ${result[1]}\n⭐️ Рейтинг: {result[5]}" \
-                            f"\n📚 Рівень: {result[2]} - {res.level_captions[result[2] - 1]} "
-            bot.send_photo(message.chat.id, deputat_photo, reply_to_message_id=message.id, caption=reply_message)
-
-    # makes user's deputat work
-    def work_deputat(self, message):
-        db_object = self.db_object
+    def business(self, message):
         bot = self.bot
-        user_id = message.from_user.id
+        buttons = types.InlineKeyboardMarkup()
+        visit = types.InlineKeyboardButton(text='Зібрати бабло з бізнесю', callback_data="collect_business")
+        provide = types.InlineKeyboardButton(text='Забезпечити бізнесяку', callback_data="provide_business")
+        buy = types.InlineKeyboardButton(text='Купити бізнесяку', callback_data="buy_business")
+        show = types.InlineKeyboardButton(text='Показать бізнесяки', callback_data="show_business")
+        buttons.add(visit, provide, buy, show)
+        bot.send_message(message.chat.id, "Меню бізнесяк", reply_markup=buttons)
 
-        sql_last_worked = f"SELECT lastworked FROM deputats WHERE deputats.userid = {user_id}"
-        db_object.execute(sql_last_worked)
-        last_worked = db_object.fetchone()
-        sql_get_user_info = f"SELECT money, level, name, deputatid FROM deputats WHERE deputats.userid = {user_id}"
-        db_object.execute(sql_get_user_info)
-        data = db_object.fetchone()
-
-        if not last_worked or data[3] is None:
-            bot.reply_to(message, "В тебе нема депутата, шоб він працював")
-        elif not last_worked[0]:            # if works first time ever
-            earned = self._work_(data, user_id)
-            bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
-                           caption=f"{data[2]}{res.work_text[data[1] - 1]}\n💰 Дохід: ${earned}",
-                           reply_to_message_id=message.id)
-        else:                               # if worked earlier
-            worked = datetime.date(last_worked[0].year, last_worked[0].month, last_worked[0].day)
-            today = datetime.date.today() + datetime.timedelta(hours=res.hour_adjust)
-            if (today - worked).days >= 1:  # didn't work in a day
-                earned = self._work_(data, user_id)
-                bot.send_photo(message.chat.id, res.work_photos[data[1] - 1],
-                               caption=f"{data[2]}{res.work_text[data[1] - 1]}\n💰 Дохід: ${earned}")
-            else:                           # if worked today
-                bot.send_photo(message.chat.id, random.choice(res.not_working_photos),
-                               caption="Твій депутат вже заїбався бо нині відхуячив своє",
-                               reply_to_message_id=message.id)
-
-    # visit user's business
-    def visit_business_deputat(self, message):
-        bot = self.bot
-        if message.chat.type != "private":
-            bot.reply_to(message, "Команду слід писати в ПП боту!")
-        else:
-            self._create_business_buttons_(message, False, "vb")
 
     # handle's callback
     def handle_visit_business_deputat(self, call):
@@ -432,39 +322,6 @@ class Deputat(object):
             bot.reply_to(message, reply_text)
             bot.send_sticker(message.chat.id, res.money_pagulich_sticker)
 
-    # level-ups deputat
-    def lvlup_deputat(self, message):
-        db_object = self.db_object
-        db_connection = self.db_connection
-        bot = self.bot
-        user_id = message.from_user.id
-
-        sql_get_user_info = f"SELECT level, money, deputatid, rating FROM deputats WHERE deputats.userid = {user_id}"
-        db_object.execute(sql_get_user_info)
-        result = db_object.fetchone()
-
-        if not result or result[2] is None:     # deputat was not found
-            bot.reply_to(message, "А шо апати то?")
-        elif result[0] >= 4:                    # level too high to lvlup
-            bot.reply_to(message, "Для підвищення рівня, необхідно ініціювати вибори!")
-        elif result[1] < res.lvlup_requirements[result[0] - 1]:     # not enough money
-            bot.reply_to(message, f"Твій депутат надто бідний, щоб перейти на новий рівень!"
-                                  f"\n💰 Необхідно грошей: ${res.lvlup_requirements[result[0] - 1]}")
-            bot.send_sticker(message.chat.id, res.sad_sticker)
-        elif result[3] < res.lvlup_rating[result[0] - 1]:           # not enough rating
-            bot.reply_to(message, f"У твого депутата надто низький рейтинг, щоб перейти на новий рівень!"
-                                  f"\n⭐ Необхідно рейтингу: {res.lvlup_rating[result[0] - 1]}")
-            bot.send_sticker(message.chat.id, res.sad_sticker)
-        else:                                   # deputat will lvlup
-            sql_lvlup = f"UPDATE deputats SET level = {result[0] + 1}," \
-                        f" photo = {random.randint(0, len(res.level_photos[result[0]]) - 1)}," \
-                        f" lastworked = NULL, money = {result[1] - res.lvlup_requirements[result[0] - 1]} " \
-                        f"WHERE userid = {user_id}"
-            db_object.execute(sql_lvlup)
-            db_connection.commit()
-            bot.reply_to(message, "Депутата підвищено до нового рівня! - /show")
-            bot.send_sticker(message.chat.id, res.happy_sticker)
-
     # starts election's recruitment
     def elections_deputat(self, message):
         bot = self.bot
@@ -592,71 +449,6 @@ class Deputat(object):
                 db_object.execute(sql_clear_voted)
                 db_connection.commit()
 
-    # upgrade user's rating
-    def up_rating_deputat(self, message):
-        bot = self.bot
-        if message.chat.type != "private":
-            bot.reply_to(message, "Команду слід писати в ПП боту!")
-        else:
-            buttons = types.InlineKeyboardMarkup()
-            for i in range(len(res.rating_name)):
-                buttons.add(types.InlineKeyboardButton
-                            (text=res.rating_name[i] + ' $' + str(res.rating_price[i]), callback_data=f'rt{i}'))
-            bot.reply_to(message, "Доступні види підняття рейтингу:", reply_markup=buttons)
-
-    # rating upgrade handler
-    def handle_rating_deputat(self, call):
-        db_object = self.db_object
-        db_connection = self.db_connection
-        bot = self.bot
-        user_id = call.from_user.id
-        rating = int(call.data[2:3])
-        sql_get_user_info = f"SELECT money, rating, deputatid FROM deputats WHERE userid = {user_id}"
-        db_object.execute(sql_get_user_info)
-        result = db_object.fetchone()
-
-        if result is None or result[2] is None:     # if user doesn't have a deputat
-            bot.send_message(call.message.chat.id, "У тебе немає депутата")
-        elif result[0] < res.rating_price[rating]:  # if user doesn't have enough money
-            bot.send_message(call.message.chat.id, "Твоєму депутату не вистачає грошей для цього!")
-            bot.send_sticker(call.message.chat.id, res.sad_sticker)
-        else:                                       # upgrade rating
-            sql_update_rating = f"UPDATE deputats SET rating = {result[1] + res.rating_up[rating]} " \
-                                f"WHERE userid = {user_id}"
-            db_object.execute(sql_update_rating)
-            db_connection.commit()
-            sql_update_money = f"UPDATE deputats SET money = {result[0] - res.rating_price[rating]} " \
-                               f"WHERE userid = {user_id}"
-            db_object.execute(sql_update_money)
-            db_connection.commit()
-            bot.send_message(call.message.chat.id, f"Рейтинг серед громади піднято на {res.rating_up[rating]}⭐️")
-
-    # sends top users
-    def top_deputat(self, message):
-        db_object = self.db_object
-        bot = self.bot
-        user_id = message.from_user.id
-        sql_top = "SELECT username, money, rating, deputats.userid FROM deputats" \
-                  " FULL JOIN business b on deputats.deputatid = b.deputatid" \
-                  " WHERE deputats.deputatid is not null" \
-                  " ORDER BY (money + COALESCE(b.kid*100, 0) + COALESCE(b.negr*500, 0) + COALESCE(b.kiosk*3000, 0))" \
-                  " DESC;"
-        db_object.execute(sql_top)
-        result = db_object.fetchall()
-        if not result:
-            bot.reply_to(message, "Здається, ніхто навіть не має дупетата...")
-        else:
-            text = ''
-            i = 0
-            for row in result:
-                if row[3] in res.SU:
-                    continue
-                i += 1
-                if i > 10 and row[3] != user_id:
-                    continue
-                text += f"{i} - {row[0]}\n💰{row[1]}$ - ⭐{row[2]}\n"
-            bot.reply_to(message, text)
-
     # kills user's deputat
     def kill_deputat(self, message):
         db_object = self.db_object
@@ -683,16 +475,3 @@ class Deputat(object):
             db_object.execute(sql_delete_business)
             db_connection.commit()
             bot.reply_to(message, "Депутату розірвало сраку...\nОтримати нового - /get")
-
-    # sends count'o killed deputats bu user
-    def killed_deputats(self, message):
-        db_object = self.db_object
-        bot = self.bot
-        user_id = message.from_user.id
-        sql_get_killed = f"SELECT killed FROM deputats WHERE userid = {user_id}"
-        db_object.execute(sql_get_killed)
-        result = db_object.fetchone()
-        if result is None or result[0] is None:
-            bot.reply_to(message, "Ти ще не вбивав своїх депутатів")
-        else:
-            bot.reply_to(message, f"Вбито депутатів: {result[0]}")
