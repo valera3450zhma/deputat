@@ -116,7 +116,7 @@ def handle_collect_business(deputat, call):
         bot.answer_callback_query(call.id, res.biz_not_visited_text[biz_id], show_alert=True)
     else:                               # collect money from business
         earned = res.biz_profits[biz_id] * random.randint(3, 8) * can_work
-        sql_update_money = f"UPDATE deputats SET money = {money[0] + earned} WHERE user_id = {user_id}"
+        sql_update_money = f"UPDATE deputats SET money = {money + earned} WHERE user_id = {user_id}"
         db_object.execute(sql_update_money)
         db_connection.commit()
         today_str = (datetime.datetime.today() + datetime.timedelta(hours=res.hour_adjust)).strftime("%Y/%m/%d")
