@@ -114,26 +114,7 @@ class Deputat(object):
             names += f"\n{resul[1]} ({resul[0]})"
         bot.edit_message_text(names, chat_id, call.message.message_id, reply_markup=buttons)
 
-    # commit biz purchase to DB
-    def _purchase_update_(self, call, result, biz_id):
-        db_object = self.db_object
-        db_connection = self.db_connection
-        bot = self.bot
-        user_id = call.from_user.id
-        sql_update_money = f"UPDATE deputats SET money = {result[1] - res.biz_prices[biz_id]} WHERE userid = {user_id}"
-        db_object.execute(sql_update_money)
-        db_connection.commit()
-        bot.send_photo(call.message.chat.id, res.biz_photos[biz_id],
-                       caption=f"Ви успішно купили \"{res.biz_name[biz_id]}\"!")
-        if random.randint(0, 4) == 0:
-            sql_get_rating = f"SELECT rating FROM deputats WHERE userid = {user_id}"
-            db_object.execute(sql_get_rating)
-            result = db_object.fetchone()
-            sql_update_rating = f"UPDATE deputats SET rating = {result[0] - res.biz_rating_drop[biz_id]} " \
-                                f"WHERE userid = {user_id}"
-            db_object.execute(sql_update_rating)
-            db_connection.commit()
-            bot.send_photo(call.message.chat.id, res.biz_rating_photo[biz_id], caption=res.biz_rating_text[biz_id])
+
 
     def me(self, message):
         bot = self.bot

@@ -4,6 +4,22 @@ import random
 from telebot import types
 
 
+# sets minimal possible id
+def _set_business_id(deputat, last_biz):
+    db_object = deputat.db_object
+    biz_id = -9223372036854775808       # set minimal value for type int in PostgreSQL
+    if last_biz is not None:    # user is not first in DB
+        while True:                 # run through all users and check if there is a deputat with that ID
+            sql_deputat_id = f"SELECT biz_id FROM businesses WHERE biz_id = {biz_id}"
+            db_object.execute(sql_deputat_id)
+            dep = db_object.fetchone()
+            if dep is None:         # if deputat was not found
+                break               # id is suitable, we will use it
+            else:                   # else, we will try a bigger one
+                biz_id += 1
+    return biz_id
+
+
 def _get_businesses_(db_object, user_id):
     lvls = []
     for i in range(len(res.biz_prices)):
@@ -30,7 +46,27 @@ def _create_business_buttons_(deputat, call, price, modifier):
             if lvls[i] is not None:
                 buttons.add(types.InlineKeyboardButton
                             (text=res.biz_provide_buttons(lvls, i, price), callback_data=f'{modifier}{i}'))
+        buttons.add((types.InlineKeyboardButton(text="Назад", callback_data="business_menu")))
         bot.edit_message_text("Меню дєпутата", call.message.chat.id, call.message.message_id, reply_markup=buttons)
+
+
+# commit biz purchase to DB
+def _purchase_update_(deputat, call, deput, biz_lvl):
+    db_object = deputat.db_object
+    db_connection = deputat.db_connection
+    bot = deputat.bot
+    user_id = call.from_user.id
+    sql_update_money = f"UPDATE deputats SET money = {deput[0] - res.biz_prices[biz_lvl]} WHERE user_id = {user_id}"
+    db_object.execute(sql_update_money)
+    db_connection.commit()
+    bot.send_photo(call.message.chat.id, res.biz_photos[biz_lvl],
+                   caption=f"Ви успішно купили \"{res.biz_name[biz_lvl]}\"!")
+    if random.randint(0, 4) == 0:
+        sql_update_rating = f"UPDATE deputats SET rating = {deput[1] - res.biz_rating_drop[biz_lvl]} " \
+                            f"WHERE user_id = {user_id}"
+        db_object.execute(sql_update_rating)
+        db_connection.commit()
+        bot.send_photo(call.message.chat.id, res.biz_rating_photo[biz_lvl], caption=res.biz_rating_text[biz_lvl])
 
 
 # collects money from business
@@ -93,10 +129,12 @@ def handle_collect_business(deputat, call):
                        caption=res.biz_work_text[biz_id] + str(earned))
 
 
+# provides biz with resources
 def provide_business(deputat, call):
     _create_business_buttons_(deputat, call, False, "pb")
 
 
+# processes biz providing
 def handle_provide_business(deputat, call):
     db_object = deputat.db_object
     db_connection = deputat.db_connection
@@ -142,3 +180,50 @@ def handle_provide_business(deputat, call):
         db_connection.commit()
         bot.send_photo(call.message.chat.id, res.biz_provide_photos[biz_id], caption=res.biz_provide_text[biz_id])
 
+
+def buy_business(deputat, call):
+    bot = deputat.bot
+    buttons = types.InlineKeyboardMarkup()
+    for i in range(len(res.biz_prices)):
+        buttons.add(types.InlineKeyboardButton(text=res.biz_name[0] + ' - 💰' + res.biz_prices + '$'))
+    buttons.add(types.InlineKeyboardButton(text="І шо мені вибирати?", callback_data="help"))
+    buttons.add((types.InlineKeyboardButton(text="Назад", callback_data="business_menu")))
+    bot.edit_message_text("Во туво купит можеш да", call.message.chat.id, call.message.message_id, reply_markup=buttons)
+
+
+def handle_buy_business(deputat, call):
+    db_object = deputat.db_object
+    db_connection = deputat.db_connection
+    bot = deputat.bot
+    user_id = call.from_user.id
+    sql_get_money = f"SELECT money, rating FROM deputats WHERE user_id = {user_id}"
+    db_object.execute(sql_get_money)
+    deput = db_object.fetchone()
+    biz_lvl = int(call.data[2:3])
+    biz_name = res.biz_db_name[biz_lvl]
+
+    if deput is None:  # if user doesn't have a deputat
+        bot.answer_callback_query(call.id, "І кому ти зібрався купляти? Собі чи шо?")
+    elif deput[0] < res.biz_prices[biz_lvl]:
+        bot.answer_callback_query(call.message.chat.id, "Твій депутат надто бідний, шоб купити о це вот")
+    else:
+        sql_bizs = f"SELECT level FROM businesses"
+        db_object.execute(sql_bizs)
+        bizs = db_object.fetchone()
+        business_id = _set_business_id(deputat, bizs)
+        sql_new_business = f"INSERT INTO businesses(biz_id, user_id, level, last_worked, last_provided) VALUES({business_id}, {user_id}, {biz_lvl}, Null, Null)"
+        db_object.execute(sql_new_business)
+        db_connection.commit()
+        _purchase_update_(deputat, call, deput, biz_lvl)
+
+
+
+def handle_business_menu(deputat, call):
+    bot = deputat.bot
+    buttons = types.InlineKeyboardMarkup()
+    visit = types.InlineKeyboardButton(text='Зібрати бабло', callback_data="collect_business")
+    provide = types.InlineKeyboardButton(text='Забезпечити', callback_data="provide_business")
+    buy = types.InlineKeyboardButton(text='Купити бізнєс', callback_data="buy_business")
+    show = types.InlineKeyboardButton(text='Покажи', callback_data="show_business")
+    buttons.add(visit, provide, buy, show)
+    bot.edit_message_text("Меню бізнєся", call.message.chat.id, call.message.message_id, reply_markup=buttons)

@@ -109,13 +109,17 @@ def answer(call):
 
     elif data == "deputat_menu":
         comms.deputat.handle_deputat_menu(deput, call)
+    elif data == "business_menu":
+        comms.biz.handle_business_menu(deput, call)
 
     elif data[:2] == "rt":
         comms.deputat.handle_rating_deputat(deput, call)
     elif data[:2] == "cb":
-        comms.deputat.handle_rating_deputat(deput, call)
+        comms.biz.collect_business(deput, call)
     elif data[:2] == "pb":
-        comms.deputat.handle_rating_deputat(deput, call)
+        comms.biz.provide_business(deput, call)
+    elif data == "help":
+        bot.send_message(call.message.chat.id, res.biz_help)
 
 
 @bot.message_handler(commands=['nwork'])
