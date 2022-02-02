@@ -117,6 +117,8 @@ def handle_collect_business(deputat, call):
         bot.answer_callback_query(call.id, res.biz_worked_text[biz_id], show_alert=True)
     elif not_supplied == biz_count:     # business was not suplied in 7 days
         bot.answer_callback_query(call.id, res.biz_not_visited_text[biz_id], show_alert=True)
+    elif can_work == 0:
+        bot.answer_callback_query(call.id, 'бля...', show_alert=True)
     else:                               # collect money from business
         earned = res.biz_profits[biz_id] * random.randint(3, 8) * can_work
         sql_update_money = f"UPDATE deputats SET money = {money + earned} WHERE user_id = {user_id}"
