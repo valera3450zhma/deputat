@@ -122,7 +122,7 @@ def answer(call):
 def money_deputat_handler(message):
     if message.from_user.id in res.SU:
         user_id = message.from_user.id
-        db_object.execute("UPDATE deputats AS d SET d.last_worked = NULL WHERE d.userid = %s", [user_id])
+        db_object.execute("UPDATE deputats SET last_worked = NULL WHERE user_id = %s", [user_id])
         db_connection.commit()
         bot.reply_to(message, f"Параметр роботи оновлено. Депутат раніше не працював.")
 
@@ -131,7 +131,7 @@ def money_deputat_handler(message):
 def money_deputat_handler(message):
     if message.from_user.id in res.SU:
         user_id = message.from_user.id
-        db_object.execute(f"UPDATE business AS b SET b.last_provided = NULL WHERE b.userid = %s", [user_id])
+        db_object.execute(f"UPDATE business SET last_provided = NULL WHERE user_id = %s", [user_id])
         db_connection.commit()
         bot.reply_to(message, f"Параметр відвідування оновлено. Депутат раніше не відвідував жоден бізнес.")
 
@@ -140,7 +140,7 @@ def money_deputat_handler(message):
 def money_deputat_handler(message):
     if message.from_user.id in res.SU:
         user_id = message.from_user.id
-        db_object.execute(f"UPDATE business AS b SET b.last_worked = NULL WHERE b.userid = %s", [user_id])
+        db_object.execute(f"UPDATE business SET last_worked = NULL WHERE user_id = %s", [user_id])
         db_connection.commit()
         bot.reply_to(message, f"Параметр збору оновлено. Депутат раніше не збирав гроші з жодного бізнесу.")
 
@@ -149,7 +149,7 @@ def money_deputat_handler(message):
 def money_deputat_handler(message):
     if (message.from_user.id in res.SU) and message.text.isnumeric():
         user_id = message.from_user.id
-        db_object.execute("UPDATE deputats SET money = %s WHERE userid = %s", (int(message.text), user_id))
+        db_object.execute("UPDATE deputats SET money = %s WHERE user_id = %s", (int(message.text), user_id))
         db_connection.commit()
         bot.reply_to(message, f"Параметр гроші оновлено: ${message.text}")
 
