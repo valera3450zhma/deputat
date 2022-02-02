@@ -207,7 +207,7 @@ def handle_buy_business(deputat, call):
         db_object.execute(sql_bizs)
         bizs = db_object.fetchone()
         business_id = _set_business_id(deputat, bizs)
-        sql_new_business = f"INSERT INTO businesses(biz_id, user_id, level, last_worked, last_provided) VALUES({business_id}, {user_id}, {biz_lvl}, Null, Null)"
+        sql_new_business = f"INSERT INTO businesses(biz_id, user_id, level, last_worked, last_provided) VALUES({business_id}, {user_id}, {biz_lvl+1}, Null, Null)"
         db_object.execute(sql_new_business)
         db_connection.commit()
         _purchase_update_(deputat, call, deput, biz_lvl)
