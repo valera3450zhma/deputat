@@ -221,12 +221,15 @@ def handle_buy_business(deputat, call):
         _purchase_update_(deputat, call, deput, biz_lvl)
 
 
-def handle_business_menu(deputat, call):
-    bot = deputat.bot
-    buttons = types.InlineKeyboardMarkup()
-    visit = types.InlineKeyboardButton(text='Зібрати', callback_data="collect_business")
-    provide = types.InlineKeyboardButton(text='Забезпечити', callback_data="provide_business")
-    buy = types.InlineKeyboardButton(text='Купити бізнєс', callback_data="buy_business")
-    show = types.InlineKeyboardButton(text='Покажи', callback_data="show_business")
-    buttons.add(visit, provide, buy, show)
-    bot.edit_message_text("Меню бізнєся", call.message.chat.id, call.message.message_id, reply_markup=buttons)
+def handle_business_menu(deputat, call, bot):
+    if call.data.split(" ")[1] != call.from_user.id:
+        bot.answer_callback_query(call.id, "Не твоє, вот і не цикай!")
+    else:
+        bot = deputat.bot
+        buttons = types.InlineKeyboardMarkup()
+        visit = types.InlineKeyboardButton(text='Зібрати', callback_data=f"collect_business {call.data.split(' ')[1]}")
+        provide = types.InlineKeyboardButton(text='Забезпечити', callback_data=f"provide_business {call.data.split(' ')[1]}")
+        buy = types.InlineKeyboardButton(text='Купити бізнєс', callback_data="buy_business")
+        show = types.InlineKeyboardButton(text='Покажи', callback_data="show_business")
+        buttons.add(visit, provide, buy, show)
+        bot.edit_message_text("Меню бізнєся", call.message.chat.id, call.message.message_id, reply_markup=buttons)
