@@ -70,7 +70,7 @@ def _purchase_update_(deputat, call, deput, biz_lvl):
 
 # collects money from business
 def collect_business(deputat, call, bot):
-    if call.data[1] != call.from_user.id:
+    if int(call.data.split(" ")[1]) != call.from_user.id:
         bot.answer_callback_query(call.id, "Шо цикаєш, то не твоє меню", show_alert=True)
     else:
         _create_business_buttons_(deputat, call, False, "cb")
@@ -134,7 +134,7 @@ def handle_collect_business(deputat, call):
 
 # provides biz with resources
 def provide_business(deputat, call, bot):
-    if call.data[1] != call.from_user.id:
+    if int(call.data.split(" ")[1]) != call.from_user.id:
         bot.answer_callback_query(call.id, "Шо цикаєш, то не твоє меню", show_alert=True)
     else:
         _create_business_buttons_(deputat, call, False, "pb")

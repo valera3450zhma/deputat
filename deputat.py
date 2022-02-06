@@ -136,10 +136,10 @@ class Deputat(object):
     def business(self, message):
         bot = self.bot
         buttons = types.InlineKeyboardMarkup()
-        visit = types.InlineKeyboardButton(text='Зібрати бабло', callback_data=["collect_business", message.from_user.id])
-        provide = types.InlineKeyboardButton(text='Забезпечити', callback_data=["provide_business", message.from_user.id])
-        buy = types.InlineKeyboardButton(text='Купити бізнєс', callback_data=["buy_business", message.from_user.id])
-        show = types.InlineKeyboardButton(text='Покажи', callback_data=["show_business", message.from_user.id])
+        visit = types.InlineKeyboardButton(text='Зібрати бабло', callback_data=f"collect_business {message.from_user.id}")
+        provide = types.InlineKeyboardButton(text='Забезпечити', callback_data=f"provide_business {message.from_user.id}")
+        buy = types.InlineKeyboardButton(text='Купити бізнєс', callback_data=f"buy_business")
+        show = types.InlineKeyboardButton(text='Покажи', callback_data=f"show_business")
         buttons.add(visit, provide, buy, show)
         bot.send_message(message.chat.id, "Меню бізнесяк", reply_markup=buttons)
 
