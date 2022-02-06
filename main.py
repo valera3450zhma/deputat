@@ -98,10 +98,10 @@ def answer(call):
     elif data == "lvlup_deputat":
         comms.deputat.lvlup_deputat(deput, call)
 
-    elif data == "collect_business":
-        comms.biz.collect_business(deput, call)
-    elif data == "provide_business":
-        comms.biz.provide_business(deput, call)
+    elif data[0] == "collect_business":
+        comms.biz.collect_business(deput, call, bot)
+    elif data[0] == "provide_business":
+        comms.biz.provide_business(deput, call, bot)
     elif data == "buy_business":
         comms.biz.buy_business(deput, call)
     elif data == "show_business":

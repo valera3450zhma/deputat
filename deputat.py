@@ -114,8 +114,6 @@ class Deputat(object):
             names += f"\n{resul[1]} ({resul[0]})"
         bot.edit_message_text(names, chat_id, call.message.message_id, reply_markup=buttons)
 
-
-
     def me(self, message):
         bot = self.bot
         buttons = types.InlineKeyboardMarkup()
@@ -138,10 +136,10 @@ class Deputat(object):
     def business(self, message):
         bot = self.bot
         buttons = types.InlineKeyboardMarkup()
-        visit = types.InlineKeyboardButton(text='Зібрати бабло', callback_data="collect_business")
-        provide = types.InlineKeyboardButton(text='Забезпечити', callback_data="provide_business")
-        buy = types.InlineKeyboardButton(text='Купити бізнєс', callback_data="buy_business")
-        show = types.InlineKeyboardButton(text='Покажи', callback_data="show_business")
+        visit = types.InlineKeyboardButton(text='Зібрати бабло', callback_data=["collect_business", message.from_user.id])
+        provide = types.InlineKeyboardButton(text='Забезпечити', callback_data=["provide_business", message.from_user.id])
+        buy = types.InlineKeyboardButton(text='Купити бізнєс', callback_data=["buy_business", message.from_user.id])
+        show = types.InlineKeyboardButton(text='Покажи', callback_data=["show_business", message.from_user.id])
         buttons.add(visit, provide, buy, show)
         bot.send_message(message.chat.id, "Меню бізнесяк", reply_markup=buttons)
 

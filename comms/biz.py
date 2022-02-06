@@ -46,7 +46,7 @@ def _create_business_buttons_(deputat, call, price, modifier):
                 buttons.add(types.InlineKeyboardButton
                             (text=res.biz_provide_buttons(lvls, i, price), callback_data=f'{modifier}{i}'))
         buttons.add((types.InlineKeyboardButton(text="Назад", callback_data="business_menu")))
-        bot.edit_message_text("Меню дєпутата", call.message.chat.id, call.message.message_id, reply_markup=buttons)
+        bot.edit_message_text("Меню бізнесяк", call.message.chat.id, call.message.message_id, reply_markup=buttons)
 
 
 # commit biz purchase to DB
@@ -69,8 +69,11 @@ def _purchase_update_(deputat, call, deput, biz_lvl):
 
 
 # collects money from business
-def collect_business(deputat, call):
-    _create_business_buttons_(deputat, call, False, "cb")
+def collect_business(deputat, call, bot):
+    if call.data[1] != call.from_user.id:
+        bot.answer_callback_query(call.id, "Шо цикаєш, то не твоє меню", show_alert=True)
+    else:
+        _create_business_buttons_(deputat, call, False, "cb")
 
 
 # processes money collect for some business
@@ -130,8 +133,11 @@ def handle_collect_business(deputat, call):
 
 
 # provides biz with resources
-def provide_business(deputat, call):
-    _create_business_buttons_(deputat, call, False, "pb")
+def provide_business(deputat, call, bot):
+    if call.data[1] != call.from_user.id:
+        bot.answer_callback_query(call.id, "Шо цикаєш, то не твоє меню", show_alert=True)
+    else:
+        _create_business_buttons_(deputat, call, False, "pb")
 
 
 # processes biz providing
@@ -215,11 +221,10 @@ def handle_buy_business(deputat, call):
         _purchase_update_(deputat, call, deput, biz_lvl)
 
 
-
 def handle_business_menu(deputat, call):
     bot = deputat.bot
     buttons = types.InlineKeyboardMarkup()
-    visit = types.InlineKeyboardButton(text='Зібрати бабло', callback_data="collect_business")
+    visit = types.InlineKeyboardButton(text='Зібрати', callback_data="collect_business")
     provide = types.InlineKeyboardButton(text='Забезпечити', callback_data="provide_business")
     buy = types.InlineKeyboardButton(text='Купити бізнєс', callback_data="buy_business")
     show = types.InlineKeyboardButton(text='Покажи', callback_data="show_business")
