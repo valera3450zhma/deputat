@@ -227,8 +227,8 @@ def handle_business_menu(deputat, call, bot):
     else:
         bot = deputat.bot
         buttons = types.InlineKeyboardMarkup()
-        visit = types.InlineKeyboardButton(text='Зібрати', callback_data=f"collect_business {call.data.split(' ')[1]}")
-        provide = types.InlineKeyboardButton(text='Забезпечити', callback_data=f"provide_business {call.data.split(' ')[1]}")
+        visit = types.InlineKeyboardButton(text='Зібрати', callback_data=f"collect_business {call.data}")
+        provide = types.InlineKeyboardButton(text='Забезпечити', callback_data=f"provide_business {call.data}")
         buy = types.InlineKeyboardButton(text='Купити бізнєс', callback_data="buy_business")
         show = types.InlineKeyboardButton(text='Покажи', callback_data="show_business")
         buttons.add(visit, provide, buy, show)
