@@ -109,7 +109,7 @@ def answer(call):
 
     elif data == "deputat_menu":
         comms.deputat.handle_deputat_menu(deput, call)
-    elif data == "business_menu":
+    elif data.split(" ")[0] == "business_menu":
         comms.biz.handle_business_menu(deput, call, bot)
 
     elif data[:2] == "rt":
