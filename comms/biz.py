@@ -45,7 +45,7 @@ def _create_business_buttons_(deputat, call, price, modifier):
             if lvls[i] != 0:
                 buttons.add(types.InlineKeyboardButton
                             (text=res.biz_provide_buttons(lvls, i, price), callback_data=f'{modifier}{i}'))
-        buttons.add((types.InlineKeyboardButton(text="Назад", callback_data="business_menu")))
+        buttons.add((types.InlineKeyboardButton(text="Назад", callback_data=f"business_menu {call.data.split(' ')[1]}")))
         bot.edit_message_text("Меню бізнесяк", call.message.chat.id, call.message.message_id, reply_markup=buttons)
 
 
@@ -192,7 +192,7 @@ def buy_business(deputat, call):
     for i in range(len(res.biz_prices)):
         buttons.add(types.InlineKeyboardButton(text=f'{res.biz_name[i]} - 💰{res.biz_prices[i]} $', callback_data=f'bb{i}'))
     buttons.add(types.InlineKeyboardButton(text="І шо мені вибирати?", callback_data="help"))
-    buttons.add((types.InlineKeyboardButton(text="Назад", callback_data="business_menu")))
+    buttons.add((types.InlineKeyboardButton(text="Назад", callback_data=f"business_menu {call.data.split(' ')[1]}")))
     bot.edit_message_text("Во туво купит можеш да", call.message.chat.id, call.message.message_id, reply_markup=buttons)
 
 
@@ -227,8 +227,8 @@ def handle_business_menu(deputat, call, bot):
     else:
         bot = deputat.bot
         buttons = types.InlineKeyboardMarkup()
-        visit = types.InlineKeyboardButton(text='Зібрати', callback_data=f"collect_business {call.data}")
-        provide = types.InlineKeyboardButton(text='Забезпечити', callback_data=f"provide_business {call.data}")
+        visit = types.InlineKeyboardButton(text='Зібрати', callback_data=f"collect_business {call.data.split(' ')[1]}")
+        provide = types.InlineKeyboardButton(text='Забезпечити', callback_data=f"provide_business {call.data.split(' ')[1]}")
         buy = types.InlineKeyboardButton(text='Купити бізнєс', callback_data="buy_business")
         show = types.InlineKeyboardButton(text='Покажи', callback_data="show_business")
         buttons.add(visit, provide, buy, show)
